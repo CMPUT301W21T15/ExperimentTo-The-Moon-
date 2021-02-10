@@ -1,7 +1,6 @@
 corieux-----corieux1
-<<<<<<< HEAD
 mholmstr----MarkHolmstrom
-=======
+dbragg dbragg99
 malmond malmond1
 mmtahir mmtahir-dev
 >>>>>>> af5f137861128ee6258d714f88061f8803b8ea97
