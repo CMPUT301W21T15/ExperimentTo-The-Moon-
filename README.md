@@ -2,6 +2,6 @@
 
 name formatting:
 
-variables: hello_i_am_a_veriable
+variables: hello_i_am_a_variable
 functions: helloIAmAFunction
 classes:   HelloIAmAClass 
