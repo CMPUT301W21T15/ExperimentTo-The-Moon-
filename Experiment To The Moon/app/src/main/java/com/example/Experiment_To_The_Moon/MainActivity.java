@@ -2,7 +2,7 @@
    @https://stackoverflow.com/a/55867656
    CC BY-SA 4.0 @https://creativecommons.org/licenses/by-sa/4.0/
 */
-package com.example.mholmstr_trialbook;
+package com.example.Experiment_To_The_Moon;
 
 import android.app.Activity;
 import android.content.Intent;

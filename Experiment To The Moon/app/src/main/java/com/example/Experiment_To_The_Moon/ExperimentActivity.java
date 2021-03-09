@@ -6,7 +6,7 @@
    @https://stackoverflow.com/a/8063533
    CC BY-SA 3.0 @https://creativecommons.org/licenses/by-sa/3.0/
 */
-package com.example.mholmstr_trialbook;
+package com.example.Experiment_To_The_Moon;
 
 import android.app.Activity;
 import android.content.Intent;
