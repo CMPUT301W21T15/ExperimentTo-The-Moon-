@@ -1,17 +1,9 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream:malmondTrialBook/app/src/androidTest/java/com/example/Experiment_To_The_Moon/ExampleInstrumentedTest.java
-=======
-<<<<<<< Updated upstream:malmondTrialBook/app/src/androidTest/java/com/example/malmond_trialbook/ExampleInstrumentedTest.java
->>>>>>> Stashed changes
-<<<<<<< Updated upstream:malmondTrialBook/app/src/androidTest/java/com/example/malmond_trialbook/ExampleInstrumentedTest.java
-package com.example.malmond_trialbook;
-=======
-package com.example.Experiment_To_The_Moon;
->>>>>>> Stashed changes:malmondTrialBook/app/src/androidTest/java/com/example/Experiment_To_The_Moon/ExampleInstrumentedTest.java
-=======
-package com.example.Experiment_To_The_Moon;
->>>>>>> Stashed changes:Experiment To The Moon/app/src/androidTest/java/com/example/Experiment_To_The_Moon/ExampleInstrumentedTest.java
 
+
+
+
+
+package com.example.Experiment_To_The_Moon;
 import android.content.Context;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -33,6 +25,7 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.malmond_trialbook", appContext.getPackageName());
+
+        assertEquals("com.example.mholmstr_trialbook", appContext.getPackageName());
     }
 }

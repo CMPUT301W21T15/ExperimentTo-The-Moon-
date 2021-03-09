@@ -1,16 +1,5 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream:malmondTrialBook/app/src/test/java/com/example/Experiment_To_The_Moon/ExampleUnitTest.java
-=======
-<<<<<<< Updated upstream:malmondTrialBook/app/src/test/java/com/example/malmond_trialbook/ExampleUnitTest.java
->>>>>>> Stashed changes
-<<<<<<< Updated upstream:malmondTrialBook/app/src/test/java/com/example/malmond_trialbook/ExampleUnitTest.java
-package com.example.malmond_trialbook;
-=======
+
 package com.example.Experiment_To_The_Moon;
->>>>>>> Stashed changes:malmondTrialBook/app/src/test/java/com/example/Experiment_To_The_Moon/ExampleUnitTest.java
-=======
-package com.example.Experiment_To_The_Moon;
->>>>>>> Stashed changes:Experiment To The Moon/app/src/test/java/com/example/Experiment_To_The_Moon/ExampleUnitTest.java
 
 import org.junit.Test;
 
