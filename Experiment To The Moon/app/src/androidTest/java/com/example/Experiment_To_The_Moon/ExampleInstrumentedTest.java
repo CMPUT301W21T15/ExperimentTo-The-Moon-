@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream:malmondTrialBook/app/src/androidTest/java/com/example/Experiment_To_The_Moon/ExampleInstrumentedTest.java
+=======
+<<<<<<< Updated upstream:malmondTrialBook/app/src/androidTest/java/com/example/malmond_trialbook/ExampleInstrumentedTest.java
+>>>>>>> Stashed changes
 <<<<<<< Updated upstream:malmondTrialBook/app/src/androidTest/java/com/example/malmond_trialbook/ExampleInstrumentedTest.java
 package com.example.malmond_trialbook;
 =======
