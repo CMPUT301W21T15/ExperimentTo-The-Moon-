@@ -7,9 +7,12 @@ import java.util.Date;
 public class Experiment implements Serializable {
     // the Experiment class represents an experiment within the program's collection of experiments
     private Date date;
+
     private String description;
     private final ArrayList<Trial> successes = new ArrayList<>();
     private final ArrayList<Trial> failures = new ArrayList<>();
+
+
 
     public Experiment(long inputDate, String description) {
         setDate(inputDate);
@@ -17,6 +20,7 @@ public class Experiment implements Serializable {
     }
 
     public long getDate() {
+
         return date.getTime();
     }
 
