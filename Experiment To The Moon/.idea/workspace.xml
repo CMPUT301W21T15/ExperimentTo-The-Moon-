@@ -25,7 +25,6 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[R58M34W4DDX]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -116,7 +115,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="8e5beb53-793e-4f27-9aed-197d57c19b26" name="Default Changelist" comment="" />
+      <changelist id="3c0c8bed-5e2a-47b7-86ca-8c1d1ad04630" name="Default Changelist" comment="" />
       <created>1615247973922</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -135,5 +134,11 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1567" y="575" key="FileChooserDialogImpl" timestamp="1615334454730">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="1567" y="575" key="FileChooserDialogImpl/-1920.0.1920.1080/0.0.2560.1440@0.0.2560.1440" timestamp="1615334454730" />
   </component>
 </project>
