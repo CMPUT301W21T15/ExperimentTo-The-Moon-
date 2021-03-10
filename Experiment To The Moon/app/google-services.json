@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "714560893839",
+    "project_id": "experiment-to-the-moon",
+    "storage_bucket": "experiment-to-the-moon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714560893839:android:b1bdc77033670c66ea51fa",
+        "android_client_info": {
+          "package_name": "com.example.Experiment_To_The_Moon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714560893839-e24q715o6dnldjf5fokgkcedl66r087i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpFhR19h7oA8hDRY00jdF0ZejBRycUHIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714560893839-e24q715o6dnldjf5fokgkcedl66r087i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
