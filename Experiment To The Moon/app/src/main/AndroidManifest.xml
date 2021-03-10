@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+
     package="com.example.Experiment_To_The_Moon">
 
     <application
@@ -10,14 +11,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MholmstrTrialBook"
         tools:ignore="AllowBackup">
+
         <activity android:name="com.example.Experiment_To_The_Moon.MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name="com.example.Experiment_To_The_Moon.ExperimentActivity">
+
         </activity>
     </application>
 
