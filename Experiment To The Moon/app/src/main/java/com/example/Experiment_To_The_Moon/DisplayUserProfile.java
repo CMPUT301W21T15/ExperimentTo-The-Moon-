@@ -6,11 +6,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
+import android.widget.TextView;
 
 public class DisplayUserProfile extends AppCompatActivity {
+
+    User currentUser;
+    FloatingActionButton profile_back = findViewById(R.id.user_profile_back);
+    FloatingActionButton profile_update = findViewById(R.id.user_profile_update);
+    TextView userID = findViewById(R.id.user_id);
+    TextView contactInfo = findViewById(R.id.contact_info);
 
 
     @Override
@@ -18,8 +24,6 @@ public class DisplayUserProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_user_profile);
 
-
-        FloatingActionButton profile_back = findViewById(R.id.user_profile_back);
         profile_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -28,7 +32,6 @@ public class DisplayUserProfile extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton profile_update = findViewById(R.id.user_profile_update);
         profile_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

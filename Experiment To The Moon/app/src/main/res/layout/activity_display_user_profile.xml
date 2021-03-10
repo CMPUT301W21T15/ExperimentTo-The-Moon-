@@ -18,6 +18,7 @@
             android:layout_gravity="bottom|start"
             android:layout_weight="0"
             android:clickable="true"
+            android:focusable="true"
             app:backgroundTint="#1DC524"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,6 +31,7 @@
             android:layout_gravity="bottom|end"
             android:layout_weight="0"
             android:clickable="true"
+            android:focusable="true"
             app:backgroundTint="#E82929"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,5 +58,4 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_id" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
--</FrameLayout>
+</FrameLayout>
