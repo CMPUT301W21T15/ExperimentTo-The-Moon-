@@ -4,49 +4,44 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Experiment implements Serializable {
+public abstract class Experiment implements Serializable {
     // the Experiment class represents an experiment within the program's collection of experiments
-    private Date date;
 
+    private int owner;
     private String description;
-    private final ArrayList<Trial> successes = new ArrayList<>();
-    private final ArrayList<Trial> failures = new ArrayList<>();
+    private String region;
+    private Boolean isEnd;
+    private Boolean isPublished;
+    private ArrayList<Integer> blacklist = new ArrayList<Integer>();
+    private ArrayList<Trial> results = new ArrayList<Trial>();
+    private int minTrials;
 
-
-
-    public Experiment(long inputDate, String description) {
-        setDate(inputDate);
-        setDescription(description);
+    public void togglePublish() {
+        isPublished = !isPublished;
     }
 
-    public long getDate() {
-
-        return date.getTime();
+    public void toggleEnd() {
+        isEnd = !isEnd;
     }
 
-    public void setDate(long inputDate) {
-        date = new Date(inputDate);
+    public void blacklistUser(int user) {
+        blacklist.add(user);
     }
 
-    public String getDescription() {
-        return description;
+    public void addResult(Trial result) {
+        results.add(result);
     }
 
-    public void setDescription(String description) {
-        this.description = description + "\n";
+    public void showStatistics() {
+        // placeholder method
     }
 
-    public int getSuccesses() {return successes.size(); }
+    public void showMap() {
+        // placeholder method
+    }
 
-    public void addSuccess() {successes.add(new Trial(true));}
-
-    public int getFailures() {return failures.size(); }
-
-    public void addFailure() {failures.add(new Trial(false));}
-
-    public String getSummary() {
-        return "Total trials: "+(getSuccesses()+getFailures()) +
-                "\nSuccess rate: " + (getSuccesses()/(float)(getSuccesses()+getFailures()));
+    public void showForum() {
+        // placeholder method
     }
 
 }
