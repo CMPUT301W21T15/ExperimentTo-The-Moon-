@@ -1,8 +1,3 @@
-
-
-
-
-
 package com.example.Experiment_To_The_Moon;
 import android.content.Context;
 
