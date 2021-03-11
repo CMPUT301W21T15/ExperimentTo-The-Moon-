@@ -13,6 +13,8 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AddExperimentFragment.OnFragmentInteractionListener{
@@ -20,10 +22,12 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     private ArrayAdapter<Experiment> experimentAdapter;
     private ArrayList<Experiment> experimentDataList;
     private int experimentPosition;  // position of interesting experiment in the ArrayList
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = FirebaseFirestore.getInstance();
         setContentView(R.layout.activity_main);
 
         // the MainActivity class handles the main activity of the application
