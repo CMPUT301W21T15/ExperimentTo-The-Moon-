@@ -51,7 +51,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         TextView summary = findViewById(R.id.experiment_summary);
         summary.setText(experiment.getSummary());
 
-        stats = new Statistics(experiment); //maybe put this in onClickListener
+        stats = new Statistics(experiment);
         Button statsButton = findViewById(R.id.statistics_button);
         statsButton.setOnClickListener(view ->
                 new StatisticsFragment(stats).show(getSupportFragmentManager(), "Statistics"));

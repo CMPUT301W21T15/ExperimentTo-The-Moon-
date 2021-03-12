@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 //public abstract class Experiment implements Serializable {
 public class Experiment implements Serializable {
-    /** Moyin: I made some changes to make sure it runs*/
+    /** Made some changes to make sure it runs*/
     // the Experiment class represents an experiment within the program's collection of experiments
 
     private int owner;
@@ -18,7 +18,7 @@ public class Experiment implements Serializable {
     private ArrayList<Trial> results = new ArrayList<Trial>();
     private int minTrials;
 
-    /** Moyin: I made some changes to make sure it runs*/
+    /** Made some changes to make sure it runs*/
     public Experiment(){
 
     }
@@ -56,7 +56,7 @@ public class Experiment implements Serializable {
         // placeholder method
     }
 
-    /** Moyin: I made some changes to make sure it runs*/
+    /** Made some changes to make sure it runs*/
     public long getDate(){
        return 0;
     }
