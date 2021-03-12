@@ -24,9 +24,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class ExperimentActivity extends AppCompatActivity {
+public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener{
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
+    Statistics stats;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +50,11 @@ public class ExperimentActivity extends AppCompatActivity {
 
         TextView summary = findViewById(R.id.experiment_summary);
         summary.setText(experiment.getSummary());
+
+        stats = new Statistics(experiment); //maybe put this in onClickListener
+        Button statsButton = findViewById(R.id.statistics_button);
+        statsButton.setOnClickListener(view ->
+                new StatisticsFragment(stats).show(getSupportFragmentManager(), "Statistics"));
 
         experimentDate.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
             Date calendarTime = new GregorianCalendar(year, month, dayOfMonth).getTime(); // getting another calendar with the new time
@@ -90,5 +96,15 @@ public class ExperimentActivity extends AppCompatActivity {
         returnIntent.putExtra("Experiment", experiment);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+    }
+
+    @Override
+    public void onPlotPressed(Experiment currentExperiment) {
+
+    }
+
+    @Override
+    public void onHistogramPressed(Experiment currentExperiment) {
+
     }
 }

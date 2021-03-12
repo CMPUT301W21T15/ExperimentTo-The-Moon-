@@ -14,7 +14,23 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Strings used for statistics -->
+    <string name="mean">Mean</string>
+    <string name="median">Median</string>
+    <string name="q1">1st Quartile</string>
+    <string name="std_variation">Standard Deviation</string>
+    <string name="sum">Sum</string>
+    <string name="total_trials">Total Trials</string>
+    <string name="q3">3rd Quartile</string>
+    <string name="min">Minimum</string>
+    <string name="max">Maximum</string>
+    <string name="percent_pass">Percentage Success</string>
+    <string name="histogram">Histogram</string>
+    <string name="plot">Plot</string>
+    <string name="close">Close</string>
+    <string name="statistics">Statistics</string>
+    <string name="participate">Participate</string>
+    <string name="questions">Q&amp;A</string>
 </resources>

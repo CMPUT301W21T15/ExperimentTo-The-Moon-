@@ -14,13 +14,15 @@
             android:layout_width="11dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/min" />
+            android:text="@string/min"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/textViewMinVal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="24sp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,13 +34,15 @@
             android:layout_width="11dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/q1" />
+            android:text="@string/q1"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/textViewQ1Val"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="24sp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,13 +54,15 @@
             android:layout_width="11dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/mean" />
+            android:text="@string/mean"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/textViewMeanVal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="24sp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,13 +74,15 @@
             android:layout_width="11dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/median" />
+            android:text="@string/median"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/textViewMedianVal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="24sp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,13 +94,15 @@
             android:layout_width="11dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/q3" />
+            android:text="@string/q3"
+            android:textSize="24sp"/>
 
         <TextView
             android:id="@+id/textViewQ3Val"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="24sp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -104,13 +114,15 @@
             android:layout_width="11dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/max" />
+            android:text="@string/max"
+            android:textSize="24sp"/>
 
         <TextView
             android:id="@+id/textViewMaxVal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="24sp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -122,13 +134,15 @@
             android:layout_width="11dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/std_variation" />
+            android:text="@string/std_variation"
+            android:textSize="24sp"/>
 
         <TextView
             android:id="@+id/textViewStdVal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="24sp"/>
 
     </LinearLayout>
     <LinearLayout
@@ -141,13 +155,15 @@
             android:layout_width="11dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/total_trials" />
+            android:text="@string/total_trials"
+            android:textSize="24sp"/>
 
         <TextView
             android:id="@+id/textViewTotalVal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="24sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -156,25 +172,20 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/histogram_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/histogram" />
+            android:text="@string/histogram"
+            android:textSize="24sp"/>
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/plot_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/plot" />
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/close" />
+            android:text="@string/plot"
+            android:textSize="24sp"/>
     </LinearLayout>
 
 </LinearLayout>

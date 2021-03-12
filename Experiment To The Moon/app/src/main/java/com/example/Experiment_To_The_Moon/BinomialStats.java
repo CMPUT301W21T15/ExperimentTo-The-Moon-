@@ -6,6 +6,12 @@ public class BinomialStats extends Statistics{
     //private int totalTrials;
     private float percentPass;
     //private float percentFail;
+    private Experiment currentExperiment;
+
+    public BinomialStats(Experiment e){
+        super(e);
+        currentExperiment = e;
+    }
 
     public void calcPercentPass(){
         
