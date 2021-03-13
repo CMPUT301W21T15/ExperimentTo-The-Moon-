@@ -33,4 +33,11 @@
     <string name="statistics">Statistics</string>
     <string name="participate">Participate</string>
     <string name="questions">Q&amp;A</string>
+    <!-- Strings used for the home page -->
+    <string name="search_bar">Search</string>
+    <string name="profile">Profile</string>
+    <string name="go">Go</string>
+    <string name="subscription_list">Subscription List</string>
+    <string name="experiment_list">Experiment List</string>
+
 </resources>
