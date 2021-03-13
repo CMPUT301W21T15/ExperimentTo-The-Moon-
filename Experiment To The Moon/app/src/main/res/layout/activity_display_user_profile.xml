@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".DisplayUserProfile">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/user_profile_update"
+            android:layout_width="58dp"
+            android:layout_height="57dp"
+            android:layout_gravity="bottom|start"
+            android:layout_weight="0"
+            android:clickable="true"
+            android:focusable="true"
+            app:backgroundTint="#1DC524"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@android:drawable/ic_popup_sync" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/user_profile_back"
+            android:layout_width="56dp"
+            android:layout_height="59dp"
+            android:layout_gravity="bottom|end"
+            android:layout_weight="0"
+            android:clickable="true"
+            android:focusable="true"
+            app:backgroundTint="#E82929"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/abc_vector_test" />
+
+        <TextView
+            android:id="@+id/user_id"
+            android:layout_width="159dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="20dp"
+            android:text="User ID"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/contact_info"
+            android:layout_width="303dp"
+            android:layout_height="578dp"
+            android:layout_marginTop="20dp"
+            android:hint="Contact Info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_id" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
