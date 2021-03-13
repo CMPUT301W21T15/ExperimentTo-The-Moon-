@@ -2,6 +2,7 @@
     <string name="app_name">ExperimentTo-The-Moon-</string>
     <string name="add_experiment">Add Experiment</string>
     <string name="date">Date</string>
+    <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="experiment_date">Experiment date</string>
     <string name="experiment_description">Experiment description</string>
@@ -39,5 +40,12 @@
     <string name="go">Go</string>
     <string name="subscription_list">Subscription List</string>
     <string name="experiment_list">Experiment List</string>
+
+    <string-array name="spinner_trial_types">
+        <item>Non-Neg Integer</item>
+        <item>Binomial</item>
+        <item>Count</item>
+        <item>Measurement</item>
+    </string-array>
 
 </resources>

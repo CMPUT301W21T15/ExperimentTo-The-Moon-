@@ -7,15 +7,26 @@ package com.example.Experiment_To_The_Moon;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements AddExperimentFragment.OnFragmentInteractionListener{
 
@@ -23,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     private ArrayList<Experiment> experimentDataList;
     private int experimentPosition;  // position of interesting experiment in the ArrayList
     private FirebaseFirestore db;
+    private String TAG = "Sample";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +54,75 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         addExperimentButton.setOnClickListener(view ->
                 new AddExperimentFragment().show(getSupportFragmentManager(), "ADD_EXPERIMENT"));
 
+
+        //    cannot edit experiments yet
         experimentList.setOnItemClickListener((parent, view, position, id) -> {  // click an experiment to edit
             updateExperiment(position);
         });
+
+
 
         experimentList.setOnItemLongClickListener((parent, view, position, id) -> {  // long click an experiment to delete
             experimentDataList.remove(position);  // removing the experiment clicked on
             experimentAdapter.notifyDataSetChanged(); // update adapter
             return true;
         });
+
+        final CollectionReference collectionReference = db.collection("Experiments");
+        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                // clear the old list
+                experimentDataList.clear();
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
+                    String name = doc.getId();
+                    String description = (String) doc.getData().get("description");
+                    String region = (String) doc.getData().get("region");
+                    String min_trials = (String) doc.getData().get("min_trials");
+
+                    experimentDataList.add(new Count(name, description, region, min_trials, false) {
+                    }); // Adding the cities and provinces from FireStore.
+                }
+                experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
+            }
+        });
     }
 
     @Override
     public void onOkPressed(Experiment newExperiment) {  // adding a new experiment
         experimentAdapter.add(newExperiment);
+
+        // get the firestore database
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference experimentsCollection = db.collection("Experiments");
+        HashMap<String, String> data = new HashMap<>();
+
+        //  add new experiment info to hashmap. For now, everything is a string.
+        data.put("description", newExperiment.getDescription());
+        data.put("region", newExperiment.getRegion());
+        data.put("min_trials", String.valueOf(newExperiment.getMinTrials()));
+        data.put("isEnd", String.valueOf(newExperiment.getIsEnd()));
+        data.put("isPublished", String.valueOf(newExperiment.getIsPublished()));
+
+        // Create the new experiment document, and add the data.
+        experimentsCollection
+                .document(newExperiment.getName())
+                .set(data)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // These are a method which gets executed when the task is successful.
+                        Log.d(TAG, "Data addition successful");
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // This method gets executed if there is any problem.
+                        Log.d(TAG, "Data addition failed" + e.toString());
+                    }
+                });
     }
 
     private void updateExperiment(int position) {

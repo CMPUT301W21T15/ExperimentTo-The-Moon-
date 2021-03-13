@@ -3,38 +3,28 @@ package com.example.Experiment_To_The_Moon;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
-//public abstract class Experiment implements Serializable {
-public class Experiment implements Serializable {
-    /** Made some changes to make sure it runs*/
+public abstract class Experiment implements Serializable {
     // the Experiment class represents an experiment within the program's collection of experiments
 
     private int owner;
-    private String description;
-    private String region;
-    private Boolean isEnd;
-    private Boolean isPublished;
+    public String name;
+    public String description;
+    public String region;
+    public Boolean isEnd;
+    public Boolean isPublished;
     private ArrayList<Integer> blacklist = new ArrayList<Integer>();
     private ArrayList<Trial> results = new ArrayList<Trial>();
-    private int minTrials;
-
-    /** Made some changes to make sure it runs*/
-    public Experiment(){
-
-    }
-    public Experiment(long date, String description){
-
-    }
-    /** */
-
+    public String minTrials;
 
     public void togglePublish() {
         isPublished = !isPublished;
     }
+    public boolean getIsPublished() { return this.isPublished; }
 
     public void toggleEnd() {
         isEnd = !isEnd;
     }
+    public boolean getIsEnd() { return this.isEnd; }
 
     public void blacklistUser(int user) {
         blacklist.add(user);
@@ -56,13 +46,24 @@ public class Experiment implements Serializable {
         // placeholder method
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+    public void setDescription(String description) {
+        this.description = description + "\n";
+    }
+
+    public String getName() { return this.name; }
+
+    public String getRegion() { return this.region; }
+
+    public String getMinTrials() { return this.minTrials; }
+
     /** Made some changes to make sure it runs*/
     public long getDate(){
-       return 0;
+        return 0;
     }
-    public String getDescription(){
-        return "";
-    }
+
     public int getSuccesses(){
         return 0;
     }
@@ -81,8 +82,7 @@ public class Experiment implements Serializable {
     public void addFailure(){
 
     }
-    public void setDescription(String v){
 
-    }
-    /** */
+
+
 }

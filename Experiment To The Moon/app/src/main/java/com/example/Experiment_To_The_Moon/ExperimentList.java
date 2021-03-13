@@ -34,12 +34,10 @@ public class ExperimentList extends ArrayAdapter<Experiment> {
 
         Experiment experiment = experiments.get(position);
 
-        TextView experimentDate = view.findViewById(R.id.experiment_date);
+        TextView experimentName = view.findViewById(R.id.experiment_name);
         TextView experimentDescription = view.findViewById(R.id.experiment_description);
 
-        @SuppressLint("SimpleDateFormat")
-        String displayedDate = new SimpleDateFormat("yyyy-MM-dd").format(experiment.getDate());
-        experimentDate.setText(displayedDate);
+        experimentName.setText(experiment.getName());
         experimentDescription.setText(experiment.getDescription());
 
         return view;

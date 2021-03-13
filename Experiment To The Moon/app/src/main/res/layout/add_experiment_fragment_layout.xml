@@ -1,24 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/linearLayout">
 
-    <CalendarView
-        android:id="@+id/experiment_date_calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="300dp" />
-
     <EditText
-        android:id="@+id/experiment_description_editText"
+        android:id="@+id/exp_name_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/experiment_description"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:maxLength="40"
-        android:singleLine="true" />
+        android:paddingBottom="15dp"
+        android:hint="Experiment name"/>
+
+    <EditText
+        android:id="@+id/exp_description_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:paddingBottom="15dp"
+        android:hint="@string/experiment_description" />
+
+    <EditText
+        android:id="@+id/exp_region_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:paddingBottom="15dp"
+        android:hint="Experiment region"/>
+
+    <EditText
+        android:id="@+id/exp_min_trials_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:paddingBottom="15dp"
+        android:hint="Minimum trials"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Experiment type:"
+            android:textSize="18sp"
+            android:paddingTop="10dp"
+            android:paddingLeft="5dp"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:id="@+id/exp_trial_type_spinner"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Geo-Location required:"
+            android:textSize="18sp"
+            android:paddingLeft="5dp"/>
+
+        <Switch
+            android:id="@+id/exp_geolocation_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:paddingLeft="15dp"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    </LinearLayout>
 
 </LinearLayout>

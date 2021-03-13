@@ -11,6 +11,7 @@ package com.example.Experiment_To_The_Moon;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -32,12 +33,11 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        experiment = (Experiment) intent.getSerializableExtra("Experiment");
-        setContentView(R.layout.activity_experiment);
+        Log.d("Sample", "WE MADE IT");
 
-        CalendarView experimentDate = findViewById(R.id.edit_experiment_date_calendarView);
-        experimentDate.setDate(experiment.getDate());
+        Intent intent = getIntent();
+        experiment = (Count) intent.getSerializableExtra("Experiment");
+        setContentView(R.layout.activity_experiment);
 
         EditText experimentDescription = findViewById(R.id.edit_experiment_description_editText);
         experimentDescription.setText(experiment.getDescription());
@@ -56,10 +56,12 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         statsButton.setOnClickListener(view ->
                 new StatisticsFragment(stats).show(getSupportFragmentManager(), "Statistics"));
 
+        /*  An experiment as a whole does not have a date
         experimentDate.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
             Date calendarTime = new GregorianCalendar(year, month, dayOfMonth).getTime(); // getting another calendar with the new time
             experiment.setDate(calendarTime.getTime()); // converting to milliseconds
         });
+        */
 
         successButton.setOnClickListener(view -> {
             experiment.addSuccess();
@@ -87,6 +89,8 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             }
             return false; // pass on to other listeners.
         });
+
+
 
     }
 
