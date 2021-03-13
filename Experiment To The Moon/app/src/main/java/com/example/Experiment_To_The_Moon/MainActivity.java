@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -19,22 +20,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.installations.FirebaseInstallations;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements AddExperimentFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements AddExperimentFragment.OnFragmentInteractionListener, Serializable {
 
     private ArrayAdapter<Experiment> experimentAdapter;
     private ArrayList<Experiment> experimentDataList;
     private int experimentPosition;  // position of interesting experiment in the ArrayList
     private FirebaseFirestore db;
     private String TAG = "Sample";
+    private User currentUser;
+    private String firebase_id; // the device's unique id
 
 
     @Override
@@ -44,6 +52,32 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         setContentView(R.layout.activity_home_screen);
 
         // the MainActivity class handles the main activity of the application
+        firebase_id = FirebaseInstallations.getInstance().getId().toString(); // this is the firebase ID associated with the unique app installation ID
+        DocumentReference docRef = db.collection("Users").document(firebase_id);
+
+        // check if the ID exists in the database
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (Objects.requireNonNull(document).exists()) {
+                    // if it exists, use server's contact info
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    String contactInfo = (String) Objects.requireNonNull(document.getData()).get("contactInfo");
+                    currentUser = new User(firebase_id, contactInfo);
+                } else {
+                    // If device ID is not in collection, add it
+                    Log.d(TAG, "No such document");
+                    currentUser = new User(firebase_id, "Please edit your contact info.");
+                    HashMap<String, String> data = new HashMap<>();
+                    data.put("contactInfo", currentUser.getContactInfo());
+                    data.put("userId", currentUser.getUid());
+                    db.collection("Users").document(firebase_id).set(data);
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+
         ListView experimentList = findViewById(R.id.home_experiment_list);
         experimentDataList = new ArrayList<>();
         experimentAdapter = new ExperimentList(this, experimentDataList);
@@ -60,7 +94,8 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
             updateExperiment(position);
         });
 
-
+        Button profileButton = findViewById(R.id.home_profile_button);
+        profileButton.setOnClickListener(v -> displayProfile());
 
         experimentList.setOnItemLongClickListener((parent, view, position, id) -> {  // long click an experiment to delete
             experimentDataList.remove(position);  // removing the experiment clicked on
@@ -69,22 +104,19 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         });
 
         final CollectionReference collectionReference = db.collection("Experiments");
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                // clear the old list
-                experimentDataList.clear();
-                for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
-                    String name = doc.getId();
-                    String description = (String) doc.getData().get("description");
-                    String region = (String) doc.getData().get("region");
-                    String min_trials = (String) doc.getData().get("min_trials");
+        collectionReference.addSnapshotListener((queryDocumentSnapshots, e) -> {
+            // clear the old list
+            experimentDataList.clear();
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
+                String name = doc.getId();
+                String description = (String) doc.getData().get("description");
+                String region = (String) doc.getData().get("region");
+                String min_trials = (String) doc.getData().get("min_trials");
 
-                    experimentDataList.add(new Count(name, description, region, min_trials, false) {
-                    }); // Adding the cities and provinces from FireStore.
-                }
-                experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
+                experimentDataList.add(new Count(name, description, region, min_trials, false) {
+                }); // Adding the cities and provinces from FireStore.
             }
+            experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
         });
     }
 
@@ -132,6 +164,13 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         startActivityForResult(intent, 101);
     }
 
+    public void displayProfile() {
+        Intent switchActivityIntent = new Intent(this, DisplayUserProfile.class);
+        switchActivityIntent.putExtra("currentUser", currentUser);
+        startActivityForResult(switchActivityIntent, 102);
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -141,6 +180,11 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 experimentPosition = data.getIntExtra("Position", 0);
                 experimentDataList.set(experimentPosition, experiment);
                 experimentAdapter.notifyDataSetChanged(); // update adapter
+            }
+        }
+        if (requestCode == 102) {
+            if (resultCode == RESULT_OK) {
+                currentUser = (User) data.getSerializableExtra("currentUser"); // updates current user
             }
         }
     }
