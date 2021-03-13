@@ -40,6 +40,11 @@
     <string name="go">Go</string>
     <string name="subscription_list">Subscription List</string>
     <string name="experiment_list">Experiment List</string>
+    <!-- Strings used for user profiles -->
+    <string name="user_id">User ID</string>
+    <string name="contact_info">Contact Info</string>
+    <string name="go_back">GO_BACK</string>
+    <string name="update">UPDATE</string>
 
     <string-array name="spinner_trial_types">
         <item>Non-Neg Integer</item>

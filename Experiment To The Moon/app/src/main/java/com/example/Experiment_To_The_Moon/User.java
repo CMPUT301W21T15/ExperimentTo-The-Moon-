@@ -1,6 +1,8 @@
 package com.example.Experiment_To_The_Moon;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private String uid;
     private String contactInfo;
