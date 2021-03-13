@@ -10,7 +10,7 @@ public class NonNegInt extends Experiment {
         this.region = region;
         this.minTrials = min_trials;
         this.isEnd = false;
-        this.isPublished = false;
+        this.isPublished = true;
     }
 
 }

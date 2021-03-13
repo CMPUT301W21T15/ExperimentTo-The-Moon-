@@ -31,7 +31,7 @@ public class ExperimentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*
+
         Intent intent = getIntent();
         experiment = (Experiment) intent.getSerializableExtra("Experiment");
         setContentView(R.layout.activity_experiment);
@@ -91,8 +91,5 @@ public class ExperimentActivity extends AppCompatActivity {
         returnIntent.putExtra("Experiment", experiment);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
-    }
-
-         */
     }
 }

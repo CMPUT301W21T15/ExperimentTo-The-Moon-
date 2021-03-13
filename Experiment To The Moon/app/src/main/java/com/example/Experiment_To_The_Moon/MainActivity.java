@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "KEK");
         db = FirebaseFirestore.getInstance();
         setContentView(R.layout.activity_main);
 
@@ -55,10 +54,10 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         addExperimentButton.setOnClickListener(view ->
                 new AddExperimentFragment().show(getSupportFragmentManager(), "ADD_EXPERIMENT"));
 
-        /*
+
         experimentList.setOnItemClickListener((parent, view, position, id) -> {  // click an experiment to edit
             updateExperiment(position);
-        }); */
+        });
 
         experimentList.setOnItemLongClickListener((parent, view, position, id) -> {  // long click an experiment to delete
             experimentDataList.remove(position);  // removing the experiment clicked on
@@ -74,14 +73,13 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 // clear the old list
                 experimentDataList.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
-                    //Log.d(TAG, String.valueOf(doc.getData().get("province_name")));
                     String name = doc.getId();
                     String description = (String) doc.getData().get("description");
                     String region = (String) doc.getData().get("region");
                     String min_trials = (String) doc.getData().get("min_trials");
-                    //String province = (String) doc.getData().get("province_name");
+
                     experimentDataList.add(new Count(name, description, region, min_trials, false) {
-                    }); // Adding the cities and provinces from FireStore.
+                    });
                 }
                 experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
             }
@@ -126,13 +124,13 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 });
     }
 
-    /*
+
     private void updateExperiment(int position) {
         Intent intent = new Intent(this, ExperimentActivity.class);
         intent.putExtra("Experiment", experimentDataList.get(position));
         experimentPosition = position;
         startActivityForResult(intent, 101);
-    } */
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
