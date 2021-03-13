@@ -28,16 +28,16 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home_screen);
 
         // the MainActivity class handles the main activity of the application
-        ListView experimentList = findViewById(R.id.experiment_list);
+        ListView experimentList = findViewById(R.id.home_experiment_list);
         experimentDataList = new ArrayList<>();
         experimentAdapter = new ExperimentList(this, experimentDataList);
 
         experimentList.setAdapter(experimentAdapter);
 
-        Button addExperimentButton = findViewById(R.id.add_experiment_button);
+        Button addExperimentButton = findViewById(R.id.home_add_exp_button);
         addExperimentButton.setOnClickListener(view ->
                 new AddExperimentFragment().show(getSupportFragmentManager(), "ADD_EXPERIMENT"));
 
@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
             experimentAdapter.notifyDataSetChanged(); // update adapter
             return true;
         });
-
     }
 
     @Override
@@ -77,4 +76,5 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
             }
         }
     }
+
 }
