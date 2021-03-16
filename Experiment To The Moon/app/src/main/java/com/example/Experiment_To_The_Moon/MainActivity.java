@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 new AddExperimentFragment().show(getSupportFragmentManager(), "ADD_EXPERIMENT"));
 
 
-        //    cannot edit experiments yet
+
         experimentList.setOnItemClickListener((parent, view, position, id) -> {  // click an experiment to edit
             updateExperiment(position);
         });
@@ -113,8 +113,8 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 String region = (String) doc.getData().get("region");
                 String min_trials = (String) doc.getData().get("min_trials");
 
-                experimentDataList.add(new Count(name, description, region, min_trials, false) {
-                }); // Adding the cities and provinces from FireStore.
+                experimentDataList.add(new Count(name, description, region, min_trials, false));
+                // Adding the cities and provinces from FireStore.
             }
             experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
         });
@@ -177,8 +177,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         if (requestCode == 101) {
             if(resultCode == Activity.RESULT_OK) {
                 Experiment experiment = (Experiment) data.getSerializableExtra("Experiment");
-                experimentPosition = data.getIntExtra("Position", 0);
-                experimentDataList.set(experimentPosition, experiment);
+                onOkPressed(experiment); // quick hack to get it working because Mark is too lazy to write a new method
                 experimentAdapter.notifyDataSetChanged(); // update adapter
             }
         }
