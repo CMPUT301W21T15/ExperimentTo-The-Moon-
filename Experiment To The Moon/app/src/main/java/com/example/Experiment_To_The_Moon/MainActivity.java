@@ -104,19 +104,20 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         });
 
         final CollectionReference collectionReference = db.collection("Experiments");
-        collectionReference.addSnapshotListener((queryDocumentSnapshots, e) -> {
-            // clear the old list
-            experimentDataList.clear();
-            for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
-                String name = doc.getId();
-                String description = (String) doc.getData().get("description");
-                String region = (String) doc.getData().get("region");
-                String min_trials = (String) doc.getData().get("min_trials");
-
-                experimentDataList.add(new Count(name, description, region, min_trials, false));
-                // Adding the cities and provinces from FireStore.
+        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                // clear the old list
+                experimentDataList.clear();
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
+                    String name = doc.getId();
+                    String description = (String) doc.getData().get("description");
+                    String region = (String) doc.getData().get("region");
+                    String min_trials = (String) doc.getData().get("min_trials");
+                    experimentDataList.add(new Count(name, description, region, min_trials, false));// Adding the cities and provinces from FireStore.
+                }
+                experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
             }
-            experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
         });
     }
 
