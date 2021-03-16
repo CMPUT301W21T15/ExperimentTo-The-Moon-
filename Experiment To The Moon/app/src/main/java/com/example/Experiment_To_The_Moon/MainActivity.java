@@ -136,8 +136,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         if (requestCode == 101) {
             if(resultCode == Activity.RESULT_OK) {
                 Experiment experiment = (Experiment) data.getSerializableExtra("Experiment");
-                experimentPosition = data.getIntExtra("Position", 0);
-                experimentDataList.set(experimentPosition, experiment);
+                onOkPressed(experiment); // quick hack to get it working because Mark is too lazy to write a new method
                 experimentAdapter.notifyDataSetChanged(); // update adapter
             }
         }
