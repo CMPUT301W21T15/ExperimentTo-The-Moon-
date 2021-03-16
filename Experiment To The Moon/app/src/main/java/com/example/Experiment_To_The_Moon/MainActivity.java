@@ -79,9 +79,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                     String description = (String) doc.getData().get("description");
                     String region = (String) doc.getData().get("region");
                     String min_trials = (String) doc.getData().get("min_trials");
-
-                    experimentDataList.add(new Count(name, description, region, min_trials, false) {
-                    }); // Adding the cities and provinces from FireStore.
+                    experimentDataList.add(new Count(name, description, region, min_trials, false));// Adding the cities and provinces from FireStore.
                 }
                 experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
             }
