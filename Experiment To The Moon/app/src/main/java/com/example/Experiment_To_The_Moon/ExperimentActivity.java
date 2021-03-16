@@ -51,6 +51,8 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         TextView summary = findViewById(R.id.experiment_summary);
         summary.setText(experiment.getSummary());
 
+        Button QandA=findViewById(R.id.questions_button);
+
         stats = new Statistics(experiment);
         Button statsButton = findViewById(R.id.statistics_button);
         statsButton.setOnClickListener(view ->
@@ -73,6 +75,12 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             experiment.addFailure();
             failureButton.setText(String.valueOf(experiment.getFailures()));
             summary.setText(experiment.getSummary());
+        });
+
+        QandA.setOnClickListener(view -> {
+            Intent q_and_a=new Intent(this, QAndA.class);
+            //intent.putExtra("City",cityAdapter.getItem(position).toString());
+            startActivity(q_and_a);
         });
 
         experimentDescription.setOnEditorActionListener((v, actionId, event) -> {
