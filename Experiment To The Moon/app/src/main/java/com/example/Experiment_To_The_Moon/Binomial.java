@@ -15,6 +15,6 @@ public class Binomial extends Experiment implements Serializable {
         this.minTrials = min_trials;
         this.isEnd = false;
         this.isPublished = false;
+        this.type = "Binomial";
     }
-
 }

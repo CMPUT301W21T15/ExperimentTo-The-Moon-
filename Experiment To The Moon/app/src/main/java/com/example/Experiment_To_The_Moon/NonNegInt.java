@@ -11,6 +11,7 @@ public class NonNegInt extends Experiment {
         this.minTrials = min_trials;
         this.isEnd = false;
         this.isPublished = false;
+        this.type = "NonNegInt";
     }
 
 }

@@ -28,15 +28,27 @@ import java.util.GregorianCalendar;
 public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener{
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
+    private String type;
     Statistics stats;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("Sample", "WE MADE IT");
-
         Intent intent = getIntent();
-        experiment = (Count) intent.getSerializableExtra("Experiment");
+
+        type = (String) intent.getSerializableExtra("type");  //  type of the experiment
+
+        // cast the experiment to it's proper type.
+        if (type.equals("Count")) {
+            experiment = (Count) intent.getSerializableExtra("Experiment");
+        } else if (type.equals("Binomial")) {
+            experiment = (Binomial) intent.getSerializableExtra("Experiment");
+        } else if (type.equals("Measurement")) {
+            experiment = (Measurement) intent.getSerializableExtra("Experiment");
+        } else if (type.equals("NonNegInt")) {
+            experiment = (NonNegInt) intent.getSerializableExtra("Experiment");
+        }
+
         setContentView(R.layout.activity_experiment);
 
         EditText experimentDescription = findViewById(R.id.edit_experiment_description_editText);

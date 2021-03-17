@@ -15,6 +15,7 @@ public abstract class Experiment implements Serializable {
     private ArrayList<Integer> blacklist = new ArrayList<Integer>();
     private ArrayList<Trial> results = new ArrayList<Trial>();
     public String minTrials;
+    public String type;
 
     public void togglePublish() {
         isPublished = !isPublished;
@@ -82,6 +83,8 @@ public abstract class Experiment implements Serializable {
     public void addFailure(){
 
     }
+
+    public String getType() { return this.type; }
 
 
 
