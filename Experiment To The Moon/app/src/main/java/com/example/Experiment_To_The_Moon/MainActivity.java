@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -53,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
 
         // the MainActivity class handles the main activity of the application
         firebase_id = FirebaseInstallations.getInstance().getId().toString(); // this is the firebase ID associated with the unique app installation ID
+        firebase_id = firebase_id.substring(33); // only looking for the 7 digit ID
         DocumentReference docRef = db.collection("Users").document(firebase_id);
 
         // check if the ID exists in the database
@@ -60,17 +60,20 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (Objects.requireNonNull(document).exists()) {
-                    // if it exists, use server's contact info
+                    // if it exists, get info
                     Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     String contactInfo = (String) Objects.requireNonNull(document.getData()).get("contactInfo");
+                    ArrayList<String> subs = (ArrayList<String>) document.getData().get("subscriptionList");
                     currentUser = new User(firebase_id, contactInfo);
+                    currentUser.setSubscriptions(subs);
                 } else {
                     // If device ID is not in collection, add it
                     Log.d(TAG, "No such document");
                     currentUser = new User(firebase_id, "Please edit your contact info.");
-                    HashMap<String, String> data = new HashMap<>();
+                    HashMap<String, Object> data = new HashMap<>();
                     data.put("contactInfo", currentUser.getContactInfo());
                     data.put("userId", currentUser.getUid());
+                    data.put("subscriptionList", currentUser.getSubscriptions());
                     db.collection("Users").document(firebase_id).set(data);
                 }
             } else {
