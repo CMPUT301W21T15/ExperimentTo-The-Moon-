@@ -83,6 +83,9 @@ public abstract class Experiment implements Serializable {
     public void addFailure(){
 
     }
+    public int getTrials(){
+        return results.size();
+    }
 
     public String getType() { return this.type; }
 
