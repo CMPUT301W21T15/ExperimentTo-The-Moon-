@@ -28,6 +28,7 @@ import java.util.GregorianCalendar;
 public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener{
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
+    private String user;
     Statistics stats;
 
     @Override
@@ -37,6 +38,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         Intent intent = getIntent();
         experiment = (Count) intent.getSerializableExtra("Experiment");
+        user=(String) intent.getSerializableExtra("User");
         setContentView(R.layout.activity_experiment);
 
         EditText experimentDescription = findViewById(R.id.edit_experiment_description_editText);
@@ -79,7 +81,8 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         QandA.setOnClickListener(view -> {
             Intent q_and_a=new Intent(this, QAndA.class);
-            //intent.putExtra("City",cityAdapter.getItem(position).toString());
+            q_and_a.putExtra("UserId",user);
+            q_and_a.putExtra("Name",experiment.getName());
             startActivity(q_and_a);
         });
 

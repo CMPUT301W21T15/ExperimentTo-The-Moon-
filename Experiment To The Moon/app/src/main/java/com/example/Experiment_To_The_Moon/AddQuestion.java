@@ -16,8 +16,12 @@ import androidx.fragment.app.DialogFragment;
 public class AddQuestion extends DialogFragment {
 
     private EditText Body;
-    private EditText UserID;
     private OnFragmentInteractionListener listener;
+    private String user;
+
+    public AddQuestion(String user) {
+        this.user = user;
+    }
 
     public interface OnFragmentInteractionListener{
         void onOkPressed(Post newPosts);
@@ -38,7 +42,6 @@ public class AddQuestion extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.qanda_add,null);
-        UserID= view.findViewById(R.id.userID);
         Body= view.findViewById(R.id.body);
 
 
@@ -50,10 +53,10 @@ public class AddQuestion extends DialogFragment {
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String p_id= "ID"+UserID.getText().toString();
+
                         String body= Body.getText().toString();
 
-                        listener.onOkPressed(new Post(p_id,body,true));
+                        listener.onOkPressed(new Post(user,body,true));
 
 
 

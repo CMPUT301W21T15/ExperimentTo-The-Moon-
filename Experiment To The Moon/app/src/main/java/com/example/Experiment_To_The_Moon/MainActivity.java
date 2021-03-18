@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     private void updateExperiment(int position) {
         Intent intent = new Intent(this, ExperimentActivity.class);
         intent.putExtra("Experiment", experimentDataList.get(position));
+        intent.putExtra("User",firebase_id);
         experimentPosition = position;
         startActivityForResult(intent, 101);
     }

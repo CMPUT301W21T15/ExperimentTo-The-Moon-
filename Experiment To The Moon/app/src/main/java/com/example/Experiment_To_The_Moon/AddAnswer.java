@@ -15,17 +15,16 @@ import androidx.fragment.app.DialogFragment;
 
 public class AddAnswer extends DialogFragment {
     private EditText Body;
-    private EditText UserID;
     private AddAnswer.OnFragmentInteractionListener listener;
     private int parent_pos;
+    private String user;
 
-    public AddAnswer(int position) {
+    public AddAnswer(int position, String user) {
+
         this.parent_pos=position;
+        this.user=user;
     }
 
-//    public AddAnswer(String userID) {
-//
-//    }
 
     public interface OnFragmentInteractionListener{
         void onOkPressedAdd(Post newPosts);
@@ -46,7 +45,6 @@ public class AddAnswer extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.qanda_add,null);
-        UserID= view.findViewById(R.id.userID);
         Body= view.findViewById(R.id.body);
 
 
@@ -59,10 +57,9 @@ public class AddAnswer extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        String p_id= "ID"+UserID.getText().toString();
                         String body= Body.getText().toString();
 
-                        listener.onOkPressedAdd(new Post(p_id,body,false,parent_pos));
+                        listener.onOkPressedAdd(new Post(user,body,false,parent_pos));
 
 
                     }
