@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -22,13 +23,21 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.logging.Logger;
 
-public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener{
+public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, addTrialFragment.DialogListener{
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
     Statistics stats;
+    private static String ExpType ="Test";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +61,8 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         summary.setText(experiment.getSummary());
 
         Button QandA=findViewById(R.id.questions_button);
+
+        Button participate= findViewById(R.id.participate_button);
 
         stats = new Statistics(experiment);
         Button statsButton = findViewById(R.id.statistics_button);
@@ -81,6 +92,13 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             Intent q_and_a=new Intent(this, QAndA.class);
             //intent.putExtra("City",cityAdapter.getItem(position).toString());
             startActivity(q_and_a);
+        });
+
+        participate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new addTrialFragment().show(getSupportFragmentManager(),"AddTrial");
+            }
         });
 
         experimentDescription.setOnEditorActionListener((v, actionId, event) -> {
@@ -118,5 +136,40 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     @Override
     public void onHistogramPressed(Experiment currentExperiment) {
 
+    }
+    @Override
+    public void onSubmitPress(String id, String count, String measurement, String NonNegInt, String BiNomial){
+        Trial newTrial;
+        int total=experiment.getTrials();
+        String name=experiment.getName();
+        String tempString="Experiments/";
+        tempString=tempString+name;
+        DocumentReference dataBase= FirebaseFirestore.getInstance().document(tempString);
+        dataBase.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()) {
+                    ExpType = documentSnapshot.getString("type");
+                }
+            }
+        });
+        if(ExpType.equals("Count")){
+            newTrial= new Trial(count,id,ExpType,name);
+            newTrial.updateDatabase(total);
+        }else {
+        if(ExpType.equals("NonNegInt")){
+            newTrial= new Trial(NonNegInt,id,ExpType,name);
+            newTrial.updateDatabase(total);
+        }else{
+        if(ExpType.equals("Measurement")){
+            newTrial= new Trial(measurement,id,ExpType,name);
+            newTrial.updateDatabase(total);
+        }else{
+        if(ExpType.equals("Binomial")){
+            newTrial= new Trial(BiNomial,id,ExpType,name);
+            newTrial.updateDatabase(total);
+        }else{newTrial= new Trial("","","", "");}
+        }}}
+        experiment.addResult(newTrial);
     }
 }
