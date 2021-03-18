@@ -5,8 +5,7 @@ import java.util.ArrayList;
 
 public abstract class Experiment implements Serializable {
     // the Experiment class represents an experiment within the program's collection of experiments
-
-    private int owner;
+    public String owner;
     public String name;
     public String description;
     public String region;
@@ -89,6 +88,11 @@ public abstract class Experiment implements Serializable {
 
     public String getType() { return this.type; }
 
+    public String getOwner() {
+        return owner;
+    }
 
-
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 }

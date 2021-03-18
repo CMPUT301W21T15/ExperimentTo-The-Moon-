@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, addTrialFragment.DialogListener{
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
+    private User currentUser;
     private String type;
     Statistics stats;
     private static String ExpType ="Test";
@@ -46,6 +47,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         Intent intent = getIntent();
 
         type = (String) intent.getSerializableExtra("type");  //  type of the experiment
+        currentUser = (User) intent.getSerializableExtra("User"); // current user
 
         // cast the experiment to it's proper type.
         if (type.equals("Count")) {
@@ -63,6 +65,14 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         EditText experimentDescription = findViewById(R.id.edit_experiment_description_editText);
         experimentDescription.setText(experiment.getDescription());
 
+        TextView ownerStatus = findViewById(R.id.owner_status);
+        if (experiment.getOwner().equals(currentUser.getUid())) {
+            ownerStatus.setText("This experiment belongs to me!");
+        } else ownerStatus.setText("This experiment is not mine :(");
+
+
+        /* Code from old assignment that is not needed
+
         Button successButton = findViewById(R.id.successButton);
         successButton.setText(String.valueOf(experiment.getSuccesses()));
 
@@ -71,22 +81,6 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         TextView summary = findViewById(R.id.experiment_summary);
         summary.setText(experiment.getSummary());
-
-        Button QandA=findViewById(R.id.questions_button);
-
-        Button participate= findViewById(R.id.participate_button);
-
-        stats = new Statistics(experiment);
-        Button statsButton = findViewById(R.id.statistics_button);
-        statsButton.setOnClickListener(view ->
-                new StatisticsFragment(stats).show(getSupportFragmentManager(), "Statistics"));
-
-        /*  An experiment as a whole does not have a date
-        experimentDate.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
-            Date calendarTime = new GregorianCalendar(year, month, dayOfMonth).getTime(); // getting another calendar with the new time
-            experiment.setDate(calendarTime.getTime()); // converting to milliseconds
-        });
-        */
 
         successButton.setOnClickListener(view -> {
             experiment.addSuccess();
@@ -99,6 +93,20 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             failureButton.setText(String.valueOf(experiment.getFailures()));
             summary.setText(experiment.getSummary());
         });
+
+        //  An experiment as a whole does not have a date
+        experimentDate.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
+            Date calendarTime = new GregorianCalendar(year, month, dayOfMonth).getTime(); // getting another calendar with the new time
+            experiment.setDate(calendarTime.getTime()); // converting to milliseconds
+        */
+        Button QandA=findViewById(R.id.questions_button);
+
+        Button participate= findViewById(R.id.participate_button);
+
+        stats = new Statistics(experiment);
+        Button statsButton = findViewById(R.id.statistics_button);
+        statsButton.setOnClickListener(view ->
+                new StatisticsFragment(stats).show(getSupportFragmentManager(), "Statistics"));
 
         QandA.setOnClickListener(view -> {
             Intent q_and_a=new Intent(this, QAndA.class);
