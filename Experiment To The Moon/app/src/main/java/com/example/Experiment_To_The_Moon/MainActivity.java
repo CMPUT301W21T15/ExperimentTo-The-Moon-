@@ -27,7 +27,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.installations.FirebaseInstallations;
+import com.google.protobuf.NullValue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -128,15 +130,17 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                     String min_trials = (String) doc.getData().get("min_trials");
                     String type = (String) doc.getData().get("type");
                     // add the experiments from the db to experimentDataList as actual experiment objects.
-                    if (type.equals("Count")) {
-                        experimentDataList.add(new Count(name, owner, description, region, min_trials, false));
-                    } else if (type.equals("Binomial")) {
-                        experimentDataList.add(new Binomial(name, owner, description, region, min_trials, false));
-                    } else if (type.equals("Measurement")) {
-                        experimentDataList.add(new Measurement(name, owner, description, region, min_trials, false));
-                    } else if (type.equals("NonNegInt")) {
-                        experimentDataList.add(new NonNegInt(name, owner, description, region, min_trials, false));
-                    }
+                    try {
+                        if (type.equals("Count")) {
+                            experimentDataList.add(new Count(name, owner, description, region, min_trials, false));
+                        } else if (type.equals("Binomial")) {
+                            experimentDataList.add(new Binomial(name, owner, description, region, min_trials, false));
+                        } else if (type.equals("Measurement")) {
+                            experimentDataList.add(new Measurement(name, owner, description, region, min_trials, false));
+                        } else if (type.equals("NonNegInt")) {
+                            experimentDataList.add(new NonNegInt(name, owner, description, region, min_trials, false));
+                        }
+                    } catch (NullPointerException a) {Log.d(TAG, "Incompatible experiment in DB"); } // just ignore it
                 }
                 experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
             }
@@ -162,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         // Create the new experiment document, and add the data.
         experimentsCollection
                 .document(experiment.getName())
-                .set(data)
+                .set(data, SetOptions.merge()) // merging to not overwrite things accidentally
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

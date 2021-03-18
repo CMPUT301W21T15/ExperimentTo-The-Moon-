@@ -49,8 +49,11 @@ public abstract class Experiment implements Serializable {
     public String getDescription() {
         return this.description;
     }
+
     public void setDescription(String description) {
-        this.description = description + "\n";
+        if (description.endsWith("\n")) this.description = description;
+        else this.description = description + "\n";
+        // formatting to make experiment list display nicely
     }
 
     public String getName() { return this.name; }

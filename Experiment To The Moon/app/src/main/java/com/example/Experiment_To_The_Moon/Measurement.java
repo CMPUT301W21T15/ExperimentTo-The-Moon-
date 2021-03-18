@@ -8,7 +8,7 @@ public class Measurement extends Experiment {
     public Measurement(String name, String owner, String description, String region, String min_trials, boolean geo_location ) {
         this.name = name;
         this.owner = owner;
-        this.description = description;
+        this.setDescription(description);
         this.region = region;
         this.minTrials = min_trials;
         this.isEnd = false;
