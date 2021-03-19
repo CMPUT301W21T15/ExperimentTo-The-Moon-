@@ -113,6 +113,13 @@
             android:layout_height="wrap_content"
             android:text="@string/delete" />
 
+        <CheckBox
+            android:id="@+id/subscribe_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onCheckboxClicked"
+            android:text="@string/subscribe" />
+
     </LinearLayout>
 
     <LinearLayout

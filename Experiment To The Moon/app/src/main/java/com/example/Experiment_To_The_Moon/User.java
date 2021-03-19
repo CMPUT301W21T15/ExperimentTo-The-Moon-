@@ -9,7 +9,7 @@ public class User implements Serializable {
 
     private String uid;
     private String contactInfo;
-    private ArrayList<String> subscriptions; // This is a list of names of experiments subbed to
+    private ArrayList<String> subscriptions = new ArrayList<>(); // This is a list of names of experiments subbed to
 
     public User(String uid, String contactInfo) {
         this.uid = uid;
@@ -33,12 +33,18 @@ public class User implements Serializable {
     }
 
     public void setSubscriptions(ArrayList<String> subscriptions) {
-        this.subscriptions = subscriptions;
+        this.subscriptions = (ArrayList<String>) subscriptions.clone();
     }
 
-    public void addSubscription(Experiment experimentToAdd) {
+    public void addSubscription(String name) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        this.subscriptions.add(experimentToAdd.getName());
+        this.subscriptions.add(name);
+        db.collection("Users").document(getUid()).update("subscriptionList", getSubscriptions());
+    }
+
+    public void removeSubscription(String name) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        this.subscriptions.remove(name);
         db.collection("Users").document(getUid()).update("subscriptionList", getSubscriptions());
     }
 }
