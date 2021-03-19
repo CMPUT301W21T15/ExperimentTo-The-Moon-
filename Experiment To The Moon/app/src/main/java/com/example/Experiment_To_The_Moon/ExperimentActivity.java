@@ -69,6 +69,9 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         }
 
         setContentView(R.layout.activity_experiment);
+        // back button for top corner of the screen
+        // makes you a new user whenever you click it, so cannot use this yet
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextView experimentName = findViewById(R.id.experiment_activity_experiment_name);
         experimentName.setText(experiment.getName());

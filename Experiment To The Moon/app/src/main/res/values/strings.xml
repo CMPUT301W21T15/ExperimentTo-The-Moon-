@@ -3,6 +3,8 @@
     <string name="add_experiment">Add Experiment</string>
     <string name="date">Date</string>
     <string name="name">Name</string>
+    <string name="owner">Owner</string>
+    <string name="status">Status</string>
     <string name="description">Description</string>
     <string name="experiment_date">Experiment date</string>
     <string name="experiment_description">Experiment description</string>
@@ -10,6 +12,7 @@
     <string name="button">Button</string>
     <string name="successes">successes</string>
     <string name="title_activity_display_user_profile">DisplayUserProfile</string>
+    <string name="subscribe">Subscribe</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

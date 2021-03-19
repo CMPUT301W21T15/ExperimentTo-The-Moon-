@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     private String TAG = "Sample";
     private User currentUser;
     private String firebase_id; // the device's unique id
+    public static final String EXTRA_MESSAGE = "com.example.Experiment_To_The_Moon.MESSAGE";
 
 
     @Override
@@ -116,6 +118,10 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
             return true;
         });
 
+        // click on the "GO" button to search
+        Button searchButton = findViewById(R.id.search_button);
+        searchButton.setOnClickListener(v -> search(v));
+
         CollectionReference collectionReference = db.collection("Experiments");
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -185,6 +191,10 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 });
     }
 
+    private void addSubscriptionToFirebase(){
+
+    }
+
     private void deleteFirebase(Experiment experiment) {
         // get the firestore database
         db = FirebaseFirestore.getInstance();
@@ -235,6 +245,15 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 currentUser = (User) data.getSerializableExtra("currentUser"); // updates current user
             }
         }
+    }
+
+    public void search(View view){
+        EditText searchTerm = (EditText) findViewById(R.id.home_search_bar);
+        String searchKey = searchTerm.getText().toString();
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, searchKey);
+        intent.putExtra("User", currentUser);
+        startActivity(intent);
     }
 
 }
