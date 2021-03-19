@@ -1,8 +1,16 @@
 package com.example.Experiment_To_The_Moon;
 
+import android.util.Log;
+
+import androidx.annotation.Nullable;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -29,6 +37,7 @@ public class Trial implements Serializable {
     // used to hold data if the type is a non negative integer or a count
     private int Counting;
     private Boolean outcome;  // true represents success and false represents failure
+    private int tempInt=0;
     // cannot modify individual trials
 
     //Outcome is a String that contains the data for the experiment. If it is a pass it contains the string True if it is a fail it contains the string "Fail"
@@ -134,6 +143,35 @@ public class Trial implements Serializable {
                 .document(Integer.toString(total))
                 .set(data);
 
+    }
+
+    //Takes in a String that is a user ID and checks if they are in the blacklist for that experiment
+    // Of they are in the Blacklist returns True otherwise returns false
+
+    public Boolean checkBan(String id){
+        boolean inList=false;
+        String tempString="Experiments/";
+        tempString=tempString+Name;
+        String tempString2="/Blacklist/";
+        tempString=tempString+tempString2;
+        CollectionReference dataBase= FirebaseFirestore.getInstance().collection(tempString);
+        dataBase.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                // clear the old list
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    String temp = doc.getId();
+                    if(temp.equals(id)){tempInt=1;}
+                }
+            }
+
+        });
+        if(tempInt==1){
+            inList=true;
+            tempInt=0;
+
+        }
+        return false;
     }
 
 }
