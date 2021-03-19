@@ -54,6 +54,11 @@
     <string name="binomialTrial">Binomial Trial</string>
     <string name="Measurement">Measurement</string>
     <string name="add">Add</string>
+    <string name="unpublish">unpublish</string>
+    <string name="blacklist">blacklist</string>
+    <string name="view_all_trials">view all trials</string>
+    <string name="delete">delete</string>
+    />
 
     <string-array name="spinner_trial_types">
         <item>Non-Neg Integer</item>

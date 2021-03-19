@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -26,7 +27,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.installations.FirebaseInstallations;
+import com.google.protobuf.NullValue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -88,8 +91,15 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         experimentList.setAdapter(experimentAdapter);
 
         Button addExperimentButton = findViewById(R.id.home_add_exp_button);
-        addExperimentButton.setOnClickListener(view ->
-                new AddExperimentFragment().show(getSupportFragmentManager(), "ADD_EXPERIMENT"));
+
+        addExperimentButton.setOnClickListener((View view) -> {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("Owner", currentUser);
+            AddExperimentFragment add_experiment = new AddExperimentFragment();
+            add_experiment.setArguments(bundle);
+            // passing owner to fragment in a bundle
+            add_experiment.show(getSupportFragmentManager(), "ADD_EXPERIMENT");
+        });
 
         // click an experiment to participate/view.
         experimentList.setOnItemClickListener((parent, view, position, id) -> {
@@ -112,49 +122,52 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 // clear the old list
                 experimentDataList.clear();
-                for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     String name = doc.getId();
+                    String owner = (String) doc.getData().get("owner");
                     String description = (String) doc.getData().get("description");
+                    String is_end = (String) doc.getData().get("isEnd");
                     String region = (String) doc.getData().get("region");
                     String min_trials = (String) doc.getData().get("min_trials");
                     String type = (String) doc.getData().get("type");
                     // add the experiments from the db to experimentDataList as actual experiment objects.
-                    if (type.equals("Count")) {
-                        experimentDataList.add(new Count(name, description, region, min_trials, false));
-                    } else if (type.equals("Binomial")) {
-                        experimentDataList.add(new Binomial(name, description, region, min_trials, false));
-                    } else if (type.equals("Measurement")) {
-                        experimentDataList.add(new Measurement(name, description, region, min_trials, false));
-                    } else if (type.equals("NonNegInt")) {
-                        experimentDataList.add(new NonNegInt(name, description, region, min_trials, false));
-                    }
+                    try {
+                        if (type.equals("Count")) {
+                            experimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, false));
+                        } else if (type.equals("Binomial")) {
+                            experimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, false));
+                        } else if (type.equals("Measurement")) {
+                            experimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, false));
+                        } else if (type.equals("NonNegInt")) {
+                            experimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, false));
+                        }
+                    } catch (NullPointerException a) {Log.d(TAG, "Incompatible experiment in DB"); } // just ignore it
                 }
                 experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
             }
         });
     }
 
-    @Override
-    public void onOkPressed(Experiment newExperiment) {  // adding a new experiment
-        experimentAdapter.add(newExperiment);
+    private void syncFirebase(Experiment experiment) {
 
         // get the firestore database
         db = FirebaseFirestore.getInstance();
         final CollectionReference experimentsCollection = db.collection("Experiments");
         HashMap<String, String> data = new HashMap<>();
 
-        //  add new experiment info to hashmap. For now, everything is a string.
-        data.put("description", newExperiment.getDescription());
-        data.put("region", newExperiment.getRegion());
-        data.put("min_trials", String.valueOf(newExperiment.getMinTrials()));
-        data.put("isEnd", String.valueOf(newExperiment.getIsEnd()));
-        data.put("isPublished", String.valueOf(newExperiment.getIsPublished()));
-        data.put("type", newExperiment.getType());
+        //  add experiment info to hashmap. For now, everything is a string.
+        data.put("owner", experiment.getOwner());
+        data.put("description", experiment.getDescription());
+        data.put("region", experiment.getRegion());
+        data.put("min_trials", String.valueOf(experiment.getMinTrials()));
+        data.put("isEnd", String.valueOf(experiment.getIsEnd()));
+        data.put("isPublished", String.valueOf(experiment.getIsPublished()));
+        data.put("type", experiment.getType());
 
         // Create the new experiment document, and add the data.
         experimentsCollection
-                .document(newExperiment.getName())
-                .set(data)
+                .document(experiment.getName())
+                .set(data, SetOptions.merge()) // merging to not overwrite things accidentally
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -172,10 +185,25 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 });
     }
 
+    private void deleteFirebase(Experiment experiment) {
+        // get the firestore database
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference experimentsCollection = db.collection("Experiments");
+        experimentsCollection.document(experiment.getName()).delete();  // name is UID for now
+    }
+
+
+    @Override
+    public void onOkPressed(Experiment newExperiment) {  // adding a new experiment
+        experimentAdapter.add(newExperiment);
+        syncFirebase(newExperiment);
+    }
+
     private void updateExperiment(int position) {
         Intent intent = new Intent(this, ExperimentActivity.class);
         intent.putExtra("Experiment", experimentDataList.get(position));  // pass in the experiment object
         intent.putExtra("type", experimentDataList.get(position).getType());  // pass in the type of experiment
+        intent.putExtra("User", currentUser);
         experimentPosition = position;
         startActivityForResult(intent, 101);
     }
@@ -191,10 +219,15 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101) {
-            if(resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
                 Experiment experiment = (Experiment) data.getSerializableExtra("Experiment");
-                onOkPressed(experiment); // quick hack to get it working because Mark is too lazy to write a new method
+                syncFirebase(experiment);
                 experimentAdapter.notifyDataSetChanged(); // update adapter
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                Experiment experiment = (Experiment) data.getSerializableExtra("Experiment");
+                deleteFirebase(experiment);
+                experimentAdapter.notifyDataSetChanged();
             }
         }
         if (requestCode == 102) {

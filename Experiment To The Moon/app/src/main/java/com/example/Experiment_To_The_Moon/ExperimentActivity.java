@@ -29,6 +29,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import org.w3c.dom.Text;
+
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.logging.Logger;
@@ -36,9 +38,10 @@ import java.util.logging.Logger;
 public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, addTrialFragment.DialogListener{
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
+    private User currentUser;
     private String type;
     Statistics stats;
-    private static String ExpType ="Test";
+    private static String ExpType ="Test";  // we have two variables with the same function
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,8 +49,9 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         Intent intent = getIntent();
 
         type = (String) intent.getSerializableExtra("type");  //  type of the experiment
+        currentUser = (User) intent.getSerializableExtra("User"); // current user
 
-        // cast the experiment to it's proper type.
+        // cast the experiment to its proper type.
         if (type.equals("Count")) {
             experiment = (Count) intent.getSerializableExtra("Experiment");
         } else if (type.equals("Binomial")) {
@@ -60,45 +64,88 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         setContentView(R.layout.activity_experiment);
 
-        EditText experimentDescription = findViewById(R.id.edit_experiment_description_editText);
+        TextView experimentName = findViewById(R.id.experiment_activity_experiment_name);
+        experimentName.setText(experiment.getName());
+
+        TextView ownerID = findViewById(R.id.experiment_activity_owner_id);
+        ownerID.setText(experiment.getOwner());
+
+        TextView experimentType = findViewById(R.id.experiment_activity_experiment_type);
+        experimentType.setText(experiment.getType());
+
+        EditText experimentDescription = findViewById(R.id.experiment_activity_description_editText);
         experimentDescription.setText(experiment.getDescription());
 
-        Button successButton = findViewById(R.id.successButton);
-        successButton.setText(String.valueOf(experiment.getSuccesses()));
+        TextView minTrials = findViewById(R.id.experiment_activity_min_trials);
+        minTrials.setText("Min trials: " + experiment.getMinTrials());
 
-        Button failureButton = findViewById(R.id.failureButton);
-        failureButton.setText(String.valueOf(experiment.getFailures()));
+        TextView status = findViewById(R.id.experiment_activity_status);
+        if (experiment.getIsEnd()) {
+            status.setText("Experiment is over");
+        }
+        else status.setText("Experiment is not over");
 
-        TextView summary = findViewById(R.id.experiment_summary);
-        summary.setText(experiment.getSummary());
+        TextView region = findViewById(R.id.experiment_activity_region);
+        region.setText(experiment.getRegion());
+
+        TextView totalTrials = findViewById(R.id.experiment_activity_total_trials);
+        totalTrials.setText("Total trials: " + experiment.getTrials());
+
+        TextView mostUsefulStat = findViewById(R.id.experiment_activity_most_useful_stat);
+        mostUsefulStat.setText("something goes here idk");
+
+        Button delete = findViewById(R.id.delete_button);
+
+        Button unpublish = findViewById(R.id.unpublish_button);
+        Button blacklist = findViewById(R.id.blacklist_button);
+        Button viewAllTrials = findViewById(R.id.view_all_trials_button);
+
+        if (!currentUser.getUid().equals(experiment.getOwner())) {
+            // make delete button invisible if the current user is not the owner of the experiment
+            delete.setVisibility(View.INVISIBLE);
+            // make the top row of buttons invisible if the current user is not the owner of the experiment
+            unpublish.setVisibility(View.INVISIBLE);
+            blacklist.setVisibility(View.INVISIBLE);
+            viewAllTrials.setVisibility(View.INVISIBLE);
+        }
+
+        delete.setOnClickListener(view -> {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("Experiment", experiment);
+            setResult(Activity.RESULT_CANCELED, returnIntent);
+            finish();  // deleting the experiment
+        });
 
         Button QandA=findViewById(R.id.questions_button);
 
         Button participate= findViewById(R.id.participate_button);
+        // reusing code for now, make a proper method later
+        if (experiment.getIsEnd()) {
+            unpublish.setText("publish");
+            participate.setVisibility(View.INVISIBLE);
+        }
+        else {
+            unpublish.setText("unpublish");
+            participate.setVisibility(View.VISIBLE);
+        }
+
+        unpublish.setOnClickListener(view -> {
+            // what's the difference between toggling end and unpublishing the experiment?
+            experiment.toggleEnd();
+            if (experiment.getIsEnd()) {
+                unpublish.setText("publish");
+                participate.setVisibility(View.INVISIBLE);
+            }
+            else {
+                unpublish.setText("unpublish");
+                participate.setVisibility(View.VISIBLE);
+            }
+        });
 
         stats = new Statistics(experiment);
         Button statsButton = findViewById(R.id.statistics_button);
         statsButton.setOnClickListener(view ->
                 new StatisticsFragment(stats).show(getSupportFragmentManager(), "Statistics"));
-
-        /*  An experiment as a whole does not have a date
-        experimentDate.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
-            Date calendarTime = new GregorianCalendar(year, month, dayOfMonth).getTime(); // getting another calendar with the new time
-            experiment.setDate(calendarTime.getTime()); // converting to milliseconds
-        });
-        */
-
-        successButton.setOnClickListener(view -> {
-            experiment.addSuccess();
-            successButton.setText(String.valueOf(experiment.getSuccesses()));
-            summary.setText(experiment.getSummary());
-        });
-
-        failureButton.setOnClickListener(view -> {
-            experiment.addFailure();
-            failureButton.setText(String.valueOf(experiment.getFailures()));
-            summary.setText(experiment.getSummary());
-        });
 
         QandA.setOnClickListener(view -> {
             Intent q_and_a=new Intent(this, QAndA.class);
