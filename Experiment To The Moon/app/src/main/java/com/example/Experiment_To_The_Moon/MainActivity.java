@@ -126,19 +126,20 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                     String name = doc.getId();
                     String owner = (String) doc.getData().get("owner");
                     String description = (String) doc.getData().get("description");
+                    String is_end = (String) doc.getData().get("isEnd");
                     String region = (String) doc.getData().get("region");
                     String min_trials = (String) doc.getData().get("min_trials");
                     String type = (String) doc.getData().get("type");
                     // add the experiments from the db to experimentDataList as actual experiment objects.
                     try {
                         if (type.equals("Count")) {
-                            experimentDataList.add(new Count(name, owner, description, region, min_trials, false));
+                            experimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, false));
                         } else if (type.equals("Binomial")) {
-                            experimentDataList.add(new Binomial(name, owner, description, region, min_trials, false));
+                            experimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, false));
                         } else if (type.equals("Measurement")) {
-                            experimentDataList.add(new Measurement(name, owner, description, region, min_trials, false));
+                            experimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, false));
                         } else if (type.equals("NonNegInt")) {
-                            experimentDataList.add(new NonNegInt(name, owner, description, region, min_trials, false));
+                            experimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, false));
                         }
                     } catch (NullPointerException a) {Log.d(TAG, "Incompatible experiment in DB"); } // just ignore it
                 }
@@ -184,6 +185,13 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 });
     }
 
+    private void deleteFirebase(Experiment experiment) {
+        // get the firestore database
+        db = FirebaseFirestore.getInstance();
+        final CollectionReference experimentsCollection = db.collection("Experiments");
+        experimentsCollection.document(experiment.getName()).delete();  // name is UID for now
+    }
+
 
     @Override
     public void onOkPressed(Experiment newExperiment) {  // adding a new experiment
@@ -215,6 +223,11 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 Experiment experiment = (Experiment) data.getSerializableExtra("Experiment");
                 syncFirebase(experiment);
                 experimentAdapter.notifyDataSetChanged(); // update adapter
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                Experiment experiment = (Experiment) data.getSerializableExtra("Experiment");
+                deleteFirebase(experiment);
+                experimentAdapter.notifyDataSetChanged();
             }
         }
         if (requestCode == 102) {

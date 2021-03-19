@@ -5,87 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Not needed, delete later
-    <CalendarView
-        android:id="@+id/edit_experiment_date_calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    -->
 
-    <!-- Not needed, delete later
-    <LinearLayout
-        android:id="@+id/horizontal_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_experiment_description_editText">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/failure_textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/failures"
-                android:textAlignment="center" />
-
-            <Button
-                android:id="@+id/failureButton"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:insetLeft="4dp"
-                android:insetRight="2dp"
-                android:textSize="50sp"
-                android:backgroundTint="@android:color/holo_red_dark" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/success_textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/successes"
-                android:textAlignment="center" />
-
-            <Button
-                android:id="@+id/successButton"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:insetLeft="2dp"
-                android:insetRight="4dp"
-                android:textSize="50sp"
-                android:backgroundTint="@android:color/holo_green_dark" />
-        </LinearLayout>
-    </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/experiment_summary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontal_layout" />
-    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -187,6 +107,12 @@
             android:ems="10"
             app:layout_constraintHorizontal_bias="1.0" />
 
+        <Button
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -195,6 +121,8 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="bottom">
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -209,7 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="unpublish" />
+                android:text="@string/unpublish" />
 
             <Button
                 android:id="@+id/blacklist_button"

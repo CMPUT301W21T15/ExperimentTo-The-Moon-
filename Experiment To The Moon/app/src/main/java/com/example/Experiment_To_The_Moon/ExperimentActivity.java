@@ -80,7 +80,9 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         minTrials.setText("Min trials: " + experiment.getMinTrials());
 
         TextView status = findViewById(R.id.experiment_activity_status);
-        if (experiment.getIsEnd()) status.setText("Experiment is over");
+        if (experiment.getIsEnd()) {
+            status.setText("Experiment is over");
+        }
         else status.setText("Experiment is not over");
 
         TextView region = findViewById(R.id.experiment_activity_region);
@@ -92,20 +94,53 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         TextView mostUsefulStat = findViewById(R.id.experiment_activity_most_useful_stat);
         mostUsefulStat.setText("something goes here idk");
 
+        Button delete = findViewById(R.id.delete_button);
+
         Button unpublish = findViewById(R.id.unpublish_button);
         Button blacklist = findViewById(R.id.blacklist_button);
         Button viewAllTrials = findViewById(R.id.view_all_trials_button);
 
         if (!currentUser.getUid().equals(experiment.getOwner())) {
+            // make delete button invisible if the current user is not the owner of the experiment
+            delete.setVisibility(View.INVISIBLE);
             // make the top row of buttons invisible if the current user is not the owner of the experiment
             unpublish.setVisibility(View.INVISIBLE);
             blacklist.setVisibility(View.INVISIBLE);
             viewAllTrials.setVisibility(View.INVISIBLE);
         }
 
+        delete.setOnClickListener(view -> {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("Experiment", experiment);
+            setResult(Activity.RESULT_CANCELED, returnIntent);
+            finish();  // deleting the experiment
+        });
+
         Button QandA=findViewById(R.id.questions_button);
 
         Button participate= findViewById(R.id.participate_button);
+        // reusing code for now, make a proper method later
+        if (experiment.getIsEnd()) {
+            unpublish.setText("publish");
+            participate.setVisibility(View.INVISIBLE);
+        }
+        else {
+            unpublish.setText("unpublish");
+            participate.setVisibility(View.VISIBLE);
+        }
+
+        unpublish.setOnClickListener(view -> {
+            // what's the difference between toggling end and unpublishing the experiment?
+            experiment.toggleEnd();
+            if (experiment.getIsEnd()) {
+                unpublish.setText("publish");
+                participate.setVisibility(View.INVISIBLE);
+            }
+            else {
+                unpublish.setText("unpublish");
+                participate.setVisibility(View.VISIBLE);
+            }
+        });
 
         stats = new Statistics(experiment);
         Button statsButton = findViewById(R.id.statistics_button);
