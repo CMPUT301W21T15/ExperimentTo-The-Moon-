@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ExperimentActivity"></activity>
-        <activity android:name=".QAndA"></activity>
+        <activity android:name=".Question"></activity>
+        <activity android:name=".Answer"></activity>
     </application>
 
 </manifest>

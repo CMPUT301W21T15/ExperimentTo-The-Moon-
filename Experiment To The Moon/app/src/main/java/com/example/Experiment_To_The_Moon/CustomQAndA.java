@@ -37,30 +37,32 @@ public class CustomQAndA extends ArrayAdapter<Post> {
         }
 
         Post qs= posts.get(position);
-        int parent_position=qs.getParent();
+        String parent_position=qs.getParent();
 
 
         TextView post= view.findViewById(R.id.posts);
         TextView userId=view.findViewById(R.id.user_ID);
         if(qs.isQuestion()){
             userId.setText("("+qs.getUserID()+") ");
-            post.setText(qs.getPost());
+            post.setText("Q. "+qs.getPost());
         }
 
         else {
 
-            if(!posts.get(parent_position).isQuestion()){
-                view.setPadding(100,0,0,0);
-                userId.setText("("+qs.getUserID()+") ");
-                post.setText("@"+posts.get(parent_position).getUserID()+" " + qs.getPost());
-            }
-            else{
-                view.setPadding(100,0,0,0);
+            if(qs.getParent().equals("None")){
+
                 userId.setText("("+qs.getUserID()+") ");
                 post.setText(qs.getPost());
             }
-        }
+            else{
 
+                int parent_post=Integer.parseInt(parent_position);
+                userId.setText("("+qs.getUserID()+") ");
+                post.setText("@"+posts.get(parent_post).getUserID()+" " + qs.getPost());
+            }
+
+
+        }
 
         return view;
     }
