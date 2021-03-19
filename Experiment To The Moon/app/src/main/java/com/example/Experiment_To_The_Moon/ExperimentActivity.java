@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,9 +34,11 @@ import org.w3c.dom.Text;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
-public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, addTrialFragment.DialogListener{
+public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, addTrialFragment.DialogListener, blacklistFragment.blacklistListener{
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
     private String user;
@@ -164,6 +167,13 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             }
         });
 
+        blacklist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new blacklistFragment().show(getSupportFragmentManager(),"Blacklist");
+            }
+        });
+
         experimentDescription.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                     actionId == EditorInfo.IME_ACTION_DONE ||
@@ -218,21 +228,42 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         });
         if(ExpType.equals("Count")){
             newTrial= new Trial(count,id,ExpType,name);
+            if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else {
         if(ExpType.equals("NonNegInt")){
             newTrial= new Trial(NonNegInt,id,ExpType,name);
+            if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else{
         if(ExpType.equals("Measurement")){
             newTrial= new Trial(measurement,id,ExpType,name);
+            if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else{
         if(ExpType.equals("Binomial")){
             newTrial= new Trial(BiNomial,id,ExpType,name);
+            if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else{newTrial= new Trial("","","", "");}
         }}}
         experiment.addResult(newTrial);
+    }
+    @Override
+    public void addBlacklist(String toBan){
+        String tempString="Experiments/";
+        tempString=tempString+experiment.getName();
+        String tempString2="/Blacklist/";
+        tempString=tempString+tempString2;
+        CollectionReference dataBase= FirebaseFirestore.getInstance().collection(tempString);
+        Map<String, Object> data = new HashMap< String, Object>();
+        data.put("UserID", toBan);
+        dataBase
+                .document(toBan)
+                .set(data);
+    }
+    @Override
+    public String getExperimentName(){
+        return experiment.getName();
     }
 }
