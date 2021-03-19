@@ -20,6 +20,7 @@ public class Post {
             UserID = userID;
             Body = body;
             this.isQuestion = isQuestion;
+            this.Parent="None";
 
         }
 
