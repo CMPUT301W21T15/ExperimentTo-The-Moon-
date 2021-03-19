@@ -16,13 +16,11 @@ import java.util.ArrayList;
 public class CustomQAndA extends ArrayAdapter<Post> {
     private ArrayList<Post> posts;
     private Context context;
-    //private int click_position;
 
     public CustomQAndA(Context context, ArrayList<Post> posts) {
         super(context,0, posts);
         this.posts = posts;
         this.context = context;
-        //this.click_position=item_position;
 
     }
 
@@ -48,27 +46,17 @@ public class CustomQAndA extends ArrayAdapter<Post> {
             userId.setText("("+qs.getUserID()+") ");
             post.setText(qs.getPost());
         }
-//        else {
-//
-//            if(posts.get(position-1).isQuestion()){
-//                userId.setText("          ("+qs.getUserID()+") ");
-//                post.setText(qs.getPost());
-//            }
-//            else{
-//                userId.setText("          ("+qs.getUserID()+") ");
-//                post.setText("@"+posts.get(position-1).getUserID()+" " + qs.getPost());
-//            }
-//        }
+
         else {
 
             if(!posts.get(parent_position).isQuestion()){
-                userId.setText("          ("+qs.getUserID()+") ");
+                view.setPadding(100,0,0,0);
+                userId.setText("("+qs.getUserID()+") ");
                 post.setText("@"+posts.get(parent_position).getUserID()+" " + qs.getPost());
             }
             else{
-
-
-                userId.setText("          ("+qs.getUserID()+") ");
+                view.setPadding(100,0,0,0);
+                userId.setText("("+qs.getUserID()+") ");
                 post.setText(qs.getPost());
             }
         }

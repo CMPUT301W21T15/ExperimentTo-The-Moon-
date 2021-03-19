@@ -1,12 +1,12 @@
 package com.example.Experiment_To_The_Moon;
 
 public class Post {
-        //private final String Parent;
+
         private String UserID;
         private String Body;
         boolean isQuestion;
         private int Parent;
-        //private String Parent;
+
 
 
         public Post(String UserID, String body, Boolean isQuestion, int parent) {
@@ -20,7 +20,7 @@ public class Post {
             UserID = userID;
             Body = body;
             this.isQuestion = isQuestion;
-            //this.Parent=;
+
         }
 
         public int getParent() {

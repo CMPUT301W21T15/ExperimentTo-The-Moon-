@@ -38,18 +38,21 @@ import java.util.logging.Logger;
 public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, addTrialFragment.DialogListener{
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
-    private User currentUser;
+    private String user;
+    private User currentUser; // we have two variables with the same function
     private String type;
     Statistics stats;
-    private static String ExpType ="Test";  // we have two variables with the same function
+    private static String ExpType ="Test";  // we have two variables with the same function again
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
+        experiment = (Experiment) intent.getSerializableExtra("Experiment");
 
         type = (String) intent.getSerializableExtra("type");  //  type of the experiment
         currentUser = (User) intent.getSerializableExtra("User"); // current user
+        user = currentUser.getUid(); // QUICKFIX FOR MERGING FIX LATER THIS IS UNNECESSARY
 
         // cast the experiment to its proper type.
         if (type.equals("Count")) {
@@ -149,7 +152,8 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         QandA.setOnClickListener(view -> {
             Intent q_and_a=new Intent(this, QAndA.class);
-            //intent.putExtra("City",cityAdapter.getItem(position).toString());
+            q_and_a.putExtra("UserId",user);
+            q_and_a.putExtra("Name",experiment.getName());
             startActivity(q_and_a);
         });
 
