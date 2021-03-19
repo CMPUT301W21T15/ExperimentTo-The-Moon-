@@ -46,11 +46,30 @@
     <string name="go_back">GO_BACK</string>
     <string name="update">UPDATE</string>
 
+    <!-- Strings used for Trials   -->
+    <string name="results">Enter the Results</string>
+    <string name="enterUserID">Enter your User ID</string>
+    <string name="Count">Count</string>
+    <string name="nonNegativeInt">Non Negative Integer</string>
+    <string name="binomialTrial">Binomial Trial</string>
+    <string name="Measurement">Measurement</string>
+    <string name="add">Add</string>
+    <string name="unpublish">unpublish</string>
+    <string name="blacklist">blacklist</string>
+    <string name="view_all_trials">view all trials</string>
+    <string name="delete">delete</string>
+    />
+
     <string-array name="spinner_trial_types">
         <item>Non-Neg Integer</item>
         <item>Binomial</item>
         <item>Count</item>
         <item>Measurement</item>
+    </string-array>
+
+    <string-array name="spinner_boolean_types">
+        <item>Pass</item>
+        <item>Fail</item>
     </string-array>
 
 </resources>
