@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+// This is a class to represent and create each trial of an experiment.
 
 public class Trial implements Serializable {
     // the Trial class represents a single trial in an experiment
@@ -21,8 +22,11 @@ public class Trial implements Serializable {
     private String  created_by;
     //the location that the trial has taken place
     private String location;
+    //only set if not given a correct type string and used to show that trial contains no valid data
     private Boolean corrupted;
+    // uesed to hold data if type is a measurement
     private double Measurement;
+    // used to hold data if the type is a non negative integer or a count
     private int Counting;
     private Boolean outcome;  // true represents success and false represents failure
     // cannot modify individual trials
@@ -103,6 +107,7 @@ public class Trial implements Serializable {
     public Boolean getBinomialData(){
         return outcome;
     }
+    //Takes in an int that is the number of trials an experiment has then puts the trial into the database
     public void updateDatabase(int total){
         String tempString="Experiments/";
         tempString=tempString+Name;

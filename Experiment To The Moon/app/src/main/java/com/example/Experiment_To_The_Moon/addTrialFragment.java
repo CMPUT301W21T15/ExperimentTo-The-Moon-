@@ -14,12 +14,17 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
+//This class is used for the inner workings of the Participation Fragment so that Trials can be created
 public class addTrialFragment extends DialogFragment{
+    //Text box that holds the UserID
     private EditText id;
+    //Text box that holds a string of the integer for a count experiment
     private EditText count;
+    //Text box that holds a String of the Float for a Measurement experiment
     private EditText measurement;
+    //Text box that holds a string of an int that is used for a non negative int experiment
     private EditText NonNegInt;
+    //Contains the chosen String for a binomial experiment
     private String biNomial;
     private DialogListener listener;
     private Spinner tfSpinner;
@@ -74,7 +79,7 @@ public class addTrialFragment extends DialogFragment{
             throw new ClassCastException(context.toString()+" must implement listener");
         }
     }
-
+    // Input the view that the spinner named spinner is in and it will initialize the spinner with the strings in the array spinner_boolean_types
     private void createSpinner(View view){
         tfSpinner = (Spinner) view.findViewById(R.id.spinner);
         ArrayAdapter<String> trialTypeAdapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.spinner_boolean_types));
