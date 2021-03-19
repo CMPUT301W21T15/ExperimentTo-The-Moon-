@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -102,6 +103,18 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         TextView mostUsefulStat = findViewById(R.id.experiment_activity_most_useful_stat);
         mostUsefulStat.setText("something goes here idk");
+
+        CheckBox subscribed = findViewById(R.id.subscribe_box);
+        // will be checked if user is subbed to experiment
+        if (currentUser.getSubscriptions() != null) {
+            if (currentUser.getSubscriptions().contains(experiment.getName())) {
+                subscribed.setChecked(true);
+            } else {
+                subscribed.setChecked(false);
+            }
+        } else {
+            subscribed.setChecked(false);
+        }
 
         Button delete = findViewById(R.id.delete_button);
 
@@ -192,14 +205,13 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             return false; // pass on to other listeners.
         });
 
-
-
     }
 
     @Override
     public void onBackPressed() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("Experiment", experiment);
+        returnIntent.putExtra("currentUser", currentUser);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
@@ -213,6 +225,16 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     public void onHistogramPressed(Experiment currentExperiment) {
 
     }
+
+    public void onCheckboxClicked(View view) {
+        boolean checked = ((CheckBox) view).isChecked();
+        if (checked) {
+            currentUser.addSubscription(experiment.getName());
+        } else {
+            currentUser.removeSubscription(experiment.getName());
+        }
+    }
+
     @Override
     public void onSubmitPress(String id, String count, String measurement, String NonNegInt, String BiNomial){
         Trial newTrial;

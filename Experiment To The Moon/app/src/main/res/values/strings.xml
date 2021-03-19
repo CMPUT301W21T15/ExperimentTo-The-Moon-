@@ -61,6 +61,7 @@
     <string name="blacklist">blacklist</string>
     <string name="view_all_trials">view all trials</string>
     <string name="delete">delete</string>
+    <string name="subscribe">Subscribe</string>
     />
 
     <string-array name="spinner_trial_types">

@@ -30,7 +30,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.installations.FirebaseInstallations;
-import com.google.protobuf.NullValue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,7 +39,9 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements AddExperimentFragment.OnFragmentInteractionListener, Serializable {
 
     private ArrayAdapter<Experiment> experimentAdapter;
+    private ArrayAdapter<Experiment> subscribedExperimentAdapter;
     private ArrayList<Experiment> experimentDataList;
+    private ArrayList<Experiment> subscribedExperimentDataList;
     private int experimentPosition;  // position of interesting experiment in the ArrayList
     private FirebaseFirestore db;
     private String TAG = "Sample";
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                     ArrayList<String> subs = (ArrayList<String>) document.getData().get("subscriptionList");
                     currentUser = new User(firebase_id, contactInfo);
                     currentUser.setSubscriptions(subs);
+                    updateSubscribedList();
+                    subscribedExperimentAdapter.notifyDataSetChanged();
                 } else {
                     // If device ID is not in collection, add it
                     Log.d(TAG, "No such document");
@@ -80,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                     data.put("userId", currentUser.getUid());
                     data.put("subscriptionList", currentUser.getSubscriptions());
                     db.collection("Users").document(firebase_id).set(data);
+                    updateSubscribedList();
+                    subscribedExperimentAdapter.notifyDataSetChanged();
                 }
             } else {
                 Log.d(TAG, "get failed with ", task.getException());
@@ -87,10 +92,14 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         });
 
         ListView experimentList = findViewById(R.id.home_experiment_list);
+        ListView subscribedExperimentList = findViewById(R.id.subscription_list);
         experimentDataList = new ArrayList<>();
+        subscribedExperimentDataList = new ArrayList<>();
         experimentAdapter = new ExperimentList(this, experimentDataList);
+        subscribedExperimentAdapter = new ExperimentList(this, subscribedExperimentDataList);
 
         experimentList.setAdapter(experimentAdapter);
+        subscribedExperimentList.setAdapter(subscribedExperimentAdapter);
 
         Button addExperimentButton = findViewById(R.id.home_add_exp_button);
 
@@ -105,8 +114,11 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
 
         // click an experiment to participate/view.
         experimentList.setOnItemClickListener((parent, view, position, id) -> {
-            updateExperiment(position);
+            updateExperiment(position, "experimentList");
         });
+
+        // click an experiment to participate/view.
+        subscribedExperimentList.setOnItemClickListener((parent, view, position, id) -> updateExperiment(position, "subscribedExperimentList"));
 
         Button profileButton = findViewById(R.id.home_profile_button);
         profileButton.setOnClickListener(v -> displayProfile());
@@ -152,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
             }
         });
+
     }
 
     private void syncFirebase(Experiment experiment) {
@@ -209,10 +222,15 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         syncFirebase(newExperiment);
     }
 
-    private void updateExperiment(int position) {
+    private void updateExperiment(int position, String passedBy) {
         Intent intent = new Intent(this, ExperimentActivity.class);
-        intent.putExtra("Experiment", experimentDataList.get(position));  // pass in the experiment object
-        intent.putExtra("type", experimentDataList.get(position).getType());  // pass in the type of experiment
+        if (passedBy.equals("experimentList")) {
+            intent.putExtra("Experiment", experimentDataList.get(position));  // pass in the experiment object
+            intent.putExtra("type", experimentDataList.get(position).getType());  // pass in the type of experiment
+        } else if (passedBy.equals("subscribedExperimentList")) {
+            intent.putExtra("Experiment", subscribedExperimentDataList.get(position));  // pass in the experiment object
+            intent.putExtra("type", subscribedExperimentDataList.get(position).getType());  // pass in the type of experiment
+        }
         intent.putExtra("User", currentUser);
         experimentPosition = position;
         startActivityForResult(intent, 101);
@@ -224,6 +242,50 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         startActivityForResult(switchActivityIntent, 102);
     }
 
+    public void updateSubscribedList() {
+        // clear the old list
+        subscribedExperimentDataList.clear();
+        // populate subbed experiments list
+        for (int i = 0; i < currentUser.getSubscriptions().size(); i++) {
+            String subbedExperimentName = currentUser.getSubscriptions().get(i);
+            DocumentReference currentSubbedExperiment = db.collection("Experiments").document(subbedExperimentName);
+            currentSubbedExperiment.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (Objects.requireNonNull(document).exists()) {
+                        // if it exists, get info
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        String name = document.getId();
+                        String owner = (String) document.getData().get("owner");
+                        String description = (String) document.getData().get("description");
+                        String is_end = (String) document.getData().get("isEnd");
+                        String region = (String) document.getData().get("region");
+                        String min_trials = (String) document.getData().get("min_trials");
+                        String type = (String) document.getData().get("type");
+                        switch (type) {
+                            case "Count":
+                                subscribedExperimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, false));
+                                break;
+                            case "Binomial":
+                                subscribedExperimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, false));
+                                break;
+                            case "Measurement":
+                                subscribedExperimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, false));
+                                break;
+                            case "NonNegInt":
+                                subscribedExperimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, false));
+                                break;
+                            default:
+                                break;
+                        }
+                        subscribedExperimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            });
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -233,6 +295,9 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 Experiment experiment = (Experiment) data.getSerializableExtra("Experiment");
                 syncFirebase(experiment);
                 experimentAdapter.notifyDataSetChanged(); // update adapter
+                currentUser = (User) data.getSerializableExtra("currentUser"); // updates current user
+                updateSubscribedList();
+                subscribedExperimentAdapter.notifyDataSetChanged();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 Experiment experiment = (Experiment) data.getSerializableExtra("Experiment");
