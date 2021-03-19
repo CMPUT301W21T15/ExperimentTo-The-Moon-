@@ -36,9 +36,17 @@ public class ExperimentList extends ArrayAdapter<Experiment> {
 
         TextView experimentName = view.findViewById(R.id.experiment_name);
         TextView experimentDescription = view.findViewById(R.id.experiment_description);
+        TextView experimentOwner = view.findViewById(R.id.experiment_owner_username);
+        TextView experimentStatus = view.findViewById(R.id.experiment_status);
 
         experimentName.setText(experiment.getName());
         experimentDescription.setText(experiment.getDescription());
+        experimentOwner.setText(experiment.getOwner());
+        String status = "Ongoing";
+        if(experiment.getIsEnd()){
+            status = "Ended";
+        }
+        experimentStatus.setText(status);
 
         return view;
     }

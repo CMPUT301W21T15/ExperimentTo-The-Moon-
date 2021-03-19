@@ -10,7 +10,7 @@
 
 
     <EditText
-        android:id="@+id/editTextSearch"
+        android:id="@+id/home_search_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
@@ -26,11 +26,12 @@
         android:id="@+id/search_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="search"
         android:text="@string/go"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/subscription_list_tag"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editTextSearch"
+        app:layout_constraintStart_toEndOf="@+id/home_search_bar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -43,7 +44,7 @@
         app:layout_constraintBottom_toTopOf="@id/subscription_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSearch" />
+        app:layout_constraintTop_toBottomOf="@+id/home_search_bar" />
 
     <ListView
         android:id="@+id/subscription_list"
