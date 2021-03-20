@@ -5,11 +5,11 @@ public class Post {
         private String UserID;
         private String Body;
         boolean isQuestion;
-        private int Parent;
+        private String Parent;
 
 
 
-        public Post(String UserID, String body, Boolean isQuestion, int parent) {
+    public Post(String UserID, String body, Boolean isQuestion, String parent) {
             this.UserID = UserID;
             this.Body = body;
             this.isQuestion=isQuestion;
@@ -20,14 +20,16 @@ public class Post {
             UserID = userID;
             Body = body;
             this.isQuestion = isQuestion;
+            this.Parent="None";
 
         }
 
-        public int getParent() {
+
+        public String getParent() {
             return Parent;
         }
 
-        public void setParent(int parent) {
+        public void setParent(String parent) {
             Parent = parent;
         }
 

@@ -16,10 +16,10 @@ import androidx.fragment.app.DialogFragment;
 public class AddAnswer extends DialogFragment {
     private EditText Body;
     private AddAnswer.OnFragmentInteractionListener listener;
-    private int parent_pos;
+    private String parent_pos;
     private String user;
 
-    public AddAnswer(int position, String user) {
+    public AddAnswer(String position, String user) {
 
         this.parent_pos=position;
         this.user=user;
@@ -60,7 +60,6 @@ public class AddAnswer extends DialogFragment {
                         String body= Body.getText().toString();
 
                         listener.onOkPressedAdd(new Post(user,body,false,parent_pos));
-
 
                     }
                 }).create();

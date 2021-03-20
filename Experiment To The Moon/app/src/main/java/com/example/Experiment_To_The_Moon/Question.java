@@ -17,7 +17,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -27,7 +26,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class QAndA extends AppCompatActivity implements AddQuestion.OnFragmentInteractionListener,AddAnswer.OnFragmentInteractionListener{
+//public class QAndA extends AppCompatActivity implements AddQuestion.OnFragmentInteractionListener,AddAnswer.OnFragmentInteractionListener{
+public class Question extends AppCompatActivity implements AddQuestion.OnFragmentInteractionListener{
+
     ListView postList;
     ArrayAdapter<Post> postAdapter;
     ArrayList<Post> expPostsList;
@@ -77,25 +78,26 @@ public class QAndA extends AppCompatActivity implements AddQuestion.OnFragmentIn
                 // clear the old list
                 expPostsList.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
-                    //String UserId = doc.getId();
-                    String UserId = user;
+                    String UserId=(String) doc.getData().get("UserId");
                     String body = (String) doc.getData().get("body");
                     String isQuestion = (String) doc.getData().get("isQuestion");
-                    String parent  = (String) doc.getData().get("parent");
-                    expPostsList.add(new Post(UserId,body,Boolean.valueOf(isQuestion),Integer.parseInt(parent)));// Adding the cities and provinces from FireStore.
-                    //expPostsList.add(new Post(UserId,body,isQuestion,parent));
+                    expPostsList.add(new Post(UserId,body,Boolean.valueOf(isQuestion)));
                 }
                 postAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
             }
         });
 
-        
+
         postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {//add answer on Click
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                item_position=position;
+                item_position=position+1;
 
-                new AddAnswer(position,user).show(getSupportFragmentManager(), "ADD_Answer");
+                Intent answer=new Intent(Question.this, Answer.class);
+                answer.putExtra("Question",item_position);
+                answer.putExtra("UserId",user);
+                answer.putExtra("name",name);
+                startActivity(answer);
 
             }
 
@@ -106,7 +108,7 @@ public class QAndA extends AppCompatActivity implements AddQuestion.OnFragmentIn
 
     @Override
     public void onOkPressed(Post posts){
-        postAdapter.add(posts);
+        //postAdapter.add(posts);
 
         // get the firestore database
         db = FirebaseFirestore.getInstance();
@@ -117,57 +119,12 @@ public class QAndA extends AppCompatActivity implements AddQuestion.OnFragmentIn
         data.put("UserId", posts.getUserID());
         data.put("body", posts.getPost());
         data.put("isQuestion", String.valueOf(posts.isQuestion()));
-        data.put("parent", String.valueOf(posts.getParent()));
 
         number++;
-        String question="P"+number.toString();
+        String question=number.toString();
         // Create the new experiment document, and add the data.
         experimentsCollection
                 .document(question)
-                .set(data)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // These are a method which gets executed when the task is successful.
-                        Log.d(TAG, "Data addition successful");
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // This method gets executed if there is any problem.
-                        Log.d(TAG, "Data addition failed" + e.toString());
-                    }
-                });
-
-
-    }
-
-    @Override
-    public void onOkPressedAdd(Post posts){
-
-        postAdapter.insert(posts,item_position+1);
-
-
-
-        // get the firestore database
-        db = FirebaseFirestore.getInstance();
-        final CollectionReference experimentsCollection = db.collection("Experiments").document(name).collection("QandA");;
-        HashMap<String, String> data = new HashMap<>();
-
-        //  add new experiment info to hashmap. For now, everything is a string.
-        data.put("UserId", posts.getUserID());
-        data.put("body", posts.getPost());
-        data.put("isQuestion", String.valueOf(posts.isQuestion()));
-        data.put("parent", String.valueOf(posts.getParent()));
-
-        number++;
-        String answer="P"+number.toString();
-        // Create the new experiment document, and add the data.
-        experimentsCollection
-
-                .document(answer)
                 .set(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

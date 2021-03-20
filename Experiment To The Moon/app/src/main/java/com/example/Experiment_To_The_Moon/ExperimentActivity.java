@@ -16,13 +16,16 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+
 import android.widget.CalendarView;
 import android.widget.CheckBox;
+
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -40,6 +43,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, addTrialFragment.DialogListener, blacklistFragment.blacklistListener{
+
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
     private String user;
@@ -170,7 +174,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
                 new StatisticsFragment(stats).show(getSupportFragmentManager(), "Statistics"));
 
         QandA.setOnClickListener(view -> {
-            Intent q_and_a=new Intent(this, QAndA.class);
+            Intent q_and_a=new Intent(this, Question.class);
             q_and_a.putExtra("UserId",user);
             q_and_a.putExtra("Name",experiment.getName());
             startActivity(q_and_a);
