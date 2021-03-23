@@ -10,8 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ExperimentToTheMoon"
         tools:ignore="AllowBackup">
-        <activity android:name=".SearchActivity"
-            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".SearchActivity" />
+            <!-- android:parentActivityName=".MainActivity"></activity> -->
         <activity
             android:name=".DisplayUserProfile"
             android:label="@string/title_activity_display_user_profile"
@@ -24,8 +24,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ExperimentActivity"
-            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".ExperimentActivity" />
+            <!--android:parentActivityName=".MainActivity"/> -->
         <activity android:name=".Question"></activity>
         <activity android:name=".Answer"></activity>
 
