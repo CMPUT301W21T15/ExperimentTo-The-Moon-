@@ -172,7 +172,7 @@ public class Trial implements Serializable {
             tempInt=0;
 
         }
-        return false;
+        return inList;
     }
 
 }
