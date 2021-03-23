@@ -67,7 +67,6 @@ public class blacklistFragment extends DialogFragment {
                     Log.d(TAG, temp);
                     idList.add(temp);
                 }
-                Log.d(TAG, idList.get(6));
                 listAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
 
             }
