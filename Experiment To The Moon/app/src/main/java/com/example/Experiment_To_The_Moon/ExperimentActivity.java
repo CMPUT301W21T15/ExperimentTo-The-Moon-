@@ -280,7 +280,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     }
     @Override
     public void addBlacklist(String toBan){
-       if(toBan==null)return;
+       if(TextUtils.isEmpty(toBan)return;
         String tempString="Experiments/";
         tempString=tempString+experiment.getName();
         String tempString2="/Blacklist/";
