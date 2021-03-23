@@ -139,8 +139,9 @@ public class Trial implements Serializable {
         if(Type.equals("Binomial")){
             data.put("data",outcome);
         }
+        tempString=Integer.toString(total);
         dataBase
-                .document(Integer.toString(total))
+                .document(tempString)
                 .set(data);
 
     }
