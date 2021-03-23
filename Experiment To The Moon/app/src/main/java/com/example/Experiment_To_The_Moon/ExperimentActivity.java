@@ -51,7 +51,6 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     private User currentUser; // we have two variables with the same function
     private String type;
     Statistics stats;
-    private static String ExpType ="Test";  // we have two variables with the same function again
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -245,33 +244,27 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         Trial newTrial;
         int total=experiment.getTrials();
         String name=experiment.getName();
-        String tempString="Experiments/";
-        tempString=tempString+name;
-        DocumentReference dataBase= FirebaseFirestore.getInstance().document(tempString);
-        dataBase.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()) {
-                    ExpType = documentSnapshot.getString("type");
-                }
-            }
-        });
+        String ExpType=experiment.getType();
         if(ExpType.equals("Count")){
+            if(TextUtils.isEmpty(count))return;;
             newTrial= new Trial(count,id,ExpType,name);
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else {
         if(ExpType.equals("NonNegInt")){
+            if(TextUtils.isEmpty(NonNegInt))return;;
             newTrial= new Trial(NonNegInt,id,ExpType,name);
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else{
         if(ExpType.equals("Measurement")){
+            if(TextUtils.isEmpty(measurement))return;;
             newTrial= new Trial(measurement,id,ExpType,name);
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else{
         if(ExpType.equals("Binomial")){
+            if(TextUtils.isEmpty(BiNomial))return;;
             newTrial= new Trial(BiNomial,id,ExpType,name);
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);

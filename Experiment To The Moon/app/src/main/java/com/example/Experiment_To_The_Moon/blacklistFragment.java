@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Layout;
 import android.util.Log;
@@ -50,22 +51,19 @@ public class blacklistFragment extends DialogFragment {
         list= view.findViewById((R.id.blacklist_list));
         EXPname=listener.getExperimentName();
         idList= new ArrayList<String>();
-        listAdapter= new ArrayAdapter<>(arraycontext,R.layout.blacklist_layout,idList);
+        listAdapter= new ArrayAdapter<>(getContext(),R.layout.blacklist_layout,idList);
         list.setAdapter(listAdapter);
-        String tempString="Experiments/";
-        tempString=tempString+EXPname;
-        String tempString2="/Blacklist/";
-        tempString=tempString+tempString2;
-        CollectionReference dataBase= FirebaseFirestore.getInstance().collection(tempString);
+       final CollectionReference dataBase= FirebaseFirestore.getInstance().collection("Experiments").document(EXPname).collection("Blacklist");
         dataBase.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                // clear the old list
+
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    if(doc.exists()){
                     Log.d(TAG, "in for loop");
                     String temp = doc.getId();
                     Log.d(TAG, temp);
-                    idList.add(temp);
+                    idList.add(temp);}
                 }
                 listAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
 
