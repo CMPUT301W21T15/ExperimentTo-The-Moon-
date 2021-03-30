@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 //This class is used for the inner workings of the Participation Fragment so that Trials can be created
-public class addTrialFragment extends DialogFragment{
+public class AddTrialFragment extends DialogFragment{
     //Text box that holds the UserID
     private EditText id;
     //Text box that holds a string of the integer for a count experiment

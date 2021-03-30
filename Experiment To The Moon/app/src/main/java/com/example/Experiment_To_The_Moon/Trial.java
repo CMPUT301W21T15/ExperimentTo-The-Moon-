@@ -13,6 +13,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
+import java.security.acl.Owner;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,25 +50,20 @@ public class Trial implements Serializable {
         this.Name=ExpName;
         if(type.equals("Measurement")){
             Measurement=Double.parseDouble(outcome);
-        }
-            else {
-            if (type.equals("NonNegInt")) {
-                Counting=Integer.parseInt(outcome);
+        } else if (type.equals("NonNegInt")) {
+            Counting=Integer.parseInt(outcome);
+        } else if (type.equals("Binomial")) {
+            if(outcome.equals("Pass")) {
+                this.outcome=true;
             }
-                else{
-                    if(type.equals("Binomial")){
-                        if(outcome.equals("Pass"))this.outcome=true;
-                        if(outcome.equals("Fail"))this.outcome=false;
-                    }
-                    else{
-                        if(type.equals("Count")){
-                            Counting=Integer.parseInt(outcome);
-                            if(Counting<0)Counting=0;
-                        }
-                        else{corrupted=true;}
-                    }
+            if(outcome.equals("Fail")) {
+                this.outcome=false;
             }
-        }
+        } else if (type.equals("Count")) {
+            Counting=Integer.parseInt(outcome);
+            if(Counting<0) {Counting=0;}
+        } else{corrupted=true;}
+
         createdOn= new Date();
         created_by=Owner;
         this.Type=type;
@@ -116,6 +112,7 @@ public class Trial implements Serializable {
     public Boolean getBinomialData(){
         return outcome;
     }
+
     //Takes in an int that is the number of trials an experiment has then puts the trial into the database
     public void updateDatabase(int total){
         String tempString="Experiments/";

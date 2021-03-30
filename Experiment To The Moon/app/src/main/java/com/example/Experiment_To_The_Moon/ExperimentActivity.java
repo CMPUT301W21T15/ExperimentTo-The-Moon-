@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 
-import android.widget.CalendarView;
 import android.widget.CheckBox;
 
 import android.widget.EditText;
@@ -28,22 +27,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import org.w3c.dom.Text;
-
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
-public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, addTrialFragment.DialogListener, blacklistFragment.blacklistListener{
+public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, AddTrialFragment.DialogListener, blacklistFragment.blacklistListener{
 
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
@@ -183,7 +173,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         participate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new addTrialFragment().show(getSupportFragmentManager(),"AddTrial");
+                new AddTrialFragment().show(getSupportFragmentManager(),"AddTrial");
             }
         });
 
@@ -193,6 +183,12 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
                 new blacklistFragment().show(getSupportFragmentManager(),"Blacklist");
             }
         });
+
+        // implement view all trials button. opens fragment.
+        String new_name = experiment.getName();
+        viewAllTrials.setOnClickListener(view ->
+            new ViewAllTrialsFragment(new_name).show(getSupportFragmentManager(), "ViewAllTrials"));
+
 
         experimentDescription.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||

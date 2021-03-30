@@ -300,9 +300,11 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 subscribedExperimentAdapter.notifyDataSetChanged();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                Experiment experiment = (Experiment) data.getSerializableExtra("Experiment");
-                deleteFirebase(experiment);
-                experimentAdapter.notifyDataSetChanged();
+                if (data != null) {
+                    Experiment experiment = (Experiment) data.getSerializableExtra("Experiment");
+                    deleteFirebase(experiment);
+                    experimentAdapter.notifyDataSetChanged();
+                }
             }
         }
         if (requestCode == 102) {
