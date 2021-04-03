@@ -26,15 +26,29 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
         setContentView(R.layout.activity_display_user_profile);
 
         Intent switchActivityIntent = getIntent();
-        User currentUser = (User) switchActivityIntent.getSerializableExtra("currentUser"); // get currentUser from MainActivity
+        User currentUser = (User) switchActivityIntent.getSerializableExtra("currentUser"); // get currentUser
+        User lookupUser = (User) switchActivityIntent.getSerializableExtra("lookupUser"); // look at this user's profile
 
         FloatingActionButton profile_back = findViewById(R.id.user_profile_back);
         FloatingActionButton profile_update = findViewById(R.id.user_profile_update);
         TextView userIDTextView = findViewById(R.id.user_id);
         EditText contactInfoEditText = findViewById(R.id.contact_info);
 
-        userIDTextView.setText(currentUser.getUid());
-        contactInfoEditText.setText(currentUser.getContactInfo());
+        userIDTextView.setText(lookupUser.getUid());
+        contactInfoEditText.setText(lookupUser.getContactInfo());
+
+        // if you are not the user, you cannot edit contact info
+        if (currentUser.getUid() != lookupUser.getUid()) {
+            contactInfoEditText.setEnabled(false);
+            contactInfoEditText.setClickable(false);
+            profile_update.setEnabled(false);
+            profile_update.setClickable(false);
+        } else {
+            contactInfoEditText.setEnabled(true);
+            contactInfoEditText.setClickable(true);
+            profile_update.setEnabled(true);
+            profile_update.setClickable(true);
+        }
 
         profile_back.setOnClickListener(view -> {
             switchActivityIntent.putExtra("currentUser", currentUser);
