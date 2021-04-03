@@ -10,14 +10,19 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.installations.FirebaseInstallations;
+
 //This class is used for the inner workings of the Participation Fragment so that Trials can be created
 public class AddTrialFragment extends DialogFragment{
     //Text box that holds the UserID
-    private EditText id;
+    private TextView id;
     //Text box that holds a string of the integer for a count experiment
     private EditText count;
     //Text box that holds a String of the Float for a Measurement experiment
@@ -25,6 +30,7 @@ public class AddTrialFragment extends DialogFragment{
     //Text box that holds a string of an int that is used for a non negative int experiment
     private EditText NonNegInt;
     //Contains the chosen String for a binomial experiment
+    private FirebaseFirestore db;
     private String biNomial;
     private DialogListener listener;
     private Spinner tfSpinner;
@@ -36,6 +42,9 @@ public class AddTrialFragment extends DialogFragment{
         View view = inflater.inflate(R.layout.add_trials_fragment,null);
         createSpinner(view);
         id= view.findViewById(R.id.textInputEditText);
+        String firebase_id = FirebaseInstallations.getInstance().getId().toString(); // this is the firebase ID associated with the unique app installation ID
+        firebase_id = firebase_id.substring(33); // only looking for the 7 digit ID
+        id.setText(firebase_id);
         count= view.findViewById(R.id.textInputEditText2);
         NonNegInt= view.findViewById(R.id.textInputEditText3);
         measurement= view.findViewById(R.id.textInputEditText4);
