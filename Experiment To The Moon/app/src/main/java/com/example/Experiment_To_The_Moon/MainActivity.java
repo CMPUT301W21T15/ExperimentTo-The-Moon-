@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     public void displayProfile() {
         Intent switchActivityIntent = new Intent(this, DisplayUserProfile.class);
         switchActivityIntent.putExtra("currentUser", currentUser);
+        switchActivityIntent.putExtra("lookupUser", currentUser);
         startActivityForResult(switchActivityIntent, 102);
     }
 
