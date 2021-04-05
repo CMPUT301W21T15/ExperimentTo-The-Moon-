@@ -18,11 +18,13 @@ public class AddAnswer extends DialogFragment {
     private AddAnswer.OnFragmentInteractionListener listener;
     private String parent_pos;
     private String user;
+    private int position;
 
-    public AddAnswer(String position, String user) {
+    public AddAnswer(String position, String user,int place) {
 
         this.parent_pos=position;
         this.user=user;
+        this.position=place;
     }
 
 
@@ -59,7 +61,7 @@ public class AddAnswer extends DialogFragment {
 
                         String body= Body.getText().toString();
 
-                        listener.onOkPressedAdd(new Post(user,body,false,parent_pos));
+                        listener.onOkPressedAdd(new Post(user,body,false,parent_pos,position));
 
                     }
                 }).create();
