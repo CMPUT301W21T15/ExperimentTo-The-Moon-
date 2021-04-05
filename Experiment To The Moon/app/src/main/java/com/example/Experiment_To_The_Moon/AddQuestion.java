@@ -18,9 +18,11 @@ public class AddQuestion extends DialogFragment {
     private EditText Body;
     private OnFragmentInteractionListener listener;
     private String user;
+    private Integer position;
 
-    public AddQuestion(String user) {
+    public AddQuestion(String user,Integer position) {
         this.user = user;
+        this.position=position;
     }
 
     public interface OnFragmentInteractionListener{
@@ -56,7 +58,7 @@ public class AddQuestion extends DialogFragment {
 
                         String body= Body.getText().toString();
 
-                        listener.onOkPressed(new Post(user,body,true));
+                        listener.onOkPressed(new Post(user,body,true,position));
 
 
 

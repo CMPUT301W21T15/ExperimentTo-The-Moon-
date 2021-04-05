@@ -58,7 +58,7 @@ public class CustomQAndA extends ArrayAdapter<Post> {
 
                 int parent_post=Integer.parseInt(parent_position);
                 userId.setText("("+qs.getUserID()+") ");
-                post.setText("@"+posts.get(parent_post).getUserID()+" " + qs.getPost());
+                post.setText("@"+posts.get(parent_post-1).getUserID()+" "+ qs.getPost());
             }
 
 
