@@ -10,13 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ExperimentToTheMoon"
         tools:ignore="AllowBackup">
-        <activity android:name=".SearchActivity" />
-            <!-- android:parentActivityName=".MainActivity"></activity> -->
+        <activity
+            android:name=".SearchActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".DisplayUserProfile"
             android:label="@string/title_activity_display_user_profile"
             android:theme="@style/Theme.ExperimentToTheMoon.NoActionBar" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,10 +27,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ExperimentActivity" />
-            <!--android:parentActivityName=".MainActivity"/> -->
-        <activity android:name=".Question"></activity>
-        <activity android:name=".Answer"></activity>
+        <activity
+            android:name=".ExperimentActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".Question" />
+        <activity android:name=".Answer" />
 
     </application>
 

@@ -123,13 +123,6 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         Button profileButton = findViewById(R.id.home_profile_button);
         profileButton.setOnClickListener(v -> displayProfile());
 
-        // long click an experiment to delete
-        experimentList.setOnItemLongClickListener((parent, view, position, id) -> {
-            experimentDataList.remove(position);  // removing the experiment clicked on
-            experimentAdapter.notifyDataSetChanged(); // update adapter
-            return true;
-        });
-
         // click on the "GO" button to search
         Button searchButton = findViewById(R.id.search_button);
         searchButton.setOnClickListener(v -> search(v));
