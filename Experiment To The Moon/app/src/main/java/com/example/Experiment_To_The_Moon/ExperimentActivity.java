@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -96,7 +97,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         totalTrials.setText("Total trials: " + experiment.getTrials());
 
         TextView mostUsefulStat = findViewById(R.id.experiment_activity_most_useful_stat);
-        mostUsefulStat.setText("something goes here idk");
+        mostUsefulStat.setText("PLACEHOLDER TEXT PUT MOST USEFUL STATISTIC");
 
         CheckBox subscribed = findViewById(R.id.subscribe_box);
         // will be checked if user is subbed to experiment
@@ -207,13 +208,27 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
     }
 
-    @Override
-    public void onBackPressed() {
+    // function to handle exiting the experiment activity
+    public void finishExperimentActivity() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("Experiment", experiment);
         returnIntent.putExtra("currentUser", currentUser);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishExperimentActivity();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finishExperimentActivity();
+            return true;
+        }
+        return false;
     }
 
     @Override

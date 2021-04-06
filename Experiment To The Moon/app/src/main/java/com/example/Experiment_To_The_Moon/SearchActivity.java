@@ -33,8 +33,6 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // see commit comment
         db = FirebaseFirestore.getInstance();
         Intent intent = getIntent();
         String searchKey = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
