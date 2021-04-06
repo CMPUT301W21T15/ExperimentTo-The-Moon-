@@ -27,6 +27,7 @@ public class AddExperimentFragment<trialTypeSpinner> extends DialogFragment {
     private Spinner trialTypeSpinner;
 
     private String name;
+    private User user;
     private String description;
     private String region;
     private String min_trials; // make me an int some time.
@@ -65,16 +66,9 @@ public class AddExperimentFragment<trialTypeSpinner> extends DialogFragment {
 
         Switch geolocationSwitch = (Switch) view.findViewById(R.id.exp_geolocation_switch);
 
-        /* This should go in an AddTrialActivity.
-        CalendarView experimentDate = view.findViewById(R.id.experiment_date_calendarView);
-        // getting current date from calendarView
-        date = experimentDate.getDate();
-        // setting a date change listener if the user selects a new date
-        experimentDate.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
-            Date calendarTime = new GregorianCalendar(year, month, dayOfMonth).getTime(); // getting another calendar with the new time
-            date = calendarTime.getTime();  // converting to milliseconds
-        });
-         */
+        Bundle bundle = this.getArguments();
+        user = (User) bundle.getSerializable("Owner");
+        // getting current user (i.e. the creator of the experiment) by passing around bundle
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
@@ -83,20 +77,22 @@ public class AddExperimentFragment<trialTypeSpinner> extends DialogFragment {
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("OK", (dialogInterface, i) -> {
                     name = experiment_name.getText().toString();
+                    String owner = user.getUid();
                     description = experiment_description.getText().toString();
+                    String end = "false"; // starts unended, make proper code later
                     region = experiment_region.getText().toString();
                     min_trials = experiment_min_trials.getText().toString();
                     trial_type = trialTypeSpinner.getSelectedItem().toString();
                     geo_location = geolocationSwitch.isChecked(); // returns True or False for now.
 
                     if (trial_type.equals("Count")) {
-                        listener.onOkPressed(new Count(name, description, region, min_trials, geo_location));
+                        listener.onOkPressed(new Count(name, owner, description, end, region, min_trials, geo_location));
                     } else if (trial_type.equals("Binomial")) {
-                        listener.onOkPressed(new Binomial(name, description, region, min_trials, geo_location));
+                        listener.onOkPressed(new Binomial(name, owner, description, end, region, min_trials, geo_location));
                     } else if (trial_type.equals("Measurement")) {
-                        listener.onOkPressed(new Measurement(name, description, region, min_trials, geo_location));
+                        listener.onOkPressed(new Measurement(name, owner, description, end, region, min_trials, geo_location));
                     } else if (trial_type.equals("Non-Neg Integer")) {
-                        listener.onOkPressed(new NonNegInt(name, description, region, min_trials, geo_location));
+                        listener.onOkPressed(new NonNegInt(name, owner, description, end, region, min_trials, geo_location));
                     }
 
                 }).create();

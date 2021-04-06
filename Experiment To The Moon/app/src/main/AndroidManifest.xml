@@ -3,17 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.Experiment_To_The_Moon">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MholmstrTrialBook"
+        android:theme="@style/Theme.ExperimentToTheMoon"
         tools:ignore="AllowBackup">
+        <activity android:name=".SearchActivity" />
+            <!-- android:parentActivityName=".MainActivity"></activity> -->
         <activity
             android:name=".DisplayUserProfile"
             android:label="@string/title_activity_display_user_profile"
-            android:theme="@style/Theme.MholmstrTrialBook.NoActionBar"></activity>
+            android:theme="@style/Theme.ExperimentToTheMoon.NoActionBar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +26,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ExperimentActivity"></activity>
+
+        <activity android:name=".ExperimentActivity" />
+            <!--android:parentActivityName=".MainActivity"/> -->
+        <activity android:name=".Question"></activity>
+        <activity android:name=".Answer"></activity>
+
     </application>
 
 </manifest>

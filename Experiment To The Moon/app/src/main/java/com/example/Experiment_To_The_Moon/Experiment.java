@@ -5,16 +5,16 @@ import java.util.ArrayList;
 
 public abstract class Experiment implements Serializable {
     // the Experiment class represents an experiment within the program's collection of experiments
-
-    private int owner;
+    public String owner;
     public String name;
     public String description;
     public String region;
     public Boolean isEnd;
     public Boolean isPublished;
     private ArrayList<Integer> blacklist = new ArrayList<Integer>();
-    private ArrayList<Trial> results = new ArrayList<Trial>();
+    public ArrayList<Trial> results = new ArrayList<Trial>();
     public String minTrials;
+    public String type;
 
     public void togglePublish() {
         isPublished = !isPublished;
@@ -31,7 +31,7 @@ public abstract class Experiment implements Serializable {
     }
 
     public void addResult(Trial result) {
-        results.add(result);
+        this.results.add(result);
     }
 
     public void showStatistics() {
@@ -46,11 +46,18 @@ public abstract class Experiment implements Serializable {
         // placeholder method
     }
 
+    public void clearResults() {
+        this.results.clear();
+    }
+
     public String getDescription() {
         return this.description;
     }
+
     public void setDescription(String description) {
-        this.description = description + "\n";
+        if (description.endsWith("\n")) this.description = description;
+        else this.description = description + "\n";
+        // formatting to make experiment list display nicely
     }
 
     public String getName() { return this.name; }
@@ -59,6 +66,40 @@ public abstract class Experiment implements Serializable {
 
     public String getMinTrials() { return this.minTrials; }
 
+    /** Made some changes to make sure it runs*/
+    public long getDate(){
+        return 0;
+    }
 
+    public int getSuccesses(){
+        return 0;
+    }
+    public int getFailures(){
+        return 0;
+    }
+    public String getSummary(){
+        return "";
+    }
+    public void setDate(long v){
 
+    }
+    public void addSuccess(){
+
+    }
+    public void addFailure(){
+
+    }
+    public int getTrials(){
+        return this.results.size();
+    }
+
+    public String getType() { return this.type; }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 }

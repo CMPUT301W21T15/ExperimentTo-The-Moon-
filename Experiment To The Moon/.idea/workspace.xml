@@ -6,7 +6,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="BranchesTreeState">
     <expand>
@@ -27,15 +27,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fa8f9216-4356-493e-9d09-dfdd97cfbfd5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/Binomial.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/Binomial.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/Count.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/Count.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/ExperimentActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/ExperimentActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/Measurement.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/Measurement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/NonNegInt.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/Experiment_To_The_Moon/NonNegInt.java" afterDir="false" />
-    </list>
+    <list default="true" id="4cb1aad7-c6ca-4cac-b7c4-88dbc5636038" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -47,18 +39,41 @@
       <ProjectState />
     </projectState>
   </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="layoutResourceFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectId" id="1pdbcfp5HyRTqJ6WVWfRf7L1qP0" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectId" id="1qPiNzsJNv0uJz67Vq8R3qdgfEW" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="8BVX1G1JD" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2021-04-06T01:17:06.427Z" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
@@ -132,11 +147,11 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="fa8f9216-4356-493e-9d09-dfdd97cfbfd5" name="Default Changelist" comment="" />
-      <created>1615515994423</created>
+      <changelist id="4cb1aad7-c6ca-4cac-b7c4-88dbc5636038" name="Default Changelist" comment="" />
+      <created>1616987590265</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1615515994423</updated>
+      <updated>1616987590265</updated>
     </task>
     <servers />
   </component>
@@ -153,30 +168,38 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="0" y="28" width="1440" height="875" key="#com.intellij.ide.util.MemberChooser" timestamp="1615583261013">
+    <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser" timestamp="1617601689000">
       <screen x="0" y="25" width="1440" height="875" />
     </state>
-    <state x="0" y="28" width="1440" height="875" key="#com.intellij.ide.util.MemberChooser/0.25.1440.875@0.25.1440.875" timestamp="1615583261013" />
-    <state width="1396" height="243" key="GridCell.Tab.0.bottom" timestamp="1615588225810">
+    <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser/0.25.1440.875@0.25.1440.875" timestamp="1617601689000" />
+    <state x="349" y="145" width="1440" height="875" key="AndroidCreateResourceFileDialog" timestamp="1617599483686">
+      <screen x="0" y="25" width="1440" height="875" />
+    </state>
+    <state x="0" y="28" width="1440" height="875" key="AndroidCreateResourceFileDialog/0.0.1440.900@0.0.1440.900" timestamp="1617599411432" />
+    <state x="349" y="145" key="AndroidCreateResourceFileDialog/0.25.1440.875@0.25.1440.875" timestamp="1617599483686" />
+    <state width="1396" height="111" key="GridCell.Tab.0.bottom" timestamp="1617689944188">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1396" height="243" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1615588225810" />
-    <state width="1396" height="243" key="GridCell.Tab.0.center" timestamp="1615588225808">
+    <state width="1396" height="111" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1617689944188" />
+    <state width="1396" height="77" key="GridCell.Tab.0.bottom/0.25.1440.875@0.25.1440.875" timestamp="1617608665192" />
+    <state width="1396" height="111" key="GridCell.Tab.0.center" timestamp="1617689944185">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1396" height="243" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1615588225808" />
-    <state width="1396" height="243" key="GridCell.Tab.0.left" timestamp="1615588225806">
+    <state width="1396" height="111" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1617689944185" />
+    <state width="1396" height="77" key="GridCell.Tab.0.center/0.25.1440.875@0.25.1440.875" timestamp="1617608665191" />
+    <state width="1396" height="111" key="GridCell.Tab.0.left" timestamp="1617689944184">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1396" height="243" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1615588225806" />
-    <state width="1396" height="243" key="GridCell.Tab.0.right" timestamp="1615588225809">
+    <state width="1396" height="111" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1617689944184" />
+    <state width="1396" height="77" key="GridCell.Tab.0.left/0.25.1440.875@0.25.1440.875" timestamp="1617608665191" />
+    <state width="1396" height="111" key="GridCell.Tab.0.right" timestamp="1617689944187">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1396" height="243" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1615588225809" />
-    <state x="0" y="28" width="1440" height="872" key="SettingsEditor" timestamp="1615593797122">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state width="1396" height="111" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1617689944187" />
+    <state width="1396" height="77" key="GridCell.Tab.0.right/0.25.1440.875@0.25.1440.875" timestamp="1617608665192" />
+    <state x="385" y="214" width="670" height="676" key="search.everywhere.popup" timestamp="1617610756928">
+      <screen x="0" y="25" width="1440" height="875" />
     </state>
-    <state x="0" y="28" width="1440" height="872" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1615593797122" />
-    <state x="221" y="100" key="SettingsEditor/0.25.1440.875@0.25.1440.875" timestamp="1615593555146" />
+    <state x="385" y="214" width="670" height="676" key="search.everywhere.popup/0.25.1440.875@0.25.1440.875" timestamp="1617610756928" />
   </component>
 </project>

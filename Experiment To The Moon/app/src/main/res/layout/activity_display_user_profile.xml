@@ -5,11 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
+    android:gravity="center_horizontal"
     tools:context=".DisplayUserProfile">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintWidth_default="wrap"
+        android:gravity="center_horizontal" >
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/user_profile_update"
@@ -18,6 +23,7 @@
             android:layout_gravity="bottom|start"
             android:layout_weight="0"
             android:clickable="true"
+            android:contentDescription="@string/update"
             android:focusable="true"
             app:backgroundTint="#1DC524"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -31,6 +37,7 @@
             android:layout_gravity="bottom|end"
             android:layout_weight="0"
             android:clickable="true"
+            android:contentDescription="@string/go_back"
             android:focusable="true"
             app:backgroundTint="#E82929"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -39,21 +46,30 @@
 
         <TextView
             android:id="@+id/user_id"
-            android:layout_width="159dp"
-            android:layout_height="32dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
             android:layout_marginTop="20dp"
-            android:text="User ID"
+            android:gravity="top|center_horizontal"
+            android:text="@string/user_id"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <EditText
             android:id="@+id/contact_info"
-            android:layout_width="303dp"
-            android:layout_height="578dp"
-            android:layout_marginTop="20dp"
-            android:hint="Contact Info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:ellipsize="none"
+            android:gravity="top|center_horizontal"
+            android:hint="@string/contact_info"
+            android:inputType="textMultiLine"
+            android:maxLines="100"
+            android:scrollHorizontally="false"
+            android:singleLine="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_id" />
