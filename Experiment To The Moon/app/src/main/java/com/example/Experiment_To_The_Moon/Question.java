@@ -61,9 +61,7 @@ public class Question extends AppCompatActivity implements AddQuestion.OnFragmen
 
         final FloatingActionButton addExperimentButton = findViewById(R.id.add_post);
         addExperimentButton.setOnClickListener((v)-> {
-
             new AddQuestion(user,item_position).show(getSupportFragmentManager(), "ADD_Post");
-            item_position++;
         });
 
         Button back_button=findViewById(R.id.back_button);
@@ -96,7 +94,7 @@ public class Question extends AppCompatActivity implements AddQuestion.OnFragmen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent answer=new Intent(Question.this, Answer.class);
-                answer.putExtra("Question",String.valueOf(position+1));
+                answer.putExtra("Question",String.valueOf(position));
                 answer.putExtra("UserId",user);
                 answer.putExtra("name",name);
                 startActivity(answer);

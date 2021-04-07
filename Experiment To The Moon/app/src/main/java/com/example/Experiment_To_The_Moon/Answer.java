@@ -66,7 +66,6 @@ public class Answer extends AppCompatActivity implements AddAnswer.OnFragmentInt
             final FloatingActionButton addExperimentButton = findViewById(R.id.add_post);
             addExperimentButton.setOnClickListener((v)-> {
                 new AddAnswer("None",user,i).show(getSupportFragmentManager(), "ADD_Post");
-                i++;
             });
 
             Button back_button=findViewById(R.id.back_button);
@@ -106,7 +105,6 @@ public class Answer extends AppCompatActivity implements AddAnswer.OnFragmentInt
                     item_position=position+1;
                     String parent_pos= item_position.toString();
                     new AddAnswer(parent_pos,user,i).show(getSupportFragmentManager(), "ADD_Answer");
-                    i++;
 
 
                 }
