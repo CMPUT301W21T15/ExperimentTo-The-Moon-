@@ -13,13 +13,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,11 +33,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.installations.FirebaseInstallations;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity implements AddExperimentFragment.OnFragmentInteractionListener, Serializable {
 
@@ -42,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     private ArrayAdapter<Experiment> subscribedExperimentAdapter;
     private ArrayList<Experiment> experimentDataList;
     private ArrayList<Experiment> subscribedExperimentDataList;
+    private ArrayList<Barcode> myBarcodesList;
     private int experimentPosition;  // position of interesting experiment in the ArrayList
     private FirebaseFirestore db;
     private String TAG = "Sample";
@@ -97,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         subscribedExperimentDataList = new ArrayList<>();
         experimentAdapter = new ExperimentList(this, experimentDataList);
         subscribedExperimentAdapter = new ExperimentList(this, subscribedExperimentDataList);
+        myBarcodesList = new ArrayList<>();
 
         experimentList.setAdapter(experimentAdapter);
         subscribedExperimentList.setAdapter(subscribedExperimentAdapter);
@@ -123,11 +131,18 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         Button profileButton = findViewById(R.id.home_profile_button);
         profileButton.setOnClickListener(v -> displayProfile());
 
-        // long click an experiment to delete
-        experimentList.setOnItemLongClickListener((parent, view, position, id) -> {
-            experimentDataList.remove(position);  // removing the experiment clicked on
-            experimentAdapter.notifyDataSetChanged(); // update adapter
-            return true;
+        // QR/Bar code scanner.
+        // sends results to onActivityResult (requestcode 49374)
+        Button scanQRButton = (Button) findViewById(R.id.scan_qr_button);
+        scanQRButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+                integrator.setPrompt("Scan a QR/Bar code");
+                integrator.setOrientationLocked(false);
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+                integrator.initiateScan();
+            }
         });
 
         // click on the "GO" button to search
@@ -307,10 +322,14 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                     experimentAdapter.notifyDataSetChanged();
                 }
             }
-        }
-        if (requestCode == 102) {
+        } else if (requestCode == 102) {
             if (resultCode == RESULT_OK) {
                 currentUser = (User) data.getSerializableExtra("currentUser"); // updates current user
+            }
+        } else if (requestCode == 49374) {  // this is the result from scanning a qr code.
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (result != null) {
+                buildBarcodeList(result.getContents());
             }
         }
     }
@@ -322,6 +341,130 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         intent.putExtra(EXTRA_MESSAGE, searchKey);
         intent.putExtra("User", currentUser);
         startActivity(intent);
+    }
+
+    /* This functions builds the local list of barcodes that the user has registered.
+    The barcodes are kept in Firebase Inside the Users collection. They are retrieved and added to the local
+    list, myBarcodesList. Then later, we check if the newly scanned code is in the myBarcodesList.
+    Once the list has been built, addNewTrial() is called to continue the process. */
+    private void buildBarcodeList(String data) {
+
+        CollectionReference collectionReference = db.collection("Users")
+                .document(currentUser.getUid())
+                .collection("Barcodes");
+
+        collectionReference
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        // clear the old list, just in case.
+                        myBarcodesList.clear();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            String code = doc.getId();
+                            String name = (String) doc.getData().get("name");
+                            String result = (String) doc.getData().get("result");
+                            String type = (String) doc.getData().get("type");
+
+                            myBarcodesList.add(new Barcode(code, name, result, type)); // add each barcode to the local list.
+                        }
+                        addNewTrial(data);
+                    }
+                });
+    }
+
+    // called from inside addNewTrial.
+    public String handleBarCodes(String result) {
+        boolean isBarcode = false;
+        String name = "";
+        String type = "";
+        String outcome = "";
+
+        for (int i = 0; i < myBarcodesList.size(); i++) {
+            Barcode barcode = myBarcodesList.get(i);
+
+            if (result.equals(barcode.getCode())) {
+                isBarcode = true;
+                name = barcode.getExperiment_name();
+                type = barcode.getType();
+                outcome = barcode.getResult();
+            }
+        }
+
+        if (!isBarcode) {
+            return result;
+        } else {
+            return name + "," + type + "," + outcome;
+        }
+    }
+
+    /* This function adds a new trial to a specific experiment after scanning a QR/Bar code.
+       If the QR/Bar code is not registered, the try/catch block will print an error message and return.
+       If the QR/Bar code is registered, the target experiment will be updated locally, and in the Firebase.
+     */
+    public void addNewTrial(String data) {
+
+        // handleBarCodes checks if the newly scanned code is a Bar or QR code, and then formats the data accordingly.
+        data = handleBarCodes(data);
+
+        String name;
+        String type;
+        String result;
+        try {
+            StringTokenizer tokenizer = new StringTokenizer(data, ",");
+            // parse up the input data. It was comma separated.
+            name = tokenizer.nextToken(); // name of experiment
+            type = tokenizer.nextToken(); // type of experiment
+            result = tokenizer.nextToken(); // desired result from QR/bar scan. e.g. pass/fail
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "The code that you scanned is not registered.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        /* Had to get a snapshot of the db to find the total amount of trials for the
+           specific experiment, and then add the new trial at the end.
+        */
+        db.collection("Experiments")
+                .document(name)
+                .collection("Trials")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        int pos = -1;
+
+                        // find the experiment in the experimentDataList
+                        for (int i = 0; i < experimentDataList.size(); i++) {
+                            Experiment temp_exp = experimentDataList.get(i);
+                            if (temp_exp.getName().equals(name)) {
+                                pos = i;
+                            }
+                        }
+
+                        // check for QR codes that have been registered, but the experiment has been closed.
+                        // pos == -1 if there is no experiment in experimentDataList that matches the input name.
+                        if (pos == -1) {
+                            Toast.makeText(getApplicationContext(), "The Experiment for this code no longer accepting trials.", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        Experiment final_exp = experimentDataList.get(pos);
+                        final_exp.clearResults(); // clear the old result list.
+
+                        // re-add all of the trials to the result list.
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            String new_createdBy = (String) doc.getData().get("createdBy");
+                            String new_result = doc.getData().get("data").toString();
+                            Trial newTrial = new Trial(new_result, new_createdBy, type, name);
+                            final_exp.addResult(newTrial);
+                        }
+
+                        // add the new trial, finally.
+                        int total = final_exp.getTrials();
+                        Trial newTrial2 = new Trial(result, currentUser.getUid(), type, name);
+                        newTrial2.updateDatabase(total); // add to db.
+                    }
+                });
     }
 
 }

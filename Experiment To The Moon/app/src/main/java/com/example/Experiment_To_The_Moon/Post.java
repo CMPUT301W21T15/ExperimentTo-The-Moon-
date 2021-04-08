@@ -6,20 +6,24 @@ public class Post {
         private String Body;
         boolean isQuestion;
         private String Parent;
+        private Integer position;
 
 
 
-    public Post(String UserID, String body, Boolean isQuestion, String parent) {
+
+    public Post(String UserID, String body, Boolean isQuestion,String parent, Integer position) {
             this.UserID = UserID;
             this.Body = body;
             this.isQuestion=isQuestion;
             this.Parent=parent;
+            this.position=position;
         }
 
-        public Post(String userID, String body, boolean isQuestion) {
+        public Post(String userID, String body, boolean isQuestion,Integer position) {
             UserID = userID;
             Body = body;
             this.isQuestion = isQuestion;
+            this.position=position;
             this.Parent="None";
 
         }
@@ -33,7 +37,16 @@ public class Post {
             Parent = parent;
         }
 
-        public boolean isQuestion() {
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    public boolean isQuestion() {
             return isQuestion;
         }
 

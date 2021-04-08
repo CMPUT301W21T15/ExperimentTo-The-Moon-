@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -39,7 +40,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     private Experiment experiment;
     private String user;
     private User currentUser; // we have two variables with the same function
-    private String type;
+    public String type;
     Statistics stats;
 
     @Override
@@ -86,8 +87,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         TextView status = findViewById(R.id.experiment_activity_status);
         if (experiment.getIsEnd()) {
             status.setText("Experiment is over");
-        }
-        else status.setText("Experiment is not over");
+        } else status.setText("Experiment is not over");
 
         TextView region = findViewById(R.id.experiment_activity_region);
         region.setText(experiment.getRegion());
@@ -96,7 +96,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         totalTrials.setText("Total trials: " + experiment.getTrials());
 
         TextView mostUsefulStat = findViewById(R.id.experiment_activity_most_useful_stat);
-        mostUsefulStat.setText("something goes here idk");
+        mostUsefulStat.setText("PLACEHOLDER TEXT PUT MOST USEFUL STATISTIC");
 
         CheckBox subscribed = findViewById(R.id.subscribe_box);
         // will be checked if user is subbed to experiment
@@ -139,8 +139,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         if (experiment.getIsEnd()) {
             unpublish.setText("publish");
             participate.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             unpublish.setText("unpublish");
             participate.setVisibility(View.VISIBLE);
         }
@@ -151,8 +150,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             if (experiment.getIsEnd()) {
                 unpublish.setText("publish");
                 participate.setVisibility(View.INVISIBLE);
-            }
-            else {
+            } else {
                 unpublish.setText("unpublish");
                 participate.setVisibility(View.VISIBLE);
             }
@@ -205,15 +203,34 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             return false; // pass on to other listeners.
         });
 
+        Button generateQR = findViewById(R.id.generate_qr_fragment);
+        generateQR.setOnClickListener((View view) -> {
+            GenerateQRFragment.newInstance(new_name, type, currentUser.getUid()).show(getSupportFragmentManager(), "GenerateQR");
+        });
+
     }
 
-    @Override
-    public void onBackPressed() {
+    // function to handle exiting the experiment activity
+    public void finishExperimentActivity() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("Experiment", experiment);
         returnIntent.putExtra("currentUser", currentUser);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishExperimentActivity();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finishExperimentActivity();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -286,4 +303,10 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     public String getExperimentName(){
         return experiment.getName();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
+

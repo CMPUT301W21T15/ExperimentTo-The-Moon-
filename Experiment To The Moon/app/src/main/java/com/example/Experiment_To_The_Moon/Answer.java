@@ -25,7 +25,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Answer extends AppCompatActivity implements AddAnswer.OnFragmentInteractionListener{
         ListView answerList;
@@ -35,10 +38,11 @@ public class Answer extends AppCompatActivity implements AddAnswer.OnFragmentInt
         private String user;
         private FirebaseFirestore db;
         private String TAG="Sample";
-        private Integer parent;
+        private String parent;
         private String name;
-        private Integer number=0;
-        private String parent_question;
+        private String ID;
+        private Integer i=0;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -54,17 +58,14 @@ public class Answer extends AppCompatActivity implements AddAnswer.OnFragmentInt
 
             db = FirebaseFirestore.getInstance();
 
-            //final CollectionReference collectionReference = db.collection("Experiments");
-
             Intent intent=getIntent();
             user=(String) intent.getSerializableExtra("UserId");
-            parent=(Integer) intent.getSerializableExtra("Question");
+            parent=(String) intent.getSerializableExtra("Question");
             name=(String) intent.getSerializableExtra("name");
 
-            parent_question=parent.toString();
             final FloatingActionButton addExperimentButton = findViewById(R.id.add_post);
             addExperimentButton.setOnClickListener((v)-> {
-                new AddAnswer("None",user).show(getSupportFragmentManager(), "ADD_Post");
+                new AddAnswer("None",user,i).show(getSupportFragmentManager(), "ADD_Post");
             });
 
             Button back_button=findViewById(R.id.back_button);
@@ -73,20 +74,26 @@ public class Answer extends AppCompatActivity implements AddAnswer.OnFragmentInt
             });
 
 
-            final CollectionReference collectionReference = db.collection("Experiments").document(name).collection("QandA").document(parent_question).collection("Answers");;
-            collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            final CollectionReference collectionReference = db.collection("Experiments").document(name).collection("QandA").document(parent).collection("Answers");
+            collectionReference.orderBy("position").addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                     // clear the old list
                     expAnsList.clear();
+                    i=0;
+                    ArrayList<Post> copy=new ArrayList<>();
+
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
 
-                        String UserId=(String) doc.getData().get("UserId");
-                        String body = (String) doc.getData().get("body");
-                        String isQuestion = (String) doc.getData().get("isQuestion");
+                        String UserId=(String) doc.getData().get("userID");
+                        String body = (String) doc.getData().get("post");
+                        boolean isQuestion = (boolean) doc.getData().get("question");
                         String parent  = (String) doc.getData().get("parent");
-                        expAnsList.add(new Post(UserId,body,Boolean.valueOf(isQuestion),parent));
+                        copy.add(new Post(UserId,body,isQuestion,parent,i));
+                        i++;
+
                     }
+                    expAnsList.addAll(copy);
                     answerAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
                 }
             });
@@ -97,8 +104,7 @@ public class Answer extends AppCompatActivity implements AddAnswer.OnFragmentInt
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     item_position=position+1;
                     String parent_pos= item_position.toString();
-
-                    new AddAnswer(parent_pos,user).show(getSupportFragmentManager(), "ADD_Answer");
+                    new AddAnswer(parent_pos,user,i).show(getSupportFragmentManager(), "ADD_Answer");
 
 
                 }
@@ -113,27 +119,16 @@ public class Answer extends AppCompatActivity implements AddAnswer.OnFragmentInt
         @Override
         public void onOkPressedAdd(Post posts){
 
-            //postAdapter.insert(posts,item_position+1);
-
             // get the firestore database
             db = FirebaseFirestore.getInstance();
-            final CollectionReference experimentsCollection = db.collection("Experiments").document(name).collection("QandA").document(parent_question).collection("Answers");
-            HashMap<String, String> data = new HashMap<>();
+            final CollectionReference experimentsCollection = db.collection("Experiments").document(name).collection("QandA").document(parent).collection("Answers");
 
-            //  add new experiment info to hashmap. For now, everything is a string.
-            data.put("UserId", posts.getUserID());
-            data.put("body", posts.getPost());
-            data.put("isQuestion", String.valueOf(posts.isQuestion()));
-            data.put("parent", posts.getParent());
-
-
-            number++;
-            String answer=number.toString();
+            ID= i.toString();
             // Create the new experiment document, and add the data.
             experimentsCollection
 
-                    .document(answer)
-                    .set(data)
+                    .document(ID)
+                    .set(posts)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -149,7 +144,6 @@ public class Answer extends AppCompatActivity implements AddAnswer.OnFragmentInt
                             Log.d(TAG, "Data addition failed" + e.toString());
                         }
                     });
-
 
         }
 

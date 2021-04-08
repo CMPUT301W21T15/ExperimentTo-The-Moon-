@@ -25,19 +25,20 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
-//public class QAndA extends AppCompatActivity implements AddQuestion.OnFragmentInteractionListener,AddAnswer.OnFragmentInteractionListener{
+
 public class Question extends AppCompatActivity implements AddQuestion.OnFragmentInteractionListener{
 
     ListView postList;
     ArrayAdapter<Post> postAdapter;
     ArrayList<Post> expPostsList;
-    int item_position;
+    Integer item_position=0;
     String user;
     private FirebaseFirestore db;
     private String TAG="Sample";
     private String name;
-    private Integer number=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +54,6 @@ public class Question extends AppCompatActivity implements AddQuestion.OnFragmen
 
         db = FirebaseFirestore.getInstance();
 
-        //final CollectionReference collectionReference = db.collection("Experiments");
-
         Intent intent=getIntent();
         user=(String) intent.getSerializableExtra("UserId");
         name=(String) intent.getSerializableExtra("Name");
@@ -62,7 +61,7 @@ public class Question extends AppCompatActivity implements AddQuestion.OnFragmen
 
         final FloatingActionButton addExperimentButton = findViewById(R.id.add_post);
         addExperimentButton.setOnClickListener((v)-> {
-            new AddQuestion(user).show(getSupportFragmentManager(), "ADD_Post");
+            new AddQuestion(user,item_position).show(getSupportFragmentManager(), "ADD_Post");
         });
 
         Button back_button=findViewById(R.id.back_button);
@@ -72,16 +71,18 @@ public class Question extends AppCompatActivity implements AddQuestion.OnFragmen
 
 
         final CollectionReference collectionReference = db.collection("Experiments").document(name).collection("QandA");
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        collectionReference.orderBy("position").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 // clear the old list
+                item_position=0;
                 expPostsList.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
-                    String UserId=(String) doc.getData().get("UserId");
-                    String body = (String) doc.getData().get("body");
-                    String isQuestion = (String) doc.getData().get("isQuestion");
-                    expPostsList.add(new Post(UserId,body,Boolean.valueOf(isQuestion)));
+                    String UserId=(String) doc.getData().get("userID");
+                    String body = (String) doc.getData().get("post");
+                    boolean isQuestion = (boolean) doc.getData().get("question");
+                    expPostsList.add(new Post(UserId,body,isQuestion,item_position));
+                    item_position++;
                 }
                 postAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
             }
@@ -91,10 +92,9 @@ public class Question extends AppCompatActivity implements AddQuestion.OnFragmen
         postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {//add answer on Click
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                item_position=position+1;
 
                 Intent answer=new Intent(Question.this, Answer.class);
-                answer.putExtra("Question",item_position);
+                answer.putExtra("Question",String.valueOf(position));
                 answer.putExtra("UserId",user);
                 answer.putExtra("name",name);
                 startActivity(answer);
@@ -108,24 +108,17 @@ public class Question extends AppCompatActivity implements AddQuestion.OnFragmen
 
     @Override
     public void onOkPressed(Post posts){
-        //postAdapter.add(posts);
 
         // get the firestore database
         db = FirebaseFirestore.getInstance();
         final CollectionReference experimentsCollection = db.collection("Experiments").document(name).collection("QandA");;
-        HashMap<String, String> data = new HashMap<>();
 
-        //  add new experiment info to hashmap. For now, everything is a string.
-        data.put("UserId", posts.getUserID());
-        data.put("body", posts.getPost());
-        data.put("isQuestion", String.valueOf(posts.isQuestion()));
+        String question=item_position.toString();
 
-        number++;
-        String question=number.toString();
         // Create the new experiment document, and add the data.
         experimentsCollection
                 .document(question)
-                .set(data)
+                .set(posts)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
