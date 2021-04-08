@@ -120,6 +120,12 @@
             android:onClick="onCheckboxClicked"
             android:text="@string/subscribe_box_text" />
 
+        <Button
+            android:id="@+id/generate_qr_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generate QR/Bar Code"/>
+
     </LinearLayout>
 
     <LinearLayout

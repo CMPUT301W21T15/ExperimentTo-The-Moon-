@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:paddingBottom="30dp"
+        android:text="Please select from the drop down menu the resulting action for your QR/Bar code."/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="5dp">
+
+        <Spinner
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:id="@+id/generate_qr_spinner"/>
+
+        <EditText
+            android:id="@+id/generate_qr_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="number"
+            android:textSize="22sp"
+            android:hint="Enter Non-neg Int"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp">
+
+        <Button
+            android:id="@+id/generate_qr_code_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:textSize="18sp"
+            android:text="Generate QR\nCode" />
+
+        <Button
+            android:id="@+id/generate_qr_register_bar_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register Bar\nCode"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/generate_qr_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save QR code"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"/>
+
+
+    <ImageView
+        android:id="@+id/generate_qr_imgview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

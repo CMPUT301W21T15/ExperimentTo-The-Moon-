@@ -46,6 +46,10 @@ public abstract class Experiment implements Serializable {
         // placeholder method
     }
 
+    public void clearResults() {
+        this.results.clear();
+    }
+
     public String getDescription() {
         return this.description;
     }
@@ -86,7 +90,7 @@ public abstract class Experiment implements Serializable {
 
     }
     public int getTrials(){
-        return results.size();
+        return this.results.size();
     }
 
     public String getType() { return this.type; }

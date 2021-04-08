@@ -40,7 +40,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     private Experiment experiment;
     private String user;
     private User currentUser; // we have two variables with the same function
-    private String type;
+    public String type;
     Statistics stats;
 
     @Override
@@ -87,8 +87,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         TextView status = findViewById(R.id.experiment_activity_status);
         if (experiment.getIsEnd()) {
             status.setText("Experiment is over");
-        }
-        else status.setText("Experiment is not over");
+        } else status.setText("Experiment is not over");
 
         TextView region = findViewById(R.id.experiment_activity_region);
         region.setText(experiment.getRegion());
@@ -140,8 +139,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         if (experiment.getIsEnd()) {
             unpublish.setText("publish");
             participate.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             unpublish.setText("unpublish");
             participate.setVisibility(View.VISIBLE);
         }
@@ -152,8 +150,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             if (experiment.getIsEnd()) {
                 unpublish.setText("publish");
                 participate.setVisibility(View.INVISIBLE);
-            }
-            else {
+            } else {
                 unpublish.setText("unpublish");
                 participate.setVisibility(View.VISIBLE);
             }
@@ -204,6 +201,11 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
                 }
             }
             return false; // pass on to other listeners.
+        });
+
+        Button generateQR = findViewById(R.id.generate_qr_fragment);
+        generateQR.setOnClickListener((View view) -> {
+            GenerateQRFragment.newInstance(new_name, type, currentUser.getUid()).show(getSupportFragmentManager(), "GenerateQR");
         });
 
     }
@@ -301,4 +303,10 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     public String getExperimentName(){
         return experiment.getName();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
+

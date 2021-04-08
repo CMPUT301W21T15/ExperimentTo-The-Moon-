@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.Experiment_To_The_Moon">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -19,7 +22,9 @@
             android:theme="@style/Theme.ExperimentToTheMoon.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
