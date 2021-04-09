@@ -6,7 +6,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:layout_marginStart="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="4dp">
 
 
     <EditText
@@ -75,44 +78,48 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:background="#C5CAE9"
-        app:layout_constraintBottom_toTopOf="@+id/home_add_exp_button"
+        app:layout_constraintBottom_toTopOf="@+id/home_linear_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/subscription_list"
         app:layout_constraintTop_toBottomOf="@+id/experiment_list_tag">
 
     </ListView>
 
+    <LinearLayout
+        android:id="@+id/home_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/home_experiment_list">
+
+
     <Button
         android:id="@+id/home_add_exp_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/add_experiment"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/home_profile_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/home_experiment_list" />
+        android:layout_weight="1"
+        android:textSize="12sp"/>
 
     <Button
         android:id="@+id/home_profile_button"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:text="@string/profile"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/scan_qr_button"
-        app:layout_constraintStart_toEndOf="@+id/home_add_exp_button"
-        app:layout_constraintTop_toBottomOf="@+id/home_experiment_list" />
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/scan_qr_button"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:text="@string/scan"
-        android:textSize="13dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/home_profile_button"
-        app:layout_constraintTop_toBottomOf="@+id/home_experiment_list" />
+        android:textSize="12sp" />
 
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
