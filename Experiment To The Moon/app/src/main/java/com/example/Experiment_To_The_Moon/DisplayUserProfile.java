@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -19,15 +20,18 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
 
     private static final String TAG = "DisplayUserProfile";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private User currentUser;
+    private User lookupUser;
+    private Intent switchActivityIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_user_profile);
 
-        Intent switchActivityIntent = getIntent();
-        User currentUser = (User) switchActivityIntent.getSerializableExtra("currentUser"); // get currentUser
-        User lookupUser = (User) switchActivityIntent.getSerializableExtra("lookupUser"); // look at this user's profile
+        switchActivityIntent = getIntent();
+        currentUser = (User) switchActivityIntent.getSerializableExtra("currentUser"); // get currentUser
+        lookupUser = (User) switchActivityIntent.getSerializableExtra("lookupUser"); // look at this user's profile
 
         FloatingActionButton profile_back = findViewById(R.id.user_profile_back);
         FloatingActionButton profile_update = findViewById(R.id.user_profile_update);
@@ -51,9 +55,7 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
         }
 
         profile_back.setOnClickListener(view -> {
-            switchActivityIntent.putExtra("currentUser", currentUser);
-            setResult(RESULT_OK, switchActivityIntent);
-            finish(); // switch back to main activity
+            profileBack();
         });
 
         profile_update.setOnClickListener(view -> {
@@ -69,5 +71,25 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
                         .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             }
         });
+    }
+
+    private void profileBack() {
+        switchActivityIntent.putExtra("currentUser", currentUser);
+        setResult(RESULT_OK, switchActivityIntent);
+        finish(); // switch back to main activity
+    }
+
+    @Override
+    public void onBackPressed() {
+        profileBack();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            profileBack();
+            return true;
+        }
+        return false;
     }
 }
