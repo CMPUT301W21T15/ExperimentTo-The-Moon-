@@ -328,8 +328,10 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
             }
         } else if (requestCode == 49374) {  // this is the result from scanning a qr code.
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            if (result != null) {
-                buildBarcodeList(result.getContents());
+            if (resultCode == Activity.RESULT_OK) {
+                if (result != null) {
+                    buildBarcodeList(result.getContents());
+                }
             }
         }
     }

@@ -43,7 +43,7 @@
     <string name="go">Go</string>
     <string name="subscription_list">Subscription List</string>
     <string name="experiment_list">Experiment List</string>
-    <string name="scan">Scan QR</string>
+    <string name="scan">Scan QR/Bar</string>
     <!-- Strings used for user profiles -->
     <string name="user_id">User ID</string>
     <string name="contact_info">Contact Info</string>

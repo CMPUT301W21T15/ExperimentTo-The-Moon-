@@ -1,6 +1,7 @@
 package com.example.Experiment_To_The_Moon;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -267,9 +268,11 @@ public class GenerateQRFragment extends DialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         // this is the result after scanning a barcode.
-        if (requestCode == 49374) {
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            registerBarCodeInDataBase(result.getContents());
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 49374) {
+                IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+                registerBarCodeInDataBase(result.getContents());
+            }
         }
     }
 }

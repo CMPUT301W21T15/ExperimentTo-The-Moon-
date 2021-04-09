@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:textSize="22sp"
         android:paddingBottom="30dp"
-        android:text="Please select from the drop down menu the resulting action for your QR/Bar code."/>
+        android:text="Please select/input the resulting action for your QR/Bar code."/>
 
     <LinearLayout
         android:layout_width="match_parent"
