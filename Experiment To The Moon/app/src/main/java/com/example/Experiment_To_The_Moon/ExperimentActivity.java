@@ -8,6 +8,7 @@
 */
 package com.example.Experiment_To_The_Moon;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,11 +40,11 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
-    private String user;
-    private User currentUser; // we have two variables with the same function
+    private User currentUser;
     public String type;
     Statistics stats;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +53,6 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         type = (String) intent.getSerializableExtra("type");  //  type of the experiment
         currentUser = (User) intent.getSerializableExtra("User"); // current user
-        user = currentUser.getUid(); // QUICKFIX FOR MERGING FIX LATER THIS IS UNNECESSARY
 
         // cast the experiment to its proper type.
         if (type.equals("Count")) {
@@ -66,9 +66,6 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         }
 
         setContentView(R.layout.activity_experiment);
-        // back button for top corner of the screen
-        // makes you a new user whenever you click it, so cannot use this yet
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextView experimentName = findViewById(R.id.experiment_activity_experiment_name);
         experimentName.setText(experiment.getName());
@@ -118,6 +115,8 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         Button viewAllTrials = findViewById(R.id.view_all_trials_button);
 
         if (!currentUser.getUid().equals(experiment.getOwner())) {
+            // make description uneditable if the current user is not the owner of the experiment
+            experimentDescription.setEnabled(false);
             // make delete button invisible if the current user is not the owner of the experiment
             delete.setVisibility(View.INVISIBLE);
             // make the top row of buttons invisible if the current user is not the owner of the experiment
@@ -164,7 +163,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         QandA.setOnClickListener(view -> {
             Intent q_and_a=new Intent(this, Question.class);
-            q_and_a.putExtra("UserId",user);
+            q_and_a.putExtra("UserId",currentUser.getUid());
             q_and_a.putExtra("Name",experiment.getName());
             startActivity(q_and_a);
         });
