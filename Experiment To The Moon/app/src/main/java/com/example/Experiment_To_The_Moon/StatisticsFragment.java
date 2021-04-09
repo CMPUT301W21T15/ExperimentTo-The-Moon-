@@ -32,13 +32,10 @@ public class StatisticsFragment extends DialogFragment {
 
     // The constructor takes the current experiment as an argument
     public StatisticsFragment(Statistics currentStatistics){
-        currentStatistics.renewStats();
         stats = currentStatistics;
     }
 
     public interface OnFragmentInteractionListener {
-        void onPlotPressed(Experiment currentExperiment);
-        void onHistogramPressed(Experiment currentExperiment);
     }
 
     public void setStats(){
@@ -47,7 +44,7 @@ public class StatisticsFragment extends DialogFragment {
         q1.setText(Float.toString(stats.q1));
         q3.setText(Float.toString(stats.q3));
         stdDev.setText(Float.toString(stats.stdDev));
-        totalTrials.setText(Float.toString(stats.totalTrials));
+        totalTrials.setText(Integer.toString(stats.totalTrials));
         min.setText(Float.toString(stats.min));
         max.setText(Float.toString(stats.max));
     }

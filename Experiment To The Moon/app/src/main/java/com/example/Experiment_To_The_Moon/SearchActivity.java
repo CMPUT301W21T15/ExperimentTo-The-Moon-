@@ -73,7 +73,7 @@ public class SearchActivity extends AppCompatActivity {
                                 }
                             } catch (NullPointerException a) {
                                 Log.d("ADDEXP", "Incompatible experiment in DB");
-                            } // just ignore it
+                            }
                         } else {
                             Log.d("GETDOC", "Cached get failed: ", task.getException());
                         }

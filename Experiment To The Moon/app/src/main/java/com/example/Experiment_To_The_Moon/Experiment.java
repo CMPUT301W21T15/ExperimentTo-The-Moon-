@@ -34,15 +34,7 @@ public abstract class Experiment implements Serializable {
         results.add(result);
     }
 
-    public void showStatistics() {
-        // placeholder method
-    }
-
     public void showMap() {
-        // placeholder method
-    }
-
-    public void showForum() {
         // placeholder method
     }
 
@@ -66,7 +58,6 @@ public abstract class Experiment implements Serializable {
 
     public String getMinTrials() { return this.minTrials; }
 
-    /** Made some changes to make sure it runs*/
     public long getDate(){
         return 0;
     }
