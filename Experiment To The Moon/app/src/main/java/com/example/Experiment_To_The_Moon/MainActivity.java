@@ -49,9 +49,8 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     private ArrayList<Experiment> experimentDataList;
     private ArrayList<Experiment> subscribedExperimentDataList;
     private ArrayList<Barcode> myBarcodesList;
-    private int experimentPosition;  // position of interesting experiment in the ArrayList
     private FirebaseFirestore db;
-    private String TAG = "Sample";
+    private final String TAG = "Sample";
     private User currentUser;
     private String firebase_id; // the device's unique id
     public static final String EXTRA_MESSAGE = "com.example.Experiment_To_The_Moon.MESSAGE";
@@ -247,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
             intent.putExtra("type", subscribedExperimentDataList.get(position).getType());  // pass in the type of experiment
         }
         intent.putExtra("User", currentUser);
-        experimentPosition = position;
+        // position of interesting experiment in the ArrayList
         startActivityForResult(intent, 101);
     }
 

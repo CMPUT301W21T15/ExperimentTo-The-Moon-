@@ -68,13 +68,13 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         setContentView(R.layout.activity_experiment);
 
         TextView experimentName = findViewById(R.id.experiment_activity_experiment_name);
-        experimentName.setText(experiment.getName());
+        experimentName.setText("Experiment: " + experiment.getName());
 
         TextView ownerID = findViewById(R.id.experiment_activity_owner_id);
-        ownerID.setText(experiment.getOwner());
+        ownerID.setText("Owner: " + experiment.getOwner());
 
         TextView experimentType = findViewById(R.id.experiment_activity_experiment_type);
-        experimentType.setText(experiment.getType());
+        experimentType.setText("Type: " + experiment.getType());
 
         EditText experimentDescription = findViewById(R.id.experiment_activity_description_editText);
         experimentDescription.setText(experiment.getDescription());
@@ -88,7 +88,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         } else status.setText("Experiment is not over");
 
         TextView region = findViewById(R.id.experiment_activity_region);
-        region.setText(experiment.getRegion());
+        region.setText("Region: " + experiment.getRegion());
 
         TextView totalTrials = findViewById(R.id.experiment_activity_total_trials);
         totalTrials.setText("Total trials: " + experiment.getTrials());
@@ -135,7 +135,6 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         Button QandA=findViewById(R.id.questions_button);
 
         Button participate= findViewById(R.id.participate_button);
-        // reusing code for now, make a proper method later
         if (experiment.getIsEnd()) {
             unpublish.setText("publish");
             participate.setVisibility(View.INVISIBLE);
@@ -145,7 +144,6 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         }
 
         unpublish.setOnClickListener(view -> {
-            // what's the difference between toggling end and unpublishing the experiment?
             experiment.toggleEnd();
             if (experiment.getIsEnd()) {
                 unpublish.setText("publish");
