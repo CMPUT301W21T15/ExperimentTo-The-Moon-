@@ -19,7 +19,7 @@
         <activity
             android:name=".DisplayUserProfile"
             android:label="@string/title_activity_display_user_profile"
-            android:theme="@style/Theme.ExperimentToTheMoon.NoActionBar" />
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -34,9 +34,14 @@
 
         <activity
             android:name=".ExperimentActivity"
-            android:parentActivityName=".MainActivity"/>
-        <activity android:name=".Question" />
-        <activity android:name=".Answer" />
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".Question"
+            android:parentActivityName=".ExperimentActivity"/>
+        <activity
+            android:name=".Answer"
+            android:parentActivityName=".Question"/>
 
     </application>
 
