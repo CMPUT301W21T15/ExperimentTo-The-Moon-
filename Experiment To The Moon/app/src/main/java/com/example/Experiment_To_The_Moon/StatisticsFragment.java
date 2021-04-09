@@ -36,8 +36,6 @@ public class StatisticsFragment extends DialogFragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onPlotPressed(Experiment currentExperiment);
-        void onHistogramPressed(Experiment currentExperiment);
     }
 
     public void setStats(){

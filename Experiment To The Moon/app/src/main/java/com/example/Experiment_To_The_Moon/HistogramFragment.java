@@ -1,3 +1,7 @@
+/**
+ * Classname: HistogramFragment
+ * Date: April 2021
+ */
 package com.example.Experiment_To_The_Moon;
 
 import android.app.AlertDialog;

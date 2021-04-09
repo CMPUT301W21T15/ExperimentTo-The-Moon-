@@ -1,3 +1,9 @@
+/**
+ * Statistics
+ * Original version
+ * April 2021
+ */
+
 package com.example.Experiment_To_The_Moon;
 
 import android.util.Log;
@@ -17,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
+/**
+ * This is the class that generates the statistics for each experiment.
+ */
 public class Statistics {
     public float mean;
     public float median;
@@ -32,6 +41,13 @@ public class Statistics {
     private DocumentReference docRef;
     private String expType;
 
+    /**
+     * This creates the Statistics object by extracting the experiment
+     * from Firebase and getting the Experiment type
+     * and calls renewStats() to calculate the statistics as soon
+     * as the object is create
+     * @param experiment
+     */
     public Statistics(Experiment experiment){
         currentExperiment = experiment;
         docRef = colRef.document(experiment.getName());
@@ -60,7 +76,10 @@ public class Statistics {
         renewStats();
     }
 
-
+    /**
+     * This calculates all the statistics.
+     * The values are automatically set to 0 if the experiment has no trials.
+     */
     public void renewStats(){
         mean = 0;
         median = 0;
@@ -252,7 +271,6 @@ public class Statistics {
         });
     }
 
-
     public DocumentReference getDocRef(){
         return docRef;
     }
@@ -267,5 +285,37 @@ public class Statistics {
 
     public float getMax(){
         return max;
+    }
+
+    public float getMean() {
+        return mean;
+    }
+
+    public float getMedian() {
+        return median;
+    }
+
+    public float getQ1() {
+        return q1;
+    }
+
+    public float getQ3() {
+        return q3;
+    }
+
+    public float getStdDev() {
+        return stdDev;
+    }
+
+    public int getTotalTrials() {
+        return totalTrials;
+    }
+
+    public float getMin() {
+        return min;
+    }
+
+    public Experiment getCurrentExperiment() {
+        return currentExperiment;
     }
 }
