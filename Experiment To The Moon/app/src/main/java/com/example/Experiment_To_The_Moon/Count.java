@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Count extends Experiment implements Serializable {
 
     private int total;
-    private boolean geo_location;  // maybe
+    private boolean geo_location;
 
     public Count(String name, String owner, String description, String end, String region, String min_trials, boolean geo_location) {
         this.name = name;

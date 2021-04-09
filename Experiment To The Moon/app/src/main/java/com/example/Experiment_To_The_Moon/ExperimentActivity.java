@@ -235,16 +235,6 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         return false;
     }
 
-    @Override
-    public void onPlotPressed(Experiment currentExperiment) {
-
-    }
-
-    @Override
-    public void onHistogramPressed(Experiment currentExperiment) {
-
-    }
-
     public void onCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();
         if (checked) {
