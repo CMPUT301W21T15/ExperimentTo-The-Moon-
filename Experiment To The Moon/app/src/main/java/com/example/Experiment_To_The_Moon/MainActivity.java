@@ -15,13 +15,22 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -33,9 +42,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.StringTokenizer;
 
-import static android.content.ContentValues.TAG;
-
-public class MainActivity extends AppCompatActivity implements AddExperimentFragment.OnFragmentInteractionListener, ProfileSearchFragment.OnFragmentInteractionListener, Serializable {
+public class MainActivity extends AppCompatActivity implements AddExperimentFragment.OnFragmentInteractionListener, Serializable {
 
     private ArrayAdapter<Experiment> experimentAdapter;
     private ArrayAdapter<Experiment> subscribedExperimentAdapter;
@@ -71,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                     ArrayList<String> subs = (ArrayList<String>) document.getData().get("subscriptionList");
                     currentUser = new User(firebase_id, contactInfo);
                     currentUser.setSubscriptions(subs);
+                    updateSubscribedList();
+                    subscribedExperimentAdapter.notifyDataSetChanged();
                 } else {
                     // If device ID is not in collection, add it
                     Log.d(TAG, "No such document");
@@ -80,9 +89,9 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                     data.put("userId", currentUser.getUid());
                     data.put("subscriptionList", currentUser.getSubscriptions());
                     db.collection("Users").document(firebase_id).set(data);
+                    updateSubscribedList();
+                    subscribedExperimentAdapter.notifyDataSetChanged();
                 }
-                updateSubscribedList();
-                subscribedExperimentAdapter.notifyDataSetChanged();
             } else {
                 Log.d(TAG, "get failed with ", task.getException());
             }
@@ -111,67 +120,63 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         });
 
         // click an experiment to participate/view.
-        experimentList.setOnItemClickListener((parent, view, position, id) -> updateExperiment(position, "experimentList"));
+        experimentList.setOnItemClickListener((parent, view, position, id) -> {
+            updateExperiment(position, "experimentList");
+        });
 
         // click an experiment to participate/view.
         subscribedExperimentList.setOnItemClickListener((parent, view, position, id) -> updateExperiment(position, "subscribedExperimentList"));
 
         Button profileButton = findViewById(R.id.home_profile_button);
-        profileButton.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("currentUser", currentUser.getUid());
-            ProfileSearchFragment profile_search = new ProfileSearchFragment();
-            profile_search.setArguments(bundle);
-            // passing owner to fragment in a bundle
-            profile_search.show(getSupportFragmentManager(), "PROFILE_SEARCH");
-        });
+        profileButton.setOnClickListener(v -> displayProfile());
 
         // QR/Bar code scanner.
-        // sends results to onActivityResult (request code 49374)
+        // sends results to onActivityResult (requestcode 49374)
         Button scanQRButton = (Button) findViewById(R.id.scan_qr_button);
-        scanQRButton.setOnClickListener(v -> {
-            IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
-            integrator.setPrompt("Scan a QR/Bar code");
-            integrator.setOrientationLocked(false);
-            integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-            integrator.initiateScan();
+        scanQRButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+                integrator.setPrompt("Scan a QR/Bar code");
+                integrator.setOrientationLocked(false);
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+                integrator.initiateScan();
+            }
         });
 
         // click on the "GO" button to search
         Button searchButton = findViewById(R.id.search_button);
-        searchButton.setOnClickListener(this::search);
+        searchButton.setOnClickListener(v -> search(v));
 
         CollectionReference collectionReference = db.collection("Experiments");
-        collectionReference.addSnapshotListener((queryDocumentSnapshots, e) -> {
-            // clear the old list
-            experimentDataList.clear();
-            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                String name = doc.getId();
-                String owner = (String) doc.getData().get("owner");
-                String description = (String) doc.getData().get("description");
-                String is_end = (String) doc.getData().get("isEnd");
-                String region = (String) doc.getData().get("region");
-                String min_trials = (String) doc.getData().get("min_trials");
-                String type = (String) doc.getData().get("type");
-                // add the experiments from the db to experimentDataList as actual experiment objects.
-                try {
-                    switch (type) {
-                        case "Count":
+        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                // clear the old list
+                experimentDataList.clear();
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    String name = doc.getId();
+                    String owner = (String) doc.getData().get("owner");
+                    String description = (String) doc.getData().get("description");
+                    String is_end = (String) doc.getData().get("isEnd");
+                    String region = (String) doc.getData().get("region");
+                    String min_trials = (String) doc.getData().get("min_trials");
+                    String type = (String) doc.getData().get("type");
+                    // add the experiments from the db to experimentDataList as actual experiment objects.
+                    try {
+                        if (type.equals("Count")) {
                             experimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, false));
-                            break;
-                        case "Binomial":
+                        } else if (type.equals("Binomial")) {
                             experimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, false));
-                            break;
-                        case "Measurement":
+                        } else if (type.equals("Measurement")) {
                             experimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, false));
-                            break;
-                        case "NonNegInt":
+                        } else if (type.equals("NonNegInt")) {
                             experimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, false));
-                            break;
-                    }
-                } catch (NullPointerException a) {Log.d(TAG, "Incompatible experiment in DB"); } // just ignore it
+                        }
+                    } catch (NullPointerException a) {Log.d(TAG, "Incompatible experiment in DB"); } // just ignore it
+                }
+                experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
             }
-            experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
         });
 
     }
@@ -196,15 +201,25 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         experimentsCollection
                 .document(experiment.getName())
                 .set(data, SetOptions.merge()) // merging to not overwrite things accidentally
-                .addOnSuccessListener(aVoid -> {
-                    // These are a method which gets executed when the task is successful.
-                    Log.d(TAG, "Experiment addition successful");
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // These are a method which gets executed when the task is successful.
+                        Log.d(TAG, "Experiment addition successful");
 
+                    }
                 })
-                .addOnFailureListener(e -> {
-                    // This method gets executed if there is any problem.
-                    Log.d(TAG, "Experiment addition failed" + e.toString());
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // This method gets executed if there is any problem.
+                        Log.d(TAG, "Experiment addition failed" + e.toString());
+                    }
                 });
+    }
+
+    private void addSubscriptionToFirebase(){
+
     }
 
     private void deleteFirebase(Experiment experiment) {
@@ -235,11 +250,11 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         startActivityForResult(intent, 101);
     }
 
-    public void displayProfile(String uid) {
+    public void displayProfile() {
         Intent switchActivityIntent = new Intent(this, DisplayUserProfile.class);
-        switchActivityIntent.putExtra("currentUser", currentUser.getUid());
-        switchActivityIntent.putExtra("lookupUser", uid);
-        startActivity(switchActivityIntent);
+        switchActivityIntent.putExtra("currentUser", currentUser);
+        switchActivityIntent.putExtra("lookupUser", currentUser);
+        startActivityForResult(switchActivityIntent, 102);
     }
 
     public void updateSubscribedList() {
@@ -306,6 +321,10 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                     experimentAdapter.notifyDataSetChanged();
                 }
             }
+        } else if (requestCode == 102) {
+            if (resultCode == RESULT_OK) {
+                currentUser = (User) data.getSerializableExtra("currentUser"); // updates current user
+            }
         } else if (requestCode == 49374) {  // this is the result from scanning a qr code.
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (resultCode == Activity.RESULT_OK) {
@@ -337,18 +356,21 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
 
         collectionReference
                 .get()
-                .addOnCompleteListener(task -> {
-                    // clear the old list, just in case.
-                    myBarcodesList.clear();
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        String code = doc.getId();
-                        String name = (String) doc.getData().get("name");
-                        String result = (String) doc.getData().get("result");
-                        String type = (String) doc.getData().get("type");
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        // clear the old list, just in case.
+                        myBarcodesList.clear();
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            String code = doc.getId();
+                            String name = (String) doc.getData().get("name");
+                            String result = (String) doc.getData().get("result");
+                            String type = (String) doc.getData().get("type");
 
-                        myBarcodesList.add(new Barcode(code, name, result, type)); // add each barcode to the local list.
+                            myBarcodesList.add(new Barcode(code, name, result, type)); // add each barcode to the local list.
+                        }
+                        addNewTrial(data);
                     }
-                    addNewTrial(data);
                 });
     }
 
@@ -407,63 +429,43 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 .document(name)
                 .collection("Trials")
                 .get()
-                .addOnCompleteListener(task -> {
-                    int pos = -1;
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        int pos = -1;
 
-                    // find the experiment in the experimentDataList
-                    for (int i = 0; i < experimentDataList.size(); i++) {
-                        Experiment temp_exp = experimentDataList.get(i);
-                        if (temp_exp.getName().equals(name)) {
-                            pos = i;
+                        // find the experiment in the experimentDataList
+                        for (int i = 0; i < experimentDataList.size(); i++) {
+                            Experiment temp_exp = experimentDataList.get(i);
+                            if (temp_exp.getName().equals(name)) {
+                                pos = i;
+                            }
                         }
+
+                        // check for QR codes that have been registered, but the experiment has been closed.
+                        // pos == -1 if there is no experiment in experimentDataList that matches the input name.
+                        if (pos == -1) {
+                            Toast.makeText(getApplicationContext(), "The Experiment for this code no longer accepting trials.", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        Experiment final_exp = experimentDataList.get(pos);
+                        final_exp.clearResults(); // clear the old result list.
+
+                        // re-add all of the trials to the result list.
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            String new_createdBy = (String) doc.getData().get("createdBy");
+                            String new_result = doc.getData().get("data").toString();
+                            Trial newTrial = new Trial(new_result, new_createdBy, type, name);
+                            final_exp.addResult(newTrial);
+                        }
+
+                        // add the new trial, finally.
+                        int total = final_exp.getTrials();
+                        Trial newTrial2 = new Trial(result, currentUser.getUid(), type, name);
+                        newTrial2.updateDatabase(total); // add to db.
                     }
-
-                    // check for QR codes that have been registered, but the experiment has been closed.
-                    // pos == -1 if there is no experiment in experimentDataList that matches the input name.
-                    if (pos == -1) {
-                        Toast.makeText(getApplicationContext(), "The Experiment for this code no longer accepting trials.", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-
-                    Experiment final_exp = experimentDataList.get(pos);
-                    final_exp.clearResults(); // clear the old result list.
-
-                    // re-add all of the trials to the result list.
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        String new_createdBy = (String) doc.getData().get("createdBy");
-                        String new_result = doc.getData().get("data").toString();
-                        Trial newTrial = new Trial(new_result, new_createdBy, type, name);
-                        final_exp.addResult(newTrial);
-                    }
-
-                    // add the new trial, finally.
-                    int total = final_exp.getTrials();
-                    Trial newTrial2 = new Trial(result, currentUser.getUid(), type, name);
-                    newTrial2.updateDatabase(total); // add to db.
                 });
     }
 
-    @Override
-    public void profileOkPressed(String uid) {
-        DocumentReference docRef = db.collection("Users").document(uid);
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (Objects.requireNonNull(document).exists()) {
-                    // if UID exists, display profile
-                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    displayProfile(uid);
-                } else {
-                    // If it does not exist, display error
-                    Log.d(TAG, "No such document");
-                    Toast toast = Toast.makeText(this,"UID does not exist", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            } else {
-                Log.d(TAG, "get failed with ", task.getException());
-                Toast toast = Toast.makeText(this,"UID does not exist", Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        });
-    }
 }
