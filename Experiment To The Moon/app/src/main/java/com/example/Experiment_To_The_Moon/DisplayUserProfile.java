@@ -38,16 +38,16 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
         contactInfoEditText.setText(lookupUser.getContactInfo());
 
         // if you are not the user, you cannot edit contact info
-        if (currentUser.getUid() != lookupUser.getUid()) {
-            contactInfoEditText.setEnabled(false);
-            contactInfoEditText.setClickable(false);
-            profile_update.setEnabled(false);
-            profile_update.setClickable(false);
-        } else {
+        if (lookupUser.getUid().compareTo(currentUser.getUid()) == 0) {
             contactInfoEditText.setEnabled(true);
             contactInfoEditText.setClickable(true);
             profile_update.setEnabled(true);
             profile_update.setClickable(true);
+        } else {
+            contactInfoEditText.setEnabled(false);
+            contactInfoEditText.setClickable(false);
+            profile_update.setEnabled(false);
+            profile_update.setClickable(false);
         }
 
         profile_back.setOnClickListener(view -> {

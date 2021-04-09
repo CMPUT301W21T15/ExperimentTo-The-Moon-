@@ -31,15 +31,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import org.w3c.dom.Text;
-
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, addTrialFragment.DialogListener, blacklistFragment.blacklistListener{
+public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, AddTrialFragment.DialogListener, blacklistFragment.blacklistListener, Serializable {
+
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
     private String user;
@@ -179,7 +177,11 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         participate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new addTrialFragment().show(getSupportFragmentManager(),"AddTrial");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("currentUser", currentUser);
+                AddTrialFragment addTrial = new AddTrialFragment();
+                addTrial.setArguments(bundle);
+                addTrial.show(getSupportFragmentManager(),"AddTrial");
             }
         });
 

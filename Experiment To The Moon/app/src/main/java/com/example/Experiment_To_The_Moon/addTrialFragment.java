@@ -36,6 +36,8 @@ public class addTrialFragment extends DialogFragment{
         View view = inflater.inflate(R.layout.add_trials_fragment,null);
         createSpinner(view);
         id= view.findViewById(R.id.textInputEditText);
+        User currentUser = (User) getArguments().getSerializable("currentUser");
+        id.setText(currentUser.getUid());
         count= view.findViewById(R.id.textInputEditText2);
         NonNegInt= view.findViewById(R.id.textInputEditText3);
         measurement= view.findViewById(R.id.textInputEditText4);
