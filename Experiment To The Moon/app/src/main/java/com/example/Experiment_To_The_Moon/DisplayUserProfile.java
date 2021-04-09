@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,8 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class DisplayUserProfile extends AppCompatActivity implements Serializable {
 
@@ -26,19 +29,39 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
         setContentView(R.layout.activity_display_user_profile);
 
         Intent switchActivityIntent = getIntent();
-        User currentUser = (User) switchActivityIntent.getSerializableExtra("currentUser"); // get currentUser
-        User lookupUser = (User) switchActivityIntent.getSerializableExtra("lookupUser"); // look at this user's profile
+        String currentUser = switchActivityIntent.getStringExtra("currentUser"); // get currentUser ID
+        String lookupUser = switchActivityIntent.getStringExtra("lookupUser"); // look at this user's profile
 
         FloatingActionButton profile_back = findViewById(R.id.user_profile_back);
         FloatingActionButton profile_update = findViewById(R.id.user_profile_update);
         TextView userIDTextView = findViewById(R.id.user_id);
         EditText contactInfoEditText = findViewById(R.id.contact_info);
 
-        userIDTextView.setText(lookupUser.getUid());
-        contactInfoEditText.setText(lookupUser.getContactInfo());
+        DocumentReference docRef = db.collection("Users").document(lookupUser);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (Objects.requireNonNull(document).exists()) {
+                    // Write contents of database
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    String contactInfo = (String) Objects.requireNonNull(document.getData()).get("contactInfo");
+                    userIDTextView.setText(lookupUser);
+                    contactInfoEditText.setText(contactInfo);
+                } else {
+                    // If it does not exist, display error
+                    Log.d(TAG, "No such document");
+                    Toast toast = Toast.makeText(this,"UID does not exist", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+                Toast toast = Toast.makeText(this,"UID does not exist", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
 
         // if you are not the user, you cannot edit contact info
-        if (lookupUser.getUid().compareTo(currentUser.getUid()) == 0) {
+        if (lookupUser.compareTo(currentUser) == 0) {
             contactInfoEditText.setEnabled(true);
             contactInfoEditText.setClickable(true);
             profile_update.setEnabled(true);
@@ -51,20 +74,17 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
         }
 
         profile_back.setOnClickListener(view -> {
-            switchActivityIntent.putExtra("currentUser", currentUser);
-            setResult(RESULT_OK, switchActivityIntent);
             finish(); // switch back to main activity
         });
 
         profile_update.setOnClickListener(view -> {
             final String newContactInfo = contactInfoEditText.getText().toString();
             if(newContactInfo.length()>0) { // We do not add anything if the field is empty.
-                DocumentReference docRef = db.collection("Users").document(currentUser.getUid());
-                docRef
+                DocumentReference docRef2 = db.collection("Users").document(currentUser);
+                docRef2
                         .update("contactInfo", newContactInfo)
                         .addOnSuccessListener(aVoid -> {
                             Log.d(TAG, "Update successful");
-                            currentUser.setContactInfo(newContactInfo);
                         })
                         .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
             }
