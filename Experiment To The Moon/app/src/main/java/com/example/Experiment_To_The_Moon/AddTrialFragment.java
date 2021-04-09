@@ -42,9 +42,8 @@ public class AddTrialFragment extends DialogFragment{
         View view = inflater.inflate(R.layout.add_trials_fragment,null);
         createSpinner(view);
         id= view.findViewById(R.id.textInputEditText);
-        String firebase_id = FirebaseInstallations.getInstance().getId().toString(); // this is the firebase ID associated with the unique app installation ID
-        firebase_id = firebase_id.substring(33); // only looking for the 7 digit ID
-        id.setText(firebase_id);
+        User currentUser = (User) getArguments().getSerializable("currentUser");
+        id.setText(currentUser.getUid());
         count= view.findViewById(R.id.textInputEditText2);
         NonNegInt= view.findViewById(R.id.textInputEditText3);
         measurement= view.findViewById(R.id.textInputEditText4);

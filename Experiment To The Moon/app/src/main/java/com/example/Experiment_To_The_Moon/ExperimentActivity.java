@@ -31,10 +31,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, AddTrialFragment.DialogListener, blacklistFragment.blacklistListener{
+public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, AddTrialFragment.DialogListener, blacklistFragment.blacklistListener, Serializable {
 
     // the ExperimentActivity class handles the activity in which experiments are edited
     private Experiment experiment;
@@ -171,7 +172,11 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         participate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AddTrialFragment().show(getSupportFragmentManager(),"AddTrial");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("currentUser", currentUser);
+                AddTrialFragment addTrial = new AddTrialFragment();
+                addTrial.setArguments(bundle);
+                addTrial.show(getSupportFragmentManager(),"AddTrial");
             }
         });
 
