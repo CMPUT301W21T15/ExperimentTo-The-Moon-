@@ -60,9 +60,12 @@
     <string name="add">Add</string>
     <string name="unpublish">unpublish</string>
     <string name="blacklist">blacklist</string>
-    <string name="view_all_trials">view all trials</string>
+    <string name="view_all_trials">view trials</string>
     <string name="delete">delete</string>
     <string name="subscribe">Subscribe</string>
+    <string name="my_profile">My Profile</string>
+    <string name="enter_a_uid">Enter a UID</string>
+    <string name="search_profile">Search profile</string>
     />
 
     <string-array name="spinner_trial_types">
