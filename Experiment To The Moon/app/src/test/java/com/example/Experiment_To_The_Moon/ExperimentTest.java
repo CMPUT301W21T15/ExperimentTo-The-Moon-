@@ -3,6 +3,7 @@ package com.example.Experiment_To_The_Moon;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ExperimentTest {
@@ -17,29 +18,31 @@ public class ExperimentTest {
     }
 
     @Test
-    void testTogglePublish(){
+    public void testTogglePublish(){
         Experiment experiment = mockExperiment();
         // Experiment.isPublish is set to false on creation
         // togglePublish should make it true
+        assertFalse(experiment.getIsPublished());
         experiment.togglePublish();
         assertTrue(experiment.getIsPublished());
     }
 
     @Test
-    void testToggleEnd(){
+    public void testToggleEnd(){
         Experiment experiment = mockExperiment();
+        assertFalse(experiment.getIsEnd());
         experiment.toggleEnd();
         assertTrue(experiment.getIsEnd());
     }
 
     @Test
-    void testGetDescription(){
+    public void testGetDescription(){
         Experiment experiment = mockExperiment();
-        assertEquals("Mock experiment", experiment.getDescription());
+        assertEquals("Mock experiment\n", experiment.getDescription());
     }
 
     @Test
-    void testSetDescription(){
+    public void testSetDescription(){
         Experiment experiment = mockExperiment();
         experiment.setDescription("New description \n");
         assertEquals("New description \n", experiment.getDescription());
