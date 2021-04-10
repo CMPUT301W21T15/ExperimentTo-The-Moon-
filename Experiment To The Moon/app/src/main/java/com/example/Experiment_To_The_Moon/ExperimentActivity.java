@@ -10,6 +10,9 @@ package com.example.Experiment_To_The_Moon;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -43,11 +46,14 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     private User currentUser;
     public String type;
     Statistics stats;
+    private String TAG = "Sample";
+    Context context;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context=this;
         Intent intent = getIntent();
         experiment = (Experiment) intent.getSerializableExtra("Experiment");
 
@@ -169,11 +175,44 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         participate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("currentUser", currentUser);
-                AddTrialFragment addTrial = new AddTrialFragment();
-                addTrial.setArguments(bundle);
-                addTrial.show(getSupportFragmentManager(),"AddTrial");
+                Log.d(TAG, String.valueOf(experiment.needLocation()));
+                if(experiment.needLocation()) {
+                    //alert was found at https://stackoverflow.com/questions/2115758/how-do-i-display-an-alert-dialog-on-android/13511580#13511580
+                    //written by Mahesh https://stackoverflow.com/users/1530838/mahesh
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                    builder1.setMessage("You are about to participate in a Experiment that requires Location. Do you wish to continue?");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Continue",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("currentUser", currentUser);
+                                    AddTrialFragment addTrial = new AddTrialFragment();
+                                    addTrial.setArguments(bundle);
+                                    addTrial.show(getSupportFragmentManager(), "AddTrial");
+                                    dialog.cancel();
+                                }
+                            });
+
+                    builder1.setNegativeButton(
+                            "Cancel",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+                }else {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("currentUser", currentUser);
+                    AddTrialFragment addTrial = new AddTrialFragment();
+                    addTrial.setArguments(bundle);
+                    addTrial.show(getSupportFragmentManager(), "AddTrial");
+                }
             }
         });
 
@@ -253,24 +292,28 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         if(ExpType.equals("Count")){
             if(TextUtils.isEmpty(count))return;;
             newTrial= new Trial(count,id,ExpType,name);
+            if(experiment.checkLocation(newTrial.getLocation()))return;
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else {
         if(ExpType.equals("NonNegInt")){
             if(TextUtils.isEmpty(NonNegInt))return;;
             newTrial= new Trial(NonNegInt,id,ExpType,name);
+            if(experiment.checkLocation(newTrial.getLocation()))return;
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else{
         if(ExpType.equals("Measurement")){
             if(TextUtils.isEmpty(measurement))return;;
             newTrial= new Trial(measurement,id,ExpType,name);
+            if(experiment.checkLocation(newTrial.getLocation()))return;
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else{
         if(ExpType.equals("Binomial")){
             if(TextUtils.isEmpty(BiNomial))return;;
             newTrial= new Trial(BiNomial,id,ExpType,name);
+            if(experiment.checkLocation(newTrial.getLocation()))return;
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else{newTrial= new Trial("","","", "");}

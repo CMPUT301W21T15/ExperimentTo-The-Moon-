@@ -15,6 +15,8 @@ public abstract class Experiment implements Serializable {
     private ArrayList<Trial> results = new ArrayList<Trial>();
     public String minTrials;
     public String type;
+    private ArrayList<double[]> acceptedLocations = new ArrayList<double[]>();
+    public boolean needALocation;
 
     public void togglePublish() {
         isPublished = !isPublished;
@@ -93,4 +95,17 @@ public abstract class Experiment implements Serializable {
     public void setOwner(String owner) {
         this.owner = owner;
     }
+
+    public boolean checkLocation(double[] location){
+        for(int i=results.size();i<0;i--){
+            double[] temp= acceptedLocations.get(i);
+            if(temp[0] == location[0]){
+                if (temp[1]==location[1])return true;
+            }
+        }
+        return false;
+    };
+    public boolean needLocation(){
+      return needALocation;
+    };
 }
