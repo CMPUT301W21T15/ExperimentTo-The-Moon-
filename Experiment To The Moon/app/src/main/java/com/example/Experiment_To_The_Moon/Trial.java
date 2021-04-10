@@ -15,6 +15,7 @@ import com.google.type.LatLng;
 
 import java.io.Serializable;
 import java.security.acl.Owner;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class Trial implements Serializable {
     // The name of the experiment that this trial belongs to
     private String Name;
     //The Date the Trial was created on
-    private Date createdOn;
+    private String createdOn;
     //The type of experiment that this Trial is for
     private String Type;
     // the ID of the creator of the trial
@@ -65,13 +66,25 @@ public class Trial implements Serializable {
             if(Counting<0) {Counting=0;}
         } else{corrupted=true;}
 
-        createdOn= new Date();
+        this.createdOn = setDateInternal();
         created_by=Owner;
         this.Type=type;
         Name=ExpName;
         location[0]= 0.00;//latitude
         location[1]=0.00;//longitude
     }
+
+    // not for out of class use
+    private String setDateInternal() {
+        Date tempDate = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        return formatter.format(tempDate);
+    }
+
+    public void setDate(String new_date) { this.createdOn = new_date; }
+
+    public String getDate() { return this.createdOn; }
+
 
     public Boolean getOutcome() {
         return outcome;
@@ -127,7 +140,8 @@ public class Trial implements Serializable {
         Map<String, Object> data = new HashMap< String, Object>();
         data.put("trialType", Type);
         data.put("createdBy",created_by);
-        data.put("location",location);
+        data.put("location","Not implemented yet");  // changed
+        data.put("date", getDate());
         if(Type.equals("Measurement")){
             data.put("data", Measurement);
         }

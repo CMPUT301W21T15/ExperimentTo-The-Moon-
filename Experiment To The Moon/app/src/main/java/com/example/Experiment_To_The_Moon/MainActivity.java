@@ -434,7 +434,10 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         String new_createdBy = (String) doc.getData().get("createdBy");
                         String new_result = doc.getData().get("data").toString();
+                        String date = (String) doc.getData().get("date");
+
                         Trial newTrial = new Trial(new_result, new_createdBy, type, name);
+                        newTrial.setDate(date);
                         final_exp.addResult(newTrial);
                     }
 

@@ -38,8 +38,10 @@ public class TrialList extends ArrayAdapter<Trial> {
 
         TextView trial_maker  = (TextView) view.findViewById(R.id.user_id_view_trials);
         TextView trial_results = (TextView) view.findViewById(R.id.trial_results);
+        TextView trial_date = (TextView) view.findViewById(R.id.trial_date);
 
         trial_maker.setText("Made by: " + trial.getCreated_by());  // who created the trial.
+        trial_date.setText("Created on: " + trial.getDate());
 
         /* depending on the type of trial, the results of that trial will be formatted differently.
            so we take into account all 4 types */

@@ -63,6 +63,7 @@ public class ViewAllTrialsFragment extends DialogFragment {
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots){
                     String owner = (String) doc.getData().get("createdBy");
                     String type = (String) doc.getData().get("trialType");
+                    String date = (String) doc.getData().get("date");
                     String exp_name = name;
 
                     // dealing with binomial trials turned out to be a challenge. I just had to do some ugly
@@ -73,15 +74,21 @@ public class ViewAllTrialsFragment extends DialogFragment {
                         String outcome_string = Boolean.toString(outcome);
 
                         if (outcome_string.equals("true")) {
-                            trialDataList.add(new Trial("Pass", owner, type, exp_name));
+                            Trial newTrial = new Trial("Pass", owner, type, exp_name);
+                            newTrial.setDate(date);
+                            trialDataList.add(newTrial);
                         } else if (outcome_string.equals("false")) {
-                            trialDataList.add(new Trial("Fail", owner, type, exp_name));
+                            Trial newTrial = new Trial("Fail", owner, type, exp_name);
+                            newTrial.setDate(date);
+                            trialDataList.add(newTrial);
                         } else {
                             throw new NullPointerException("Binomial trial has null outcome");
                         }
                     } else {
                         String outcome = doc.getData().get("data").toString();
-                        trialDataList.add(new Trial(outcome, owner, type, exp_name));
+                        Trial newTrial = new Trial(outcome, owner, type, exp_name);
+                        newTrial.setDate(date);
+                        trialDataList.add(newTrial);
                     }
                 }
                 trialListAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
@@ -92,7 +99,7 @@ public class ViewAllTrialsFragment extends DialogFragment {
         return builder
                 .setView(view)
                 .setTitle("View Trials")
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton("OK", null)
                 .create();
     }
 

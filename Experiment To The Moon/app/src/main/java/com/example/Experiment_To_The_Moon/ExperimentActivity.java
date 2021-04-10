@@ -33,7 +33,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -42,6 +46,7 @@ import java.util.Map;
 public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, AddTrialFragment.DialogListener, blacklistFragment.blacklistListener, Serializable {
 
     // the ExperimentActivity class handles the activity in which experiments are edited
+    private FirebaseFirestore db;
     private Experiment experiment;
     private User currentUser;
     public String type;
@@ -53,6 +58,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = FirebaseFirestore.getInstance();
         context=this;
         Intent intent = getIntent();
         experiment = (Experiment) intent.getSerializableExtra("Experiment");
@@ -247,6 +253,32 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         Button generateQR = findViewById(R.id.generate_qr_fragment);
         generateQR.setOnClickListener((View view) -> {
             GenerateQRFragment.newInstance(new_name, type, currentUser.getUid()).show(getSupportFragmentManager(), "GenerateQR");
+        });
+
+        // build the trial list for this specific experiment.
+        CollectionReference collectionReference = db
+                .collection("Experiments")
+                .document(experiment.getName())
+                .collection("Trials");
+        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                // clear the old list
+                experiment.clearResults();
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    String owner = (String) doc.getData().get("createdBy");
+                    String type = (String) doc.getData().get("trialType");
+                    String outcome;
+
+                    if (type.equals("Binomial")) {
+                        outcome = Boolean.toString((Boolean) doc.getData().get("data"));
+                    } else {
+                        outcome = Long.toString((Long) doc.getData().get("data"));
+                    }
+                    experiment.addResult(new Trial(outcome, owner, type, experiment.getName()));
+                }
+                totalTrials.setText("Total trials: " + experiment.getTrials()); // update the "total trials" textview.
+            }
         });
 
     }
