@@ -23,8 +23,8 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
 
     private static final String TAG = "DisplayUserProfile";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private User currentUser;
-    private User lookupUser;
+    private String currentUser;
+    private String lookupUser;
     private Intent switchActivityIntent;
 
     @Override
@@ -34,15 +34,15 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
 
 
         switchActivityIntent = getIntent();
-        currentUser = (User) switchActivityIntent.getSerializableExtra("currentUser"); // get currentUser
-        lookupUser = (User) switchActivityIntent.getSerializableExtra("lookupUser"); // look at this user's profile
+        currentUser = switchActivityIntent.getStringExtra("currentUser"); // get currentUser
+        lookupUser = switchActivityIntent.getStringExtra("lookupUser"); // look at this user's profile
 
         FloatingActionButton profile_back = findViewById(R.id.user_profile_back);
         FloatingActionButton profile_update = findViewById(R.id.user_profile_update);
         TextView userIDTextView = findViewById(R.id.user_id);
         EditText contactInfoEditText = findViewById(R.id.contact_info);
 
-        DocumentReference docRef = db.collection("Users").document(lookupUser.getUid());
+        DocumentReference docRef = db.collection("Users").document(lookupUser);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -50,7 +50,7 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
                     // Write contents of database
                     Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     String contactInfo = (String) Objects.requireNonNull(document.getData()).get("contactInfo");
-                    userIDTextView.setText(lookupUser.getUid());
+                    userIDTextView.setText(lookupUser);
                     contactInfoEditText.setText(contactInfo);
                 } else {
                     // If it does not exist, display error
@@ -66,7 +66,7 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
         });
 
         // if you are not the user, you cannot edit contact info
-        if (lookupUser.getUid().compareTo(currentUser.getUid()) == 0) {
+        if (lookupUser.compareTo(currentUser) == 0) {
             contactInfoEditText.setEnabled(true);
             contactInfoEditText.setClickable(true);
             profile_update.setEnabled(true);
@@ -85,7 +85,7 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
         profile_update.setOnClickListener(view -> {
             final String newContactInfo = contactInfoEditText.getText().toString();
             if(newContactInfo.length()>0) { // We do not add anything if the field is empty.
-                DocumentReference docRef2 = db.collection("Users").document(currentUser.getUid());
+                DocumentReference docRef2 = db.collection("Users").document(currentUser);
                 docRef2
                         .update("contactInfo", newContactInfo)
                         .addOnSuccessListener(aVoid -> {
