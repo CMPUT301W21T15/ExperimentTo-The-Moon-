@@ -15,5 +15,6 @@ public class Measurement extends Experiment {
         if (end.equals("false")) this.isEnd = false;
         this.isPublished = false;
         this.type = "Measurement";
+        this.needALocation=geo_location;
     }
 }

@@ -153,20 +153,21 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 String region = (String) doc.getData().get("region");
                 String min_trials = (String) doc.getData().get("min_trials");
                 String type = (String) doc.getData().get("type");
+                Boolean geo_location= Boolean.parseBoolean((String) doc.getData().get("geoLocation"));
                 // add the experiments from the db to experimentDataList as actual experiment objects.
                 try {
                     switch (type) {
                         case "Count":
-                            experimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, false));
+                            experimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, geo_location));
                             break;
                         case "Binomial":
-                            experimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, false));
+                            experimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, geo_location));
                             break;
                         case "Measurement":
-                            experimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, false));
+                            experimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, geo_location));
                             break;
                         case "NonNegInt":
-                            experimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, false));
+                            experimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, geo_location));
                             break;
                     }
                 } catch (NullPointerException a) {Log.d(TAG, "Incompatible experiment in DB"); } // just ignore it
@@ -191,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         data.put("isEnd", String.valueOf(experiment.getIsEnd()));
         data.put("isPublished", String.valueOf(experiment.getIsPublished()));
         data.put("type", experiment.getType());
+        data.put("geoLocation" , String.valueOf(experiment.needLocation()));
 
         // Create the new experiment document, and add the data.
         experimentsCollection

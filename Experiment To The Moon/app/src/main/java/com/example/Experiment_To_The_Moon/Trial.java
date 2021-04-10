@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.type.LatLng;
 
 import java.io.Serializable;
 import java.security.acl.Owner;
@@ -30,7 +31,7 @@ public class Trial implements Serializable {
     // the ID of the creator of the trial
     private String  created_by;
     //the location that the trial has taken place
-    private String location;
+    private double[] location = new double[2];
     //only set if not given a correct type string and used to show that trial contains no valid data
     private Boolean corrupted;
     // uesed to hold data if type is a measurement
@@ -68,6 +69,8 @@ public class Trial implements Serializable {
         created_by=Owner;
         this.Type=type;
         Name=ExpName;
+        location[0]= 0.00;//latitude
+        location[1]=0.00;//longitude
     }
 
     public Boolean getOutcome() {
@@ -90,12 +93,13 @@ public class Trial implements Serializable {
         this.created_by = created_by;
     }
 
-    public String getLocation() {
+    public double[] getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocation(double l1, double l2) {
+        this.location[0] = l1;
+        this.location[1]=l2;
     }
     public String getType(){
         return Type;
@@ -123,7 +127,7 @@ public class Trial implements Serializable {
         Map<String, Object> data = new HashMap< String, Object>();
         data.put("trialType", Type);
         data.put("createdBy",created_by);
-        data.put("location","not implemented yet");
+        data.put("location",location);
         if(Type.equals("Measurement")){
             data.put("data", Measurement);
         }

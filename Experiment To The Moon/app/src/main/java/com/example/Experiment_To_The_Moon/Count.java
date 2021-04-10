@@ -17,5 +17,6 @@ public class Count extends Experiment implements Serializable {
         if (end.equals("false")) this.isEnd = false;
         this.isPublished = false;
         this.type = "Count";
+        this.needALocation=geo_location;
     }
 }

@@ -18,5 +18,6 @@ public class Binomial extends Experiment implements Serializable {
         if (end.equals("false")) this.isEnd = false;
         this.isPublished = false;
         this.type = "Binomial";
+        this.needALocation=geo_location;
     }
 }

@@ -14,6 +14,7 @@ public class NonNegInt extends Experiment {
         if (end.equals("false")) this.isEnd = false;
         this.isPublished = false;
         this.type = "NonNegInt";
+        this.needALocation=geo_location;
     }
 
 }
