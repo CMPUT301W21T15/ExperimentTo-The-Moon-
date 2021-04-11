@@ -33,15 +33,15 @@ public class UserTest {
     }
 /*
     @Test
-    public void testAddSubscription(){
+    public void testAddSubscription() {
         User testSubject = mockUser();
         testSubject.addSubscription("Exp01");
         ArrayList<String> subscriptions = testSubject.getSubscriptions();
         assertEquals("Exp01", subscriptions.get(0));
     }
-
+/*
     @Test
-    public void testGetSubscriptions(){
+    public void testGetSubscriptions() {
         User testSubject = mockUser();
         testSubject.addSubscription("Exp01");
         testSubject.addSubscription("Exp02");

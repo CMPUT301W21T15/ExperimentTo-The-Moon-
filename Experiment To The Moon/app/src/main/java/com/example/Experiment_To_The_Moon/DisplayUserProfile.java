@@ -37,7 +37,6 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
         currentUser = switchActivityIntent.getStringExtra("currentUser"); // get currentUser
         lookupUser = switchActivityIntent.getStringExtra("lookupUser"); // look at this user's profile
 
-        FloatingActionButton profile_back = findViewById(R.id.user_profile_back);
         FloatingActionButton profile_update = findViewById(R.id.user_profile_update);
         TextView userIDTextView = findViewById(R.id.user_id);
         EditText contactInfoEditText = findViewById(R.id.contact_info);
@@ -77,10 +76,6 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
             profile_update.setEnabled(false);
             profile_update.setClickable(false);
         }
-
-        profile_back.setOnClickListener(view -> {
-            profileBack();
-        });
 
         profile_update.setOnClickListener(view -> {
             final String newContactInfo = contactInfoEditText.getText().toString();
