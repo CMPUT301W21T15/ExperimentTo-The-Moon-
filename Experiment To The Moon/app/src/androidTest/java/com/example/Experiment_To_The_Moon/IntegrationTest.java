@@ -95,7 +95,7 @@ public class IntegrationTest {
         solo.enterText((EditText) solo.getView(R.id.exp_min_trials_editText), "10");
         solo.clickOnView(solo.getView(R.id.exp_trial_type_spinner));
         solo.scrollToTop();
-        solo.clickOnView(solo.getView(TextView.class, 0)); // get binomial
+        solo.clickOnView(solo.getView(TextView.class, 0)); // get non-negative integer
         solo.clickOnButton("OK");
         assertTrue(solo.waitForText("Test Experiment Name", 1, 5000));
 
@@ -103,7 +103,7 @@ public class IntegrationTest {
         assertTrue(solo.waitForText("Test Experiment Description"));
         assertTrue(solo.waitForText("Test Experiment Region"));
         assertTrue(solo.waitForText("Min trials: 10"));
-        assertTrue(solo.waitForText("Binomial"));
+        assertTrue(solo.waitForText("NonNegInt"));
         assertTrue(solo.waitForText("Total trials: 0"));
 
         solo.clickOnView(solo.getView(R.id.unpublish_button));
@@ -132,7 +132,14 @@ public class IntegrationTest {
         solo.goBack();
         solo.goBack();
 
-        // adding trials doesn't work atm
+        solo.clickOnButton("Participate");
+        solo.enterText((EditText) solo.getView(R.id.textInputEditText3), "420");
+        solo.clickOnButton("Submit");
+
+        solo.clickOnButton("View Trials");
+        assertTrue(solo.waitForText("420"));
+        solo.clickOnButton("Ok");
+
 
         // deleting the experiment TEST LAST
         solo.clickOnButton("Delete");
