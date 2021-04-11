@@ -100,6 +100,7 @@ public class Statistics {
                     if(task.getResult().isEmpty()){
                         return;
                     }
+                    if (expType == null) return;
                     if(expType.equals("Count") || expType.equals("NonNegInt")) {
                         int n = 0;
                         long total = 0;
