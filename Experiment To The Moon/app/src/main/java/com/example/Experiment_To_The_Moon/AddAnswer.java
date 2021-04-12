@@ -12,7 +12,9 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
+/**
+ * This class is a fragment that controls adding answers to questions
+ */
 public class AddAnswer extends DialogFragment {
     private EditText Body;
     private AddAnswer.OnFragmentInteractionListener listener;
@@ -20,6 +22,15 @@ public class AddAnswer extends DialogFragment {
     private String user;
     private int position;
 
+    /**
+     * Adding an answer
+     * @param position
+     * The identifier of the question in the database
+     * @param user
+     * The UID of the user posting the answer
+     * @param place
+     * The ID of the question the answer is a reply to
+     */
     public AddAnswer(String position, String user,int place) {
 
         this.parent_pos=position;

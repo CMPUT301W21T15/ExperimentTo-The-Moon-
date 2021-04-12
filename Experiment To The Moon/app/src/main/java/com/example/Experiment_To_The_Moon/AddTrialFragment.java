@@ -22,7 +22,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
-//This class is used for the inner workings of the Participation Fragment so that Trials can be created
+/**
+ * This class is used for the inner workings of the Participation Fragment so that Trials can be created
+ */
 public class AddTrialFragment extends DialogFragment {
     //Text box that holds the UserID
     private TextView id;
@@ -174,6 +176,9 @@ public class AddTrialFragment extends DialogFragment {
                 .create();
     }
 
+    /**
+     * This method updates the longitude and latitude (ie location) of the trial
+     */
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling

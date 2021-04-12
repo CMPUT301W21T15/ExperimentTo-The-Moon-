@@ -31,6 +31,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * This class is an activity that displays answers to questions in the Q&A
+ */
 public class Answer extends AppCompatActivity implements AddAnswer.OnFragmentInteractionListener{
         ListView answerList;
         ArrayAdapter<Post> answerAdapter;

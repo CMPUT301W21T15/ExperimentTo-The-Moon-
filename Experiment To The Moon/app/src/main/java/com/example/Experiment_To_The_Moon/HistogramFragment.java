@@ -30,7 +30,9 @@ import com.jjoe64.graphview.series.PointsGraphSeries;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
+/**
+ * This class is a fragment that displays a histogram for an experiment's statistics
+ */
 public class HistogramFragment extends DialogFragment {
     private Statistics stats;
     private BarGraphSeries<DataPoint> series;
@@ -38,6 +40,11 @@ public class HistogramFragment extends DialogFragment {
     private String expType;
     private int num;
 
+    /**
+     *
+     * @param statistics
+     * statistics objects with trial data
+     */
     public HistogramFragment(Statistics statistics){
         stats = statistics;
         docRef = statistics.getDocRef();
@@ -65,7 +72,11 @@ public class HistogramFragment extends DialogFragment {
                 .create();
     }
 
-
+    /**
+     * display histogram
+     * @param view
+     * histogram fragment layout
+     */
     public void drawHistogram(View view){
         docRef.collection("Trials").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

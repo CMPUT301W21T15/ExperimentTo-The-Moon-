@@ -43,7 +43,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
+/**
+ * This class is an activity that displays experiments
+ */
 public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, AddTrialFragment.DialogListener, blacklistFragment.blacklistListener, Serializable {
 
     // the ExperimentActivity class handles the activity in which experiments are edited
@@ -288,7 +290,9 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
     }
 
-    // function to handle exiting the experiment activity
+    /**
+     * function to handle exiting the experiment activity
+     */
     public void finishExperimentActivity() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("Experiment", experiment);
@@ -311,6 +315,11 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         return false;
     }
 
+    /**
+     * function to subscribe/unsubscribe from an experiment
+     * @param view
+     * checkbox
+     */
     public void onCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();
         if (checked) {

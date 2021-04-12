@@ -10,19 +10,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-
-// custom list for individual trials
+/**
+ * This class is a custom array adapter for trials
+ */
 public class TrialList extends ArrayAdapter<Trial> {
 
     private final ArrayList<Trial> trials;
     private final Context context;
 
+    /**
+     *
+     * @param context
+     * ArrayAdapter context
+     * @param trials
+     * ArrayList of trials to be adapted
+     */
     public TrialList(Context context, ArrayList<Trial> trials) {
         super(context, 0, trials);
         this.trials = trials;
         this.context = context;
     }
 
+    /**
+     * UI method
+     */
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
 

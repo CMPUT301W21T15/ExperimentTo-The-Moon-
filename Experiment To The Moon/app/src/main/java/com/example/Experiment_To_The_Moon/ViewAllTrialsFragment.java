@@ -21,7 +21,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-// Fragment to be accessed from ExperimentActivity. View all trials of the current Experiment
+/**
+ * Fragment to be accessed from ExperimentActivity. View all trials of the current Experiment
+ */
 public class ViewAllTrialsFragment extends DialogFragment {
 
     private String name;
@@ -29,7 +31,11 @@ public class ViewAllTrialsFragment extends DialogFragment {
     private ArrayList<Trial> trialDataList;
     ListView trialListView;
 
-    // input: name of the experiment.
+    /**
+     *
+     * @param new_name
+     * experiment name
+     */
     public ViewAllTrialsFragment(String new_name) {
         name = new_name;
     }

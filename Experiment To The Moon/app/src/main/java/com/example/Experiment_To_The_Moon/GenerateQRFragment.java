@@ -39,7 +39,9 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.util.HashMap;
 
-// fragment for generating QR codes for a specific type of trial in a specific experiment.
+/**
+ * fragment for generating QR codes for a specific type of trial in a specific experiment.
+ */
 public class GenerateQRFragment extends DialogFragment {
 
     public String type; // type of the experiment
@@ -55,6 +57,9 @@ public class GenerateQRFragment extends DialogFragment {
     public ImageView QR_Code;
     private FirebaseFirestore db;
 
+    /**
+     * constructor
+     */
     public GenerateQRFragment() { }
 
     @NonNull
@@ -125,8 +130,10 @@ public class GenerateQRFragment extends DialogFragment {
                 .create();
     }
 
-    // populate the spinner based on the type of experiment.
-    // e.g. you can't have a "pass" result in an experiment of type Count, so we don't want the "pass" option to be shown.
+    /**
+     * populate the spinner based on the type of experiment.
+     * e.g. you can't have a "pass" result in an experiment of type Count, so we don't want the "pass" option to be shown.
+     */
     public void populateSpinner() {
         if (type.equals("Binomial")) {
             ArrayAdapter<String> QRTypeAdapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.spinner_boolean_types));
@@ -139,9 +146,10 @@ public class GenerateQRFragment extends DialogFragment {
         }
     }
 
-    /* When the user generates a QR code, they can then click the Save button, and an image of the QR code
-       will be saved into "Files" on the device.
-       The name of the QR image in Files will be: "(name of experiment), Result (result)"
+    /**
+     * When the user generates a QR code, they can then click the Save button, and an image of the QR code
+     * will be saved into "Files" on the device.
+     * The name of the QR image in Files will be: "(name of experiment), Result (result)"
      */
     public void saveToFiles() {
         String input;
@@ -162,6 +170,9 @@ public class GenerateQRFragment extends DialogFragment {
         );
     }
 
+    /**
+     * displays QR code
+     */
     public void showQR() {
         String input;
         if (type.equals("NonNegInt")) {
@@ -195,7 +206,9 @@ public class GenerateQRFragment extends DialogFragment {
         }
     }
 
-
+    /**
+     * associates bar code with trial result
+     */
     public void registerBarCode() {
         String input;
         if (type.equals("NonNegInt")) {
@@ -216,7 +229,17 @@ public class GenerateQRFragment extends DialogFragment {
         integrator.initiateScan();
     }
 
-    // factory method for creating GenerateQRFragment(s). Used for passing in name and type.
+    /**
+     * factory method for creating GenerateQRFragment(s). Used for passing in name and type.
+     * @param name
+     * experiment name
+     * @param type
+     * experiment type
+     * @param uid
+     * QR creator user id
+     * @return
+     * GenerateQRFragment
+     */
     public static GenerateQRFragment newInstance(String name, String type, String uid) {
         Bundle args = new Bundle();
         args.putString("name", name);
@@ -227,13 +250,15 @@ public class GenerateQRFragment extends DialogFragment {
         return f;
     }
 
-    /*
-        If the user scans a barcode to register it, the barcode is added to the db with its desired result.
-        Then, if the user scans that same bar code from the home screen, they will add a new trial to the experiment
-        with the same result.
-        Note: if the user scans a barcode that has already been registered, the old one is overwritten with the new result.
-        Note: The same barcode can be registered for multiple experiments. The scope of a specific bar code is only the experiment
-        that it is registered in.
+    /**
+     * If the user scans a barcode to register it, the barcode is added to the db with its desired result.
+     * Then, if the user scans that same bar code from the home screen, they will add a new trial to the experiment
+     * with the same result.
+     * Note: if the user scans a barcode that has already been registered, the old one is overwritten with the new result.
+     * Note: The same barcode can be registered for multiple experiments. The scope of a specific bar code is only the experiment
+     * that it is registered in.
+     * @param bar_code
+     * bar code to register
      */
     public void registerBarCodeInDataBase(String bar_code) {
         String input;

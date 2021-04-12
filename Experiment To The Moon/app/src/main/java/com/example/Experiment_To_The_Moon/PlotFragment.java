@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.jjoe64.graphview.GridLabelRenderer.GridStyle.NONE;
-
+/**
+ * This class is a fragment that displays a plot for an experiment's statistics
+ */
 public class PlotFragment extends DialogFragment {
     private Statistics stats;
     private PointsGraphSeries<DataPoint> series;
@@ -35,6 +37,11 @@ public class PlotFragment extends DialogFragment {
     private String expType;
     private int num;
 
+    /**
+     *
+     * @param statistics
+     * statistics objects with trial data
+     */
     public PlotFragment(Statistics statistics){
         stats = statistics;
         docRef = statistics.getDocRef();
@@ -63,6 +70,11 @@ public class PlotFragment extends DialogFragment {
                 .create();
     }
 
+    /**
+     * display plot
+     * @param view
+     * plot fragment layout
+     */
     public void drawPlot(View view){
         docRef.collection("Trials").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

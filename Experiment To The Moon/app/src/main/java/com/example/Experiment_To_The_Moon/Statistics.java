@@ -46,6 +46,7 @@ public class Statistics {
      * and calls renewStats() to calculate the statistics as soon
      * as the object is create
      * @param experiment
+     * experiment to make statistics for
      */
     public Statistics(Experiment experiment){
         currentExperiment = experiment;
@@ -269,50 +270,84 @@ public class Statistics {
         });
     }
 
+    /**
+     *
+     * @return
+     * docref
+     */
     public DocumentReference getDocRef(){
         return docRef;
     }
 
+    /**
+     *
+     * @return
+     * experiment type
+     */
     public String getExpType(){
         return currentExperiment.getType();
     }
 
+    /**
+     *
+     * @return
+     * number of trials in the experiment
+     */
     public int getNumTrials(){
         return totalTrials;
     }
 
+    /**
+     * @deprecated
+     */
     public float getMax(){
         return max;
     }
-
+    /**
+     * @deprecated
+     */
     public float getMean() {
         return mean;
     }
-
+    /**
+     * @deprecated
+     */
     public float getMedian() {
         return median;
     }
-
+    /**
+     * @deprecated
+     */
     public float getQ1() {
         return q1;
     }
-
+    /**
+     * @deprecated
+     */
     public float getQ3() {
         return q3;
     }
-
+    /**
+     * @deprecated
+     */
     public float getStdDev() {
         return stdDev;
     }
-
+    /**
+     * @deprecated
+     */
     public int getTotalTrials() {
         return totalTrials;
     }
-
+    /**
+     * @deprecated
+     */
     public float getMin() {
         return min;
     }
-
+    /**
+     * @deprecated
+     */
     public Experiment getCurrentExperiment() {
         return currentExperiment;
     }

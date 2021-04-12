@@ -13,10 +13,20 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * This class is a custom array adapter for Q&A posts
+ */
 public class CustomQAndA extends ArrayAdapter<Post> {
     private ArrayList<Post> posts;
     private Context context;
 
+    /**
+     *
+     * @param context
+     * ArrayAdapter context
+     * @param posts
+     * ArrayList of posts to be adapted
+     */
     public CustomQAndA(Context context, ArrayList<Post> posts) {
         super(context,0, posts);
         this.posts = posts;

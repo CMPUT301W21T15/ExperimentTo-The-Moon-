@@ -4,6 +4,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests the Trial class
+ */
 public class TrialTest {
     private Trial mockTrial(){
         return new Trial("10", "w12345", "Count", "Exp01");
@@ -33,8 +36,8 @@ public class TrialTest {
         Trial testSubject = mockTrial();
         double[] location = {53.5501, -113.4687};
         testSubject.setLocation(53.5501, -113.4687);
-        assertEquals(location[0], testSubject.getLocation()[0], 0);
-        assertEquals(location[1], testSubject.getLocation()[1], 0);
+        assertEquals(location[0], testSubject.getLocation().get(0), 0);
+        assertEquals(location[1], testSubject.getLocation().get(1), 0);
     }
 
     @Test
