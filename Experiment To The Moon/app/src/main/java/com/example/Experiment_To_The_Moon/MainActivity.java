@@ -282,18 +282,19 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                         String region = (String) document.getData().get("region");
                         String min_trials = (String) document.getData().get("min_trials");
                         String type = (String) document.getData().get("type");
+                        boolean geo_location = Boolean.parseBoolean((String) document.getData().get("geoLocation"));
                         switch (type) {
                             case "Count":
-                                subscribedExperimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, false));
+                                subscribedExperimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, geo_location));
                                 break;
                             case "Binomial":
-                                subscribedExperimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, false));
+                                subscribedExperimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, geo_location));
                                 break;
                             case "Measurement":
-                                subscribedExperimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, false));
+                                subscribedExperimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, geo_location));
                                 break;
                             case "NonNegInt":
-                                subscribedExperimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, false));
+                                subscribedExperimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, geo_location));
                                 break;
                             default:
                                 break;
