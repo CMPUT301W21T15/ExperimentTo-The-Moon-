@@ -39,7 +39,6 @@ public class Statistics {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference colRef = db.collection("Experiments");
     private DocumentReference docRef;
-    private String expType;
 
     /**
      * This creates the Statistics object by extracting the experiment
@@ -62,8 +61,7 @@ public class Statistics {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("DOC_MESSAGE", "DocumentSnapshot data: " + document.getData());
-                        expType = (String) document.getData().get("type");
-                        Log.d("GOTTEN_NAME", String.format("The name of the type is %s", expType));
+                        Log.d("GOTTEN_NAME", String.format("The name of the type is %s", currentExperiment.getType()));
                     } else {
                         Log.d("DOC_MESSAGE", "No such document");
                     }
@@ -100,7 +98,7 @@ public class Statistics {
                     if(task.getResult().isEmpty()){
                         return;
                     }
-                    if(expType.equals("Count") || expType.equals("NonNegInt")) {
+                    if(currentExperiment.getType().equals("Count") ||currentExperiment.getType().equals("NonNegInt")) {
                         int n = 0;
                         long total = 0;
                         ArrayList<Long> values = new ArrayList<Long>();
@@ -153,7 +151,7 @@ public class Statistics {
                                 q3 = values.get(qPoint);
                             }
                         }
-                    } else if (expType.equals("Measurement")){
+                    } else if (currentExperiment.getType().equals("Measurement")){
                         int n = 0;
                         float total = 0;
                         ArrayList<Float> values = new ArrayList<Float>();
@@ -206,7 +204,7 @@ public class Statistics {
                                 q3 = values.get(qPoint);
                             }
                         }
-                    } else if (expType.equals("Binomial")){
+                    } else if (currentExperiment.getType().equals("Binomial")){
                         int n = 0;
                         float total = 0;
                         ArrayList<Integer> values = new ArrayList<Integer>();
@@ -276,7 +274,7 @@ public class Statistics {
     }
 
     public String getExpType(){
-        return expType;
+        return currentExperiment.getType();
     }
 
     public int getNumTrials(){
