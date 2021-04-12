@@ -14,9 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -26,14 +24,11 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.StringTokenizer;
-
-import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity implements AddExperimentFragment.OnFragmentInteractionListener, ProfileSearchFragment.OnFragmentInteractionListener, Serializable {
 
@@ -128,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
 
         // QR/Bar code scanner.
         // sends results to onActivityResult (request code 49374)
-        Button scanQRButton = (Button) findViewById(R.id.scan_qr_button);
+        Button scanQRButton = findViewById(R.id.scan_qr_button);
         scanQRButton.setOnClickListener(v -> {
             IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
             integrator.setPrompt("Scan a QR/Bar code");
@@ -153,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 String region = (String) doc.getData().get("region");
                 String min_trials = (String) doc.getData().get("min_trials");
                 String type = (String) doc.getData().get("type");
-                Boolean geo_location= Boolean.parseBoolean((String) doc.getData().get("geoLocation"));
+                boolean geo_location= Boolean.parseBoolean((String) doc.getData().get("geoLocation"));
                 // add the experiments from the db to experimentDataList as actual experiment objects.
                 try {
                     switch (type) {
@@ -214,6 +209,8 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         db = FirebaseFirestore.getInstance();
         final CollectionReference experimentsCollection = db.collection("Experiments");
         experimentsCollection.document(experiment.getName()).delete();  // name is UID for now
+        updateSubscribedList();
+        subscribedExperimentAdapter.notifyDataSetChanged();
     }
 
 
@@ -319,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     }
 
     public void search(View view){
-        EditText searchTerm = (EditText) findViewById(R.id.home_search_bar);
+        EditText searchTerm = findViewById(R.id.home_search_bar);
         String searchKey = searchTerm.getText().toString();
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(EXTRA_MESSAGE, searchKey);

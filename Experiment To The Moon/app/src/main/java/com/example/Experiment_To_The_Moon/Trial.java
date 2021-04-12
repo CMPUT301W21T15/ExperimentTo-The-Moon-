@@ -16,6 +16,7 @@ import com.google.type.LatLng;
 import java.io.Serializable;
 import java.security.acl.Owner;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class Trial implements Serializable {
     // the ID of the creator of the trial
     private String  created_by;
     //the location that the trial has taken place
-    private double[] location = new double[2];
+    private ArrayList<Double> location = new ArrayList<>();
     //only set if not given a correct type string and used to show that trial contains no valid data
     private Boolean corrupted;
     // uesed to hold data if type is a measurement
@@ -50,28 +51,38 @@ public class Trial implements Serializable {
     public Trial(String outcome, String Owner, String type, String ExpName) {
         corrupted=false;
         this.Name=ExpName;
-        if(type.equals("Measurement")){
-            Measurement=Double.parseDouble(outcome);
-        } else if (type.equals("NonNegInt")) {
-            Counting=Integer.parseInt(outcome);
-        } else if (type.equals("Binomial")) {
-            if(outcome.equals("Pass")) {
-                this.outcome=true;
-            }
-            if(outcome.equals("Fail")) {
-                this.outcome=false;
-            }
-        } else if (type.equals("Count")) {
-            Counting=Integer.parseInt(outcome);
-            if(Counting<0) {Counting=0;}
-        } else{corrupted=true;}
+        switch (type) {
+            case "Measurement":
+                Measurement = Double.parseDouble(outcome);
+                break;
+            case "NonNegInt":
+                Counting = Integer.parseInt(outcome);
+                break;
+            case "Binomial":
+                if (outcome.equals("Pass")) {
+                    this.outcome = true;
+                }
+                if (outcome.equals("Fail")) {
+                    this.outcome = false;
+                }
+                break;
+            case "Count":
+                Counting = Integer.parseInt(outcome);
+                if (Counting < 0) {
+                    Counting = 0;
+                }
+                break;
+            default:
+                corrupted = true;
+                break;
+        }
 
         this.createdOn = setDateInternal();
         created_by=Owner;
         this.Type=type;
         Name=ExpName;
-        location[0]= 0.00;//latitude
-        location[1]=0.00;//longitude
+        location.add(0.00); // latitude
+        location.add(0.00); // longitude
     }
 
     // not for out of class use
@@ -106,13 +117,13 @@ public class Trial implements Serializable {
         this.created_by = created_by;
     }
 
-    public double[] getLocation() {
+    public ArrayList<Double> getLocation() {
         return location;
     }
 
     public void setLocation(double l1, double l2) {
-        this.location[0] = l1;
-        this.location[1]=l2;
+        this.location.set(0, l1);
+        this.location.set(1, l2);
     }
     public String getType(){
         return Type;
@@ -137,10 +148,10 @@ public class Trial implements Serializable {
         String tempString2="/Trials/";
         tempString=tempString+tempString2;
         CollectionReference dataBase= FirebaseFirestore.getInstance().collection(tempString);
-        Map<String, Object> data = new HashMap< String, Object>();
+        Map<String, Object> data = new HashMap<>();
         data.put("trialType", Type);
         data.put("createdBy",created_by);
-        data.put("location","Not implemented yet");  // changed
+        data.put("location", getLocation());
         data.put("date", getDate());
         if(Type.equals("Measurement")){
             data.put("data", Measurement);
@@ -171,16 +182,12 @@ public class Trial implements Serializable {
         String tempString2="/Blacklist/";
         tempString=tempString+tempString2;
         CollectionReference dataBase= FirebaseFirestore.getInstance().collection(tempString);
-        dataBase.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                // clear the old list
-                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                    String temp = doc.getId();
-                    if(temp.equals(id)){tempInt=1;}
-                }
+        dataBase.addSnapshotListener((queryDocumentSnapshots, e) -> {
+            // clear the old list
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                String temp = doc.getId();
+                if(temp.equals(id)){tempInt=1;}
             }
-
         });
         if(tempInt==1){
             inList=true;

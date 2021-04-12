@@ -6,21 +6,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.installations.FirebaseInstallations;
-import com.google.zxing.integration.android.IntentIntegrator;
 import com.robotium.solo.Solo;
 
-import junit.framework.TestCase;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -133,7 +124,7 @@ public class IntegrationTest {
         solo.goBack();
 
         solo.clickOnButton("Participate");
-        solo.enterText((EditText) solo.getView(R.id.textInputEditText3), "420");
+        solo.enterText((EditText) solo.getView(R.id.nonnegint_result), "420");
         solo.clickOnButton("Submit");
 
         solo.clickOnButton("View Trials");

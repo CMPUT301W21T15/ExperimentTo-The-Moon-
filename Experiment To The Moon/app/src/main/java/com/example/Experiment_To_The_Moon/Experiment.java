@@ -11,11 +11,11 @@ public abstract class Experiment implements Serializable {
     public String region;
     public Boolean isEnd;
     public Boolean isPublished;
-    private ArrayList<Integer> blacklist = new ArrayList<Integer>();
-    private ArrayList<Trial> results = new ArrayList<Trial>();
+    private final ArrayList<Integer> blacklist = new ArrayList<>();
+    private final ArrayList<Trial> results = new ArrayList<>();
     public String minTrials;
     public String type;
-    private ArrayList<double[]> acceptedLocations = new ArrayList<double[]>();
+    private final ArrayList<Double> acceptedLocations = new ArrayList<>();
     public boolean needALocation;
 
     public void togglePublish() {
@@ -96,16 +96,7 @@ public abstract class Experiment implements Serializable {
         this.owner = owner;
     }
 
-    public boolean checkLocation(double[] location){
-        for(int i=results.size();i<0;i--){
-            double[] temp= acceptedLocations.get(i);
-            if(temp[0] == location[0]){
-                if (temp[1]==location[1])return true;
-            }
-        }
-        return false;
-    };
     public boolean needLocation(){
       return needALocation;
-    };
+    }
 }
