@@ -175,8 +175,8 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         stats = new Statistics(experiment);
         Button statsButton = findViewById(R.id.statistics_button);
-        statsButton.setOnClickListener(view ->
-                new StatisticsFragment(stats).show(getSupportFragmentManager(), "Statistics"));
+        statsButton.setOnClickListener(view -> {
+                new StatisticsFragment(stats).show(getSupportFragmentManager(), "Statistics");});
 
         QandA.setOnClickListener(view -> {
             Intent q_and_a=new Intent(this, Question.class);
@@ -283,6 +283,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
                 experiment.addResult(new Trial(outcome, owner, type, experiment.getName()));
             }
             totalTrials.setText("Total trials: " + experiment.getTrials()); // update the "total trials" textview.
+            stats = new Statistics(experiment);
         });
 
     }
