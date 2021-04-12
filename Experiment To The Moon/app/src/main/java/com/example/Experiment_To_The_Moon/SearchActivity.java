@@ -21,7 +21,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-
+/**
+ * This class is an activity that displays experiment search results
+ */
 public class SearchActivity extends AppCompatActivity {
     FirebaseFirestore db;
     private ArrayAdapter<Experiment> searchListAdapter;

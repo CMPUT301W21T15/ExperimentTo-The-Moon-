@@ -6,6 +6,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Tests the Experiment class
+ */
 public class ExperimentTest {
     private Experiment mockExperiment(){
         Experiment experiment = new Count("Exp01", "c56789", "Mock experiment",

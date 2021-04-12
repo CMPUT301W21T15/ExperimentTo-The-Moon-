@@ -71,7 +71,7 @@ public class IntegrationTest {
         solo.clearEditText((EditText) solo.getView(R.id.contact_info));
         solo.enterText((EditText) solo.getView(R.id.contact_info), "Test Contact Information");
         solo.clickOnView(solo.getView(R.id.user_profile_update));
-        solo.clickOnView(solo.getView(R.id.user_profile_back));
+        solo.goBack();
         solo.clickOnButton("Profile");
         solo.clickOnButton("My Profile");
         assertTrue(solo.searchEditText("Test Contact Information"));

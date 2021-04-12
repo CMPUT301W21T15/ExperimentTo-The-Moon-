@@ -12,7 +12,9 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
+/**
+ * This class is a fragment that controls adding questions to the Q&A
+ */
 public class AddQuestion extends DialogFragment {
 
     private EditText Body;
@@ -20,6 +22,13 @@ public class AddQuestion extends DialogFragment {
     private String user;
     private Integer position;
 
+    /**
+     * Adding a questions
+     * @param user
+     * The UID of the user posting the question
+     * @param position
+     * The identifier of the question in the database
+     */
     public AddQuestion(String user,Integer position) {
         this.user = user;
         this.position=position;

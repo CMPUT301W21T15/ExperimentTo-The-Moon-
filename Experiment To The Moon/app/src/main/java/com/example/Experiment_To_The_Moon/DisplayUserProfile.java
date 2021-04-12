@@ -19,6 +19,9 @@ import android.widget.Toast;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * This class is an activity that displays user profiles
+ */
 public class DisplayUserProfile extends AppCompatActivity implements Serializable {
 
     private static final String TAG = "DisplayUserProfile";

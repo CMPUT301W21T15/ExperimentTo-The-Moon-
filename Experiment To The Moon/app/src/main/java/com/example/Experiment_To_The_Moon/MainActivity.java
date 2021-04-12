@@ -30,6 +30,9 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.StringTokenizer;
 
+/**
+ * This class represents the main activity of the program
+ */
 public class MainActivity extends AppCompatActivity implements AddExperimentFragment.OnFragmentInteractionListener, ProfileSearchFragment.OnFragmentInteractionListener, Serializable {
 
     private ArrayAdapter<Experiment> experimentAdapter;
@@ -172,6 +175,11 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
 
     }
 
+    /**
+     * update the remote database with local changes made to an experiment
+     * @param experiment
+     * experiment to update
+     */
     private void syncFirebase(Experiment experiment) {
 
         // get the firestore database
@@ -204,6 +212,11 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 });
     }
 
+    /**
+     * delete an experiment from the remote database
+     * @param experiment
+     * experiment to delete
+     */
     private void deleteFirebase(Experiment experiment) {
         // get the firestore database
         db = FirebaseFirestore.getInstance();
@@ -234,6 +247,11 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         startActivityForResult(intent, 101);
     }
 
+    /**
+     * display a user profile
+     * @param uid
+     * uid of the profile to display
+     */
     public void displayProfile(String uid) {
         Intent switchActivityIntent = new Intent(this, DisplayUserProfile.class);
         switchActivityIntent.putExtra("currentUser", currentUser.getUid());
@@ -241,6 +259,9 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         startActivity(switchActivityIntent);
     }
 
+    /**
+     * update list of experiments the current user is subscribed to
+     */
     public void updateSubscribedList() {
         // clear the old list
         subscribedExperimentDataList.clear();
@@ -315,6 +336,11 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         }
     }
 
+    /**
+     * search for an experiment
+     * @param view
+     * current view
+     */
     public void search(View view){
         EditText searchTerm = findViewById(R.id.home_search_bar);
         String searchKey = searchTerm.getText().toString();
@@ -324,10 +350,14 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         startActivity(intent);
     }
 
-    /* This functions builds the local list of barcodes that the user has registered.
-    The barcodes are kept in Firebase Inside the Users collection. They are retrieved and added to the local
-    list, myBarcodesList. Then later, we check if the newly scanned code is in the myBarcodesList.
-    Once the list has been built, addNewTrial() is called to continue the process. */
+    /**
+     * This functions builds the local list of barcodes that the user has registered.
+     * The barcodes are kept in Firebase Inside the Users collection. They are retrieved and added to the local
+     * list, myBarcodesList. Then later, we check if the newly scanned code is in the myBarcodesList.
+     * Once the list has been built, addNewTrial() is called to continue the process.
+     * @param data
+     * bar or QR code
+     */
     private void buildBarcodeList(String data) {
 
         CollectionReference collectionReference = db.collection("Users")
@@ -351,7 +381,13 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 });
     }
 
-    // called from inside addNewTrial.
+    /**
+     * called from inside addNewTrial.
+     * @param result
+     * unprocessed barcode trial result
+     * @return
+     * processed barcode trial result
+     */
     public String handleBarCodes(String result) {
         boolean isBarcode = false;
         String name = "";
@@ -376,9 +412,12 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         }
     }
 
-    /* This function adds a new trial to a specific experiment after scanning a QR/Bar code.
-       If the QR/Bar code is not registered, the try/catch block will print an error message and return.
-       If the QR/Bar code is registered, the target experiment will be updated locally, and in the Firebase.
+    /**
+     * This function adds a new trial to a specific experiment after scanning a QR/Bar code.
+     * If the QR/Bar code is not registered, the try/catch block will print an error message and return.
+     * If the QR/Bar code is registered, the target experiment will be updated locally, and in the Firebase.
+     * @param data
+     * bar or QR code
      */
     public void addNewTrial(String data) {
 

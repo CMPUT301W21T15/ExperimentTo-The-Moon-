@@ -14,8 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 
+/**
+ * This is the fragment that appears when a user taps on the statistics button
+ */
 public class StatisticsFragment extends DialogFragment {
-    // This is the fragment that appears when a user taps on the statistics button
     private Statistics stats;
     Button plotButton;
     Button histogramButton;
@@ -30,7 +32,11 @@ public class StatisticsFragment extends DialogFragment {
     TextView min;
     TextView max;
 
-    // The constructor takes the current experiment as an argument
+    /**
+     *
+     * @param currentStatistics
+     * The constructor takes the current experiment as an argument
+     */
     public StatisticsFragment(Statistics currentStatistics){
         stats = currentStatistics;
     }
@@ -38,6 +44,9 @@ public class StatisticsFragment extends DialogFragment {
     public interface OnFragmentInteractionListener {
     }
 
+    /**
+     * update textviews with statistical values
+     */
     public void setStats(){
         mean.setText(Float.toString(stats.mean));
         median.setText(Float.toString(stats.median));

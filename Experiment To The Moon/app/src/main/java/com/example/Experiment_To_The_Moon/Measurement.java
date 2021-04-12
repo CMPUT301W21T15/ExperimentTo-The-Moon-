@@ -1,10 +1,28 @@
 package com.example.Experiment_To_The_Moon;
-
+/**
+ * This class represents a measurement experiment
+ */
 public class Measurement extends Experiment {
 
     private float average;
 
-
+    /**
+     *
+     * @param name
+     * experiment name
+     * @param owner
+     * owner UID
+     * @param description
+     * experiment description
+     * @param end
+     * whether the experiment has ended or not (String)
+     * @param region
+     * experiment regions
+     * @param min_trials
+     * minimum number of trials to end the experiment
+     * @param geo_location
+     * whether geolocation is required for the experiment or not (boolean)
+     */
     public Measurement(String name, String owner, String description, String end, String region, String min_trials, boolean geo_location) {
         this.name = name;
         this.owner = owner;

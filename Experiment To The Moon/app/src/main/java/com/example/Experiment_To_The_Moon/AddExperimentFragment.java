@@ -16,8 +16,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 
-
-public class AddExperimentFragment<trialTypeSpinner> extends DialogFragment {
+/**
+ * This class is a fragment that controls the user creating experiments
+ */
+public class AddExperimentFragment extends DialogFragment {
     // the AddExperimentFragment class handles the fragment which lets the user create a new experiment
     private Spinner trialTypeSpinner;
 
@@ -105,7 +107,9 @@ public class AddExperimentFragment<trialTypeSpinner> extends DialogFragment {
 
     }
 
-    //  adds the 4 different trial types to the spinner.
+    /**
+     * This method creates a dropdown menu with all the experiment types
+     */
     public void populateSpinner() {
         ArrayAdapter<String> trialTypeAdapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.spinner_trial_types));
         trialTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
