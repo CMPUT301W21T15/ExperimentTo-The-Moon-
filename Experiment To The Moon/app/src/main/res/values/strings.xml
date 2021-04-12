@@ -66,6 +66,12 @@
     <string name="my_profile">My Profile</string>
     <string name="enter_a_uid">Enter a UID</string>
     <string name="search_profile">Search profile</string>
+    <string name="geolocation">Geolocation</string>
+    <string name="enter_geolocation">Enter Geolocation</string>
+    <string name="latitude">Latitude</string>
+    <string name="enter_latitude">Enter Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="enter_longitude">Enter Longitude</string>
     />
 
     <string-array name="spinner_trial_types">

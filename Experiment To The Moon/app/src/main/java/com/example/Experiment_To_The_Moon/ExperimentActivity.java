@@ -12,7 +12,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,18 +32,28 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.Objects;
+/**
+ * This class is an activity that displays experiments
+ */
 public class ExperimentActivity extends AppCompatActivity implements StatisticsFragment.OnFragmentInteractionListener, AddTrialFragment.DialogListener, blacklistFragment.blacklistListener, Serializable {
 
     // the ExperimentActivity class handles the activity in which experiments are edited
+    private FirebaseFirestore db;
     private Experiment experiment;
     private User currentUser;
     public String type;
+    private String geoLocation = "false";
     Statistics stats;
     private String TAG = "Sample";
     Context context;
@@ -53,6 +62,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = FirebaseFirestore.getInstance();
         context=this;
         Intent intent = getIntent();
         experiment = (Experiment) intent.getSerializableExtra("Experiment");
@@ -61,14 +71,19 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         currentUser = (User) intent.getSerializableExtra("User"); // current user
 
         // cast the experiment to its proper type.
-        if (type.equals("Count")) {
-            experiment = (Count) intent.getSerializableExtra("Experiment");
-        } else if (type.equals("Binomial")) {
-            experiment = (Binomial) intent.getSerializableExtra("Experiment");
-        } else if (type.equals("Measurement")) {
-            experiment = (Measurement) intent.getSerializableExtra("Experiment");
-        } else if (type.equals("NonNegInt")) {
-            experiment = (NonNegInt) intent.getSerializableExtra("Experiment");
+        switch (type) {
+            case "Count":
+                experiment = (Count) intent.getSerializableExtra("Experiment");
+                break;
+            case "Binomial":
+                experiment = (Binomial) intent.getSerializableExtra("Experiment");
+                break;
+            case "Measurement":
+                experiment = (Measurement) intent.getSerializableExtra("Experiment");
+                break;
+            case "NonNegInt":
+                experiment = (NonNegInt) intent.getSerializableExtra("Experiment");
+                break;
         }
 
         setContentView(R.layout.activity_experiment);
@@ -162,8 +177,8 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         stats = new Statistics(experiment);
         Button statsButton = findViewById(R.id.statistics_button);
-        statsButton.setOnClickListener(view ->
-                new StatisticsFragment(stats).show(getSupportFragmentManager(), "Statistics"));
+        statsButton.setOnClickListener(view -> {
+                new StatisticsFragment(stats).show(getSupportFragmentManager(), "Statistics");});
 
         QandA.setOnClickListener(view -> {
             Intent q_and_a=new Intent(this, Question.class);
@@ -172,56 +187,58 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             startActivity(q_and_a);
         });
 
-        participate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, String.valueOf(experiment.needLocation()));
-                if(experiment.needLocation()) {
-                    //alert was found at https://stackoverflow.com/questions/2115758/how-do-i-display-an-alert-dialog-on-android/13511580#13511580
-                    //written by Mahesh https://stackoverflow.com/users/1530838/mahesh
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-                    builder1.setMessage("You are about to participate in a Experiment that requires Location. Do you wish to continue?");
-                    builder1.setCancelable(true);
+        participate.setOnClickListener(v -> {
+            Log.d(TAG, String.valueOf(experiment.needLocation()));
 
-                    builder1.setPositiveButton(
-                            "Continue",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
+            // checking experiment.needLocation() sometimes doesn't work, using db to check instead
+            DocumentReference docRef = db.collection("Experiments").document(experiment.getName());
+            docRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    geoLocation = (String) document.getData().get("geoLocation");
+                    // was experiment.needLocation(), didn't always work. Will crash on experiments that don't have geoLocation
+                    if (geoLocation.compareTo("true") == 0) {
+                        // alert was found at https://stackoverflow.com/questions/2115758/how-do-i-display-an-alert-dialog-on-android/13511580#13511580
+                        // written by Mahesh https://stackoverflow.com/users/1530838/mahesh
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                        builder1.setMessage("You are about to participate in an Experiment that requires Location. Do you wish to continue?");
+                        builder1.setCancelable(true);
+
+                        builder1.setPositiveButton(
+                                "Continue",
+                                (dialog, id) -> {
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable("currentUser", currentUser);
+                                    bundle.putBoolean("requireLoc", true);
+                                    bundle.putString("trialType", experiment.getType());
                                     AddTrialFragment addTrial = new AddTrialFragment();
                                     addTrial.setArguments(bundle);
                                     addTrial.show(getSupportFragmentManager(), "AddTrial");
                                     dialog.cancel();
-                                }
-                            });
+                                });
 
-                    builder1.setNegativeButton(
-                            "Cancel",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
+                        builder1.setNegativeButton(
+                                "Cancel",
+                                (dialog, id) -> dialog.cancel());
 
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-                }else {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("currentUser", currentUser);
-                    AddTrialFragment addTrial = new AddTrialFragment();
-                    addTrial.setArguments(bundle);
-                    addTrial.show(getSupportFragmentManager(), "AddTrial");
+                        AlertDialog alert11 = builder1.create();
+                        alert11.show();
+                    }else {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("currentUser", currentUser);
+                        bundle.putBoolean("requireLoc", false);
+                        bundle.putString("trialType", experiment.getType());
+                        AddTrialFragment addTrial = new AddTrialFragment();
+                        addTrial.setArguments(bundle);
+                        addTrial.show(getSupportFragmentManager(), "AddTrial");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
-            }
+            });
         });
 
-        blacklist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new blacklistFragment().show(getSupportFragmentManager(),"Blacklist");
-            }
-        });
+        blacklist.setOnClickListener(v -> new blacklistFragment().show(getSupportFragmentManager(),"Blacklist"));
 
         // implement view all trials button. opens fragment.
         String new_name = experiment.getName();
@@ -245,13 +262,37 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         });
 
         Button generateQR = findViewById(R.id.generate_qr_fragment);
-        generateQR.setOnClickListener((View view) -> {
-            GenerateQRFragment.newInstance(new_name, type, currentUser.getUid()).show(getSupportFragmentManager(), "GenerateQR");
+        generateQR.setOnClickListener((View view) -> GenerateQRFragment.newInstance(new_name, type, currentUser.getUid()).show(getSupportFragmentManager(), "GenerateQR"));
+
+        // build the trial list for this specific experiment.
+        CollectionReference collectionReference = db
+                .collection("Experiments")
+                .document(experiment.getName())
+                .collection("Trials");
+        collectionReference.addSnapshotListener((queryDocumentSnapshots, e) -> {
+            // clear the old list
+            experiment.clearResults();
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                String owner = (String) doc.getData().get("createdBy");
+                String type = (String) doc.getData().get("trialType");
+                String outcome;
+
+                if (type.equals("Binomial")) {
+                    outcome = Boolean.toString((Boolean) doc.getData().get("data"));
+                } else {
+                    outcome = Long.toString((Long) doc.getData().get("data"));
+                }
+                experiment.addResult(new Trial(outcome, owner, type, experiment.getName()));
+            }
+            totalTrials.setText("Total trials: " + experiment.getTrials()); // update the "total trials" textview.
+            stats = new Statistics(experiment);
         });
 
     }
 
-    // function to handle exiting the experiment activity
+    /**
+     * function to handle exiting the experiment activity
+     */
     public void finishExperimentActivity() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("Experiment", experiment);
@@ -274,6 +315,11 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         return false;
     }
 
+    /**
+     * function to subscribe/unsubscribe from an experiment
+     * @param view
+     * checkbox
+     */
     public void onCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();
         if (checked) {
@@ -284,36 +330,44 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     }
 
     @Override
-    public void onSubmitPress(String id, String count, String measurement, String NonNegInt, String BiNomial){
+    public void onSubmitPress(String id, String count, String measurement, String NonNegInt, String BiNomial, ArrayList<Double> location) {
         Trial newTrial;
         int total=experiment.getTrials();
         String name=experiment.getName();
         String ExpType=experiment.getType();
         if(ExpType.equals("Count")){
-            if(TextUtils.isEmpty(count))return;;
+            if(TextUtils.isEmpty(count))return;
             newTrial= new Trial(count,id,ExpType,name);
-            if(experiment.checkLocation(newTrial.getLocation()))return;
+            if (!location.isEmpty()) {
+                newTrial.setLocation(location.get(0), location.get(1));
+            }
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else {
         if(ExpType.equals("NonNegInt")){
-            if(TextUtils.isEmpty(NonNegInt))return;;
+            if(TextUtils.isEmpty(NonNegInt))return;
             newTrial= new Trial(NonNegInt,id,ExpType,name);
-            if(experiment.checkLocation(newTrial.getLocation()))return;
+            if (!location.isEmpty()) {
+                newTrial.setLocation(location.get(0), location.get(1));
+            }
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else{
         if(ExpType.equals("Measurement")){
-            if(TextUtils.isEmpty(measurement))return;;
+            if(TextUtils.isEmpty(measurement))return;
             newTrial= new Trial(measurement,id,ExpType,name);
-            if(experiment.checkLocation(newTrial.getLocation()))return;
+            if (!location.isEmpty()) {
+                newTrial.setLocation(location.get(0), location.get(1));
+            }
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else{
         if(ExpType.equals("Binomial")){
-            if(TextUtils.isEmpty(BiNomial))return;;
+            if(TextUtils.isEmpty(BiNomial))return;
             newTrial= new Trial(BiNomial,id,ExpType,name);
-            if(experiment.checkLocation(newTrial.getLocation()))return;
+            if (!location.isEmpty()) {
+                newTrial.setLocation(location.get(0), location.get(1));
+            }
             if(newTrial.checkBan(id))return;
             newTrial.updateDatabase(total);
         }else{newTrial= new Trial("","","", "");}
@@ -328,7 +382,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         String tempString2="/Blacklist/";
         tempString=tempString+tempString2;
         CollectionReference dataBase= FirebaseFirestore.getInstance().collection(tempString);
-        Map<String, Object> data = new HashMap< String, Object>();
+        Map<String, Object> data = new HashMap<>();
         data.put("UserID", toBan);
         dataBase
                 .document(toBan)

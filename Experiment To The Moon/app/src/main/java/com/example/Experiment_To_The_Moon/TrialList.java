@@ -1,32 +1,39 @@
 package com.example.Experiment_To_The_Moon;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-
-// custom list for individual trials
+/**
+ * This class is a custom array adapter for trials
+ */
 public class TrialList extends ArrayAdapter<Trial> {
 
     private final ArrayList<Trial> trials;
     private final Context context;
 
+    /**
+     *
+     * @param context
+     * ArrayAdapter context
+     * @param trials
+     * ArrayList of trials to be adapted
+     */
     public TrialList(Context context, ArrayList<Trial> trials) {
         super(context, 0, trials);
         this.trials = trials;
         this.context = context;
     }
 
+    /**
+     * UI method
+     */
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
 
@@ -36,10 +43,14 @@ public class TrialList extends ArrayAdapter<Trial> {
 
         Trial trial = trials.get(position);
 
-        TextView trial_maker  = (TextView) view.findViewById(R.id.user_id_view_trials);
-        TextView trial_results = (TextView) view.findViewById(R.id.trial_results);
+        TextView trial_maker = view.findViewById(R.id.user_id_view_trials);
+        TextView trial_results = view.findViewById(R.id.trial_results);
+        TextView trial_date = view.findViewById(R.id.trial_date);
+        TextView trial_location = view.findViewById(R.id.trial_location);
 
         trial_maker.setText("Made by: " + trial.getCreated_by());  // who created the trial.
+        trial_date.setText("Created on: " + trial.getDate());
+        trial_location.setText("Submitted at: " + trial.getLocation());
 
         /* depending on the type of trial, the results of that trial will be formatted differently.
            so we take into account all 4 types */

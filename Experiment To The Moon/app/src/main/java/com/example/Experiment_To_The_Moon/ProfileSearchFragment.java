@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-
+/**
+ * This class is a fragment in which a UID is searched for
+ */
 public class ProfileSearchFragment extends DialogFragment {
     private String myUID;
     private OnFragmentInteractionListener listener;

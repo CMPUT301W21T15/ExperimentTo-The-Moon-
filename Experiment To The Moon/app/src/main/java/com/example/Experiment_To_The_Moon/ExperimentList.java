@@ -13,18 +13,30 @@ import androidx.annotation.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
+/**
+ * This class is a custom array adapter for experiments
+ */
 public class ExperimentList extends ArrayAdapter<Experiment> {
     // the ExperimentList class handles the list of experiments visible from the main activity
     private final ArrayList<Experiment> experiments;
     private final Context context;
 
+    /**
+     *
+     * @param context
+     * ArrayAdapter context
+     * @param experiments
+     * ArrayList of experiments to be adapted
+     */
     public ExperimentList(Context context, ArrayList<Experiment> experiments) {
         super(context, 0, experiments);
         this.experiments = experiments;
         this.context = context;
     }
 
+    /**
+     * UI method
+     */
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
 

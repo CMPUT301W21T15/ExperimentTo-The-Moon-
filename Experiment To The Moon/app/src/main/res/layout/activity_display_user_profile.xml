@@ -30,20 +30,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@android:drawable/ic_popup_sync" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/user_profile_back"
-            android:layout_width="56dp"
-            android:layout_height="59dp"
-            android:layout_gravity="bottom|end"
-            android:layout_weight="0"
-            android:clickable="true"
-            android:contentDescription="@string/go_back"
-            android:focusable="true"
-            app:backgroundTint="#E82929"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/abc_vector_test" />
-
         <TextView
             android:id="@+id/user_id"
             android:layout_width="350dp"

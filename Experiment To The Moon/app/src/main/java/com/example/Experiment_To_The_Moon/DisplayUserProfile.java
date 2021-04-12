@@ -19,12 +19,15 @@ import android.widget.Toast;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * This class is an activity that displays user profiles
+ */
 public class DisplayUserProfile extends AppCompatActivity implements Serializable {
 
     private static final String TAG = "DisplayUserProfile";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private User currentUser;
-    private User lookupUser;
+    private String currentUser;
+    private String lookupUser;
     private Intent switchActivityIntent;
 
     @Override
@@ -34,10 +37,9 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
 
 
         switchActivityIntent = getIntent();
-        currentUser = (User) switchActivityIntent.getSerializableExtra("currentUser"); // get currentUser
-        lookupUser = (User) switchActivityIntent.getSerializableExtra("lookupUser"); // look at this user's profile
+        currentUser = switchActivityIntent.getStringExtra("currentUser"); // get currentUser
+        lookupUser = switchActivityIntent.getStringExtra("lookupUser"); // look at this user's profile
 
-        FloatingActionButton profile_back = findViewById(R.id.user_profile_back);
         FloatingActionButton profile_update = findViewById(R.id.user_profile_update);
         TextView userIDTextView = findViewById(R.id.user_id);
         EditText contactInfoEditText = findViewById(R.id.contact_info);
@@ -77,10 +79,6 @@ public class DisplayUserProfile extends AppCompatActivity implements Serializabl
             profile_update.setEnabled(false);
             profile_update.setClickable(false);
         }
-
-        profile_back.setOnClickListener(view -> {
-            profileBack();
-        });
 
         profile_update.setOnClickListener(view -> {
             final String newContactInfo = contactInfoEditText.getText().toString();

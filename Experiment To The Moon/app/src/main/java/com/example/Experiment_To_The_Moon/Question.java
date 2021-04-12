@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-
+/**
+ * This class is an activity that displays questions in the Q&A
+ */
 public class Question extends AppCompatActivity implements AddQuestion.OnFragmentInteractionListener{
 
     ListView postList;

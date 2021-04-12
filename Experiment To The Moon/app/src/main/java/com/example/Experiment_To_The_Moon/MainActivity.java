@@ -14,9 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -26,15 +24,15 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.StringTokenizer;
 
-import static android.content.ContentValues.TAG;
-
+/**
+ * This class represents the main activity of the program
+ */
 public class MainActivity extends AppCompatActivity implements AddExperimentFragment.OnFragmentInteractionListener, ProfileSearchFragment.OnFragmentInteractionListener, Serializable {
 
     private ArrayAdapter<Experiment> experimentAdapter;
@@ -128,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
 
         // QR/Bar code scanner.
         // sends results to onActivityResult (request code 49374)
-        Button scanQRButton = (Button) findViewById(R.id.scan_qr_button);
+        Button scanQRButton = findViewById(R.id.scan_qr_button);
         scanQRButton.setOnClickListener(v -> {
             IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
             integrator.setPrompt("Scan a QR/Bar code");
@@ -153,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 String region = (String) doc.getData().get("region");
                 String min_trials = (String) doc.getData().get("min_trials");
                 String type = (String) doc.getData().get("type");
-                Boolean geo_location= Boolean.parseBoolean((String) doc.getData().get("geoLocation"));
+                boolean geo_location= Boolean.parseBoolean((String) doc.getData().get("geoLocation"));
                 // add the experiments from the db to experimentDataList as actual experiment objects.
                 try {
                     switch (type) {
@@ -177,6 +175,11 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
 
     }
 
+    /**
+     * update the remote database with local changes made to an experiment
+     * @param experiment
+     * experiment to update
+     */
     private void syncFirebase(Experiment experiment) {
 
         // get the firestore database
@@ -209,11 +212,18 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 });
     }
 
+    /**
+     * delete an experiment from the remote database
+     * @param experiment
+     * experiment to delete
+     */
     private void deleteFirebase(Experiment experiment) {
         // get the firestore database
         db = FirebaseFirestore.getInstance();
         final CollectionReference experimentsCollection = db.collection("Experiments");
         experimentsCollection.document(experiment.getName()).delete();  // name is UID for now
+        updateSubscribedList();
+        subscribedExperimentAdapter.notifyDataSetChanged();
     }
 
 
@@ -237,6 +247,11 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         startActivityForResult(intent, 101);
     }
 
+    /**
+     * display a user profile
+     * @param uid
+     * uid of the profile to display
+     */
     public void displayProfile(String uid) {
         Intent switchActivityIntent = new Intent(this, DisplayUserProfile.class);
         switchActivityIntent.putExtra("currentUser", currentUser.getUid());
@@ -244,6 +259,9 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         startActivity(switchActivityIntent);
     }
 
+    /**
+     * update list of experiments the current user is subscribed to
+     */
     public void updateSubscribedList() {
         // clear the old list
         subscribedExperimentDataList.clear();
@@ -264,18 +282,19 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                         String region = (String) document.getData().get("region");
                         String min_trials = (String) document.getData().get("min_trials");
                         String type = (String) document.getData().get("type");
+                        boolean geo_location = Boolean.parseBoolean((String) document.getData().get("geoLocation"));
                         switch (type) {
                             case "Count":
-                                subscribedExperimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, false));
+                                subscribedExperimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, geo_location));
                                 break;
                             case "Binomial":
-                                subscribedExperimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, false));
+                                subscribedExperimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, geo_location));
                                 break;
                             case "Measurement":
-                                subscribedExperimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, false));
+                                subscribedExperimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, geo_location));
                                 break;
                             case "NonNegInt":
-                                subscribedExperimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, false));
+                                subscribedExperimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, geo_location));
                                 break;
                             default:
                                 break;
@@ -318,8 +337,13 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         }
     }
 
+    /**
+     * search for an experiment
+     * @param view
+     * current view
+     */
     public void search(View view){
-        EditText searchTerm = (EditText) findViewById(R.id.home_search_bar);
+        EditText searchTerm = findViewById(R.id.home_search_bar);
         String searchKey = searchTerm.getText().toString();
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(EXTRA_MESSAGE, searchKey);
@@ -327,10 +351,14 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         startActivity(intent);
     }
 
-    /* This functions builds the local list of barcodes that the user has registered.
-    The barcodes are kept in Firebase Inside the Users collection. They are retrieved and added to the local
-    list, myBarcodesList. Then later, we check if the newly scanned code is in the myBarcodesList.
-    Once the list has been built, addNewTrial() is called to continue the process. */
+    /**
+     * This functions builds the local list of barcodes that the user has registered.
+     * The barcodes are kept in Firebase Inside the Users collection. They are retrieved and added to the local
+     * list, myBarcodesList. Then later, we check if the newly scanned code is in the myBarcodesList.
+     * Once the list has been built, addNewTrial() is called to continue the process.
+     * @param data
+     * bar or QR code
+     */
     private void buildBarcodeList(String data) {
 
         CollectionReference collectionReference = db.collection("Users")
@@ -354,7 +382,13 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 });
     }
 
-    // called from inside addNewTrial.
+    /**
+     * called from inside addNewTrial.
+     * @param result
+     * unprocessed barcode trial result
+     * @return
+     * processed barcode trial result
+     */
     public String handleBarCodes(String result) {
         boolean isBarcode = false;
         String name = "";
@@ -379,9 +413,12 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         }
     }
 
-    /* This function adds a new trial to a specific experiment after scanning a QR/Bar code.
-       If the QR/Bar code is not registered, the try/catch block will print an error message and return.
-       If the QR/Bar code is registered, the target experiment will be updated locally, and in the Firebase.
+    /**
+     * This function adds a new trial to a specific experiment after scanning a QR/Bar code.
+     * If the QR/Bar code is not registered, the try/catch block will print an error message and return.
+     * If the QR/Bar code is registered, the target experiment will be updated locally, and in the Firebase.
+     * @param data
+     * bar or QR code
      */
     public void addNewTrial(String data) {
 
@@ -434,7 +471,10 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         String new_createdBy = (String) doc.getData().get("createdBy");
                         String new_result = doc.getData().get("data").toString();
+                        String date = (String) doc.getData().get("date");
+
                         Trial newTrial = new Trial(new_result, new_createdBy, type, name);
+                        newTrial.setDate(date);
                         final_exp.addResult(newTrial);
                     }
 

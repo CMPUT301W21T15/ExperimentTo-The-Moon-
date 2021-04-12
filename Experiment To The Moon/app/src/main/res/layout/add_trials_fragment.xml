@@ -3,7 +3,25 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/textInputEditText3"
+        android:id="@+id/latitude_coordinate"
+        android:layout_width="200dp"
+        android:layout_height="49dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="336dp"
+        android:layout_marginEnd="0dp"
+        android:hint="@string/enter_latitude" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/longitude_coordinate"
+        android:layout_width="200dp"
+        android:layout_height="49dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="399dp"
+        android:layout_marginEnd="0dp"
+        android:hint="@string/enter_longitude" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/nonnegint_result"
         android:layout_width="200dp"
         android:layout_height="49dp"
         android:layout_alignParentEnd="true"
@@ -12,7 +30,7 @@
         android:hint="@string/results" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/textInputEditText4"
+        android:id="@+id/measurement_result"
         android:layout_width="200dp"
         android:layout_height="49dp"
         android:layout_alignParentEnd="true"
@@ -21,7 +39,7 @@
         android:hint="@string/results" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/textInputEditText2"
+        android:id="@+id/count_result"
         android:layout_width="200dp"
         android:layout_height="49dp"
         android:layout_alignParentEnd="true"
@@ -30,7 +48,7 @@
         android:hint="@string/results" />
 
     <TextView
-        android:id="@+id/textInputEditText"
+        android:id="@+id/trial_uid_edittext"
         android:layout_width="200dp"
         android:layout_height="49dp"
         android:layout_alignParentEnd="true"
@@ -42,7 +60,7 @@
         android:hint="@string/enterUserID" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/trial_uid_textbox"
         android:layout_width="110dp"
         android:layout_height="49dp"
         android:layout_marginStart="0dp"
@@ -54,7 +72,7 @@
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/count_textbox"
         android:layout_width="110dp"
         android:layout_height="49dp"
         android:layout_marginStart="0dp"
@@ -65,7 +83,7 @@
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/nonnegint_textbox"
         android:layout_width="110dp"
         android:layout_height="49dp"
         android:layout_marginStart="0dp"
@@ -78,7 +96,7 @@
     <!--Spinner was found out on https://developer.android.com/guide/topics/ui/controls/spinner -->
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/measurement_textbox"
         android:layout_width="110dp"
         android:layout_height="49dp"
         android:layout_marginStart="0dp"
@@ -88,7 +106,7 @@
         android:textSize="17sp" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/binomial_textbox"
         android:layout_width="110dp"
         android:layout_height="49dp"
         android:layout_alignParentStart="true"
@@ -96,6 +114,30 @@
         android:layout_marginTop="273dp"
         android:gravity="center"
         android:text="@string/binomialTrial"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/latitude_textbox"
+        android:layout_width="110dp"
+        android:layout_height="49dp"
+        android:layout_alignParentStart="false"
+        android:layout_centerVertical="false"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="336dp"
+        android:gravity="center"
+        android:text="@string/latitude"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/longitude_textbox"
+        android:layout_width="110dp"
+        android:layout_height="49dp"
+        android:layout_alignParentStart="false"
+        android:layout_centerVertical="false"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="399dp"
+        android:gravity="center"
+        android:text="@string/longitude"
         android:textSize="18sp" />
 
     <Spinner
@@ -106,4 +148,5 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="273dp"
         android:layout_marginEnd="0dp" />
+
 </RelativeLayout>

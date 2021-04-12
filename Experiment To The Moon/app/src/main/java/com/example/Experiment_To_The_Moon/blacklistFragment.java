@@ -28,7 +28,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-//Class is used to display the blacklist fragment
+/**
+ * This class is used to display the blacklist fragment
+ */
 public class blacklistFragment extends DialogFragment {
     View view;
     Context arraycontext;
