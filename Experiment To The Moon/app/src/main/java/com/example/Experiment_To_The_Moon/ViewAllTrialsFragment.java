@@ -2,9 +2,7 @@ package com.example.Experiment_To_The_Moon;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -64,6 +62,7 @@ public class ViewAllTrialsFragment extends DialogFragment {
                     String owner = (String) doc.getData().get("createdBy");
                     String type = (String) doc.getData().get("trialType");
                     String date = (String) doc.getData().get("date");
+                    ArrayList<Double> location = (ArrayList<Double>) doc.getData().get("location");
                     String exp_name = name;
 
                     // dealing with binomial trials turned out to be a challenge. I just had to do some ugly
@@ -76,10 +75,12 @@ public class ViewAllTrialsFragment extends DialogFragment {
                         if (outcome_string.equals("true")) {
                             Trial newTrial = new Trial("Pass", owner, type, exp_name);
                             newTrial.setDate(date);
+                            newTrial.setLocation(location.get(0), location.get(1));
                             trialDataList.add(newTrial);
                         } else if (outcome_string.equals("false")) {
                             Trial newTrial = new Trial("Fail", owner, type, exp_name);
                             newTrial.setDate(date);
+                            newTrial.setLocation(location.get(0), location.get(1));
                             trialDataList.add(newTrial);
                         } else {
                             throw new NullPointerException("Binomial trial has null outcome");
@@ -88,6 +89,7 @@ public class ViewAllTrialsFragment extends DialogFragment {
                         String outcome = doc.getData().get("data").toString();
                         Trial newTrial = new Trial(outcome, owner, type, exp_name);
                         newTrial.setDate(date);
+                        newTrial.setLocation(location.get(0), location.get(1));
                         trialDataList.add(newTrial);
                     }
                 }
