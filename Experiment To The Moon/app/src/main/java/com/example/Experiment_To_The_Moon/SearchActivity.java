@@ -52,7 +52,7 @@ public class SearchActivity extends AppCompatActivity {
         db.collection("Experiments").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
+                if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         String name = doc.getId();
                         if (name.contains(searchKey)) {
@@ -62,36 +62,40 @@ public class SearchActivity extends AppCompatActivity {
                             String region = (String) doc.getData().get("region");
                             String min_trials = (String) doc.getData().get("min_trials");
                             String type = (String) doc.getData().get("type");
-                            boolean geo_location= Boolean.parseBoolean((String) doc.getData().get("geoLocation"));
+                            boolean geo_location = Boolean.parseBoolean((String) doc.getData().get("geoLocation"));
                             String is_published = (String) doc.getData().get("isPublished");
                             // add the experiments from the db to experimentDataList as actual experiment objects.
                             boolean i_own_this = false;
-                            try { i_own_this = owner.equals(currentUser.getUid());
-                            } catch (NullPointerException f) { Log.d(TAG, "Incompatible experiment in DB"); }
-                            if (is_published.equals("true") || i_own_this) {
                             try {
-                                switch (type) {
-                                    case "Count":
-                                        searchDataList.add(new Count(name, owner, description, is_end, region, min_trials, geo_location, is_published));
-                                        break;
-                                    case "Binomial":
-                                        searchDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, geo_location, is_published));
-                                        break;
-                                    case "Measurement":
-                                        searchDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, geo_location, is_published));
-                                        break;
-                                    case "NonNegInt":
-                                        searchDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, geo_location, is_published));
-                                        break;
-                                }
-                            } catch (NullPointerException a) {
-                                Log.d("ADDEXP", "Incompatible experiment in DB");
+                                i_own_this = owner.equals(currentUser.getUid());
+                            } catch (NullPointerException f) {
+                                Log.d("TAG", "Incompatible experiment in DB");
                             }
-                        } else {
-                            Log.d("GETDOC", "Cached get failed: ", task.getException());
+                            if (is_published.equals("true") || i_own_this) {
+                                try {
+                                    switch (type) {
+                                        case "Count":
+                                            searchDataList.add(new Count(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                            break;
+                                        case "Binomial":
+                                            searchDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                            break;
+                                        case "Measurement":
+                                            searchDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                            break;
+                                        case "NonNegInt":
+                                            searchDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                            break;
+                                    }
+                                } catch (NullPointerException a) {
+                                    Log.d("ADDEXP", "Incompatible experiment in DB");
+                                }
+                            } else {
+                                Log.d("GETDOC", "Cached get failed: ", task.getException());
+                            }
                         }
+                        searchListAdapter.notifyDataSetChanged();
                     }
-                    searchListAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -100,10 +104,9 @@ public class SearchActivity extends AppCompatActivity {
             selectExperiment(position);
         });
 
-
     }
 
-    private void selectExperiment(int position) {
+    void selectExperiment(int position) {
         Intent intent = new Intent(this, ExperimentActivity.class);
         intent.putExtra("Experiment", searchDataList.get(position));  // pass in the experiment object
         intent.putExtra("type", searchDataList.get(position).getType());  // pass in the type of experiment
