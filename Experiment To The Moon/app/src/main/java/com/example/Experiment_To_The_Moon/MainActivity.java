@@ -7,6 +7,7 @@ package com.example.Experiment_To_The_Moon;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -43,7 +44,9 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
     private FirebaseFirestore db;
     private final String TAG = "Sample";
     private User currentUser;
-    private String firebase_id; // the device's unique id
+    private final String firebase_id = FirebaseInstallations.getInstance().getId().toString().substring(33);
+    // the device's unique id
+    // only looking for the 7 digit ID
     public static final String EXTRA_MESSAGE = "com.example.Experiment_To_The_Moon.MESSAGE";
 
 
@@ -54,8 +57,6 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
         setContentView(R.layout.activity_home_screen);
 
         // the MainActivity class handles the main activity of the application
-        firebase_id = FirebaseInstallations.getInstance().getId().toString(); // this is the firebase ID associated with the unique app installation ID
-        firebase_id = firebase_id.substring(33); // only looking for the 7 digit ID
         DocumentReference docRef = db.collection("Users").document(firebase_id);
 
         // check if the ID exists in the database
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 }
                 updateSubscribedList();
                 subscribedExperimentAdapter.notifyDataSetChanged();
+
             } else {
                 Log.d(TAG, "get failed with ", task.getException());
             }
@@ -152,23 +154,31 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                 String min_trials = (String) doc.getData().get("min_trials");
                 String type = (String) doc.getData().get("type");
                 boolean geo_location= Boolean.parseBoolean((String) doc.getData().get("geoLocation"));
+                String is_published = (String) doc.getData().get("isPublished");
                 // add the experiments from the db to experimentDataList as actual experiment objects.
-                try {
-                    switch (type) {
-                        case "Count":
-                            experimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, geo_location));
-                            break;
-                        case "Binomial":
-                            experimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, geo_location));
-                            break;
-                        case "Measurement":
-                            experimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, geo_location));
-                            break;
-                        case "NonNegInt":
-                            experimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, geo_location));
-                            break;
-                    }
-                } catch (NullPointerException a) {Log.d(TAG, "Incompatible experiment in DB"); } // just ignore it
+                boolean i_own_this = false;
+                try { i_own_this = owner.equals(firebase_id);
+                } catch (NullPointerException f) { Log.d(TAG, "Incompatible experiment in DB"); }
+                if (is_published.equals("true") || i_own_this) {
+                    try {
+                        switch (type) {
+                            case "Count":
+                                experimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                break;
+                            case "Binomial":
+                                experimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                break;
+                            case "Measurement":
+                                experimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                break;
+                            case "NonNegInt":
+                                experimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                break;
+                        }
+                    } catch (NullPointerException a) {
+                        Log.d(TAG, "Incompatible experiment in DB");
+                    } // just ignore it
+                }
             }
             experimentAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud.
         });
@@ -283,18 +293,19 @@ public class MainActivity extends AppCompatActivity implements AddExperimentFrag
                         String min_trials = (String) document.getData().get("min_trials");
                         String type = (String) document.getData().get("type");
                         boolean geo_location = Boolean.parseBoolean((String) document.getData().get("geoLocation"));
+                        String is_published = (String) document.getData().get("isPublished");
                         switch (type) {
                             case "Count":
-                                subscribedExperimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, geo_location));
+                                subscribedExperimentDataList.add(new Count(name, owner, description, is_end, region, min_trials, geo_location, is_published));
                                 break;
                             case "Binomial":
-                                subscribedExperimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, geo_location));
+                                subscribedExperimentDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, geo_location, is_published));
                                 break;
                             case "Measurement":
-                                subscribedExperimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, geo_location));
+                                subscribedExperimentDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, geo_location, is_published));
                                 break;
                             case "NonNegInt":
-                                subscribedExperimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, geo_location));
+                                subscribedExperimentDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, geo_location, is_published));
                                 break;
                             default:
                                 break;

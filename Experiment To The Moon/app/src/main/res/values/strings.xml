@@ -72,6 +72,9 @@
     <string name="enter_latitude">Enter Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="enter_longitude">Enter Longitude</string>
+    <string name="end">End</string>
+    <string name="generate_qr_bar_code">Generate QR/Bar Code</string>
+    <string name="publish">publish</string>
     />
 
     <string-array name="spinner_trial_types">

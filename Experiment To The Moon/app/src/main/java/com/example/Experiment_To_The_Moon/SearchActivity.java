@@ -62,16 +62,23 @@ public class SearchActivity extends AppCompatActivity {
                             String region = (String) doc.getData().get("region");
                             String min_trials = (String) doc.getData().get("min_trials");
                             String type = (String) doc.getData().get("type");
+                            boolean geo_location= Boolean.parseBoolean((String) doc.getData().get("geoLocation"));
+                            String is_published = (String) doc.getData().get("isPublished");
                             // add the experiments from the db to experimentDataList as actual experiment objects.
                             try {
-                                if (type.equals("Count")) {
-                                    searchDataList.add(new Count(name, owner, description, is_end, region, min_trials, false));
-                                } else if (type.equals("Binomial")) {
-                                    searchDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, false));
-                                } else if (type.equals("Measurement")) {
-                                    searchDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, false));
-                                } else if (type.equals("NonNegInt")) {
-                                    searchDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, false));
+                                switch (type) {
+                                    case "Count":
+                                        searchDataList.add(new Count(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                        break;
+                                    case "Binomial":
+                                        searchDataList.add(new Binomial(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                        break;
+                                    case "Measurement":
+                                        searchDataList.add(new Measurement(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                        break;
+                                    case "NonNegInt":
+                                        searchDataList.add(new NonNegInt(name, owner, description, is_end, region, min_trials, geo_location, is_published));
+                                        break;
                                 }
                             } catch (NullPointerException a) {
                                 Log.d("ADDEXP", "Incompatible experiment in DB");

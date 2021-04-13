@@ -26,8 +26,10 @@ public class Count extends Experiment implements Serializable {
      * minimum number of trials to end the experiment
      * @param geo_location
      * whether geolocation is required for the experiment or not (boolean)
+     * @param published
+     * whether the experiment has been published or not (String)
      */
-    public Count(String name, String owner, String description, String end, String region, String min_trials, boolean geo_location) {
+    public Count(String name, String owner, String description, String end, String region, String min_trials, boolean geo_location, String published) {
         this.name = name;
         this.owner = owner;
         this.setDescription(description);
@@ -35,7 +37,8 @@ public class Count extends Experiment implements Serializable {
         this.minTrials = min_trials;
         if (end.equals("true")) this.isEnd = true;
         if (end.equals("false")) this.isEnd = false;
-        this.isPublished = false;
+        if (published.equals("true")) this.isPublished = true;
+        if (published.equals("false")) this.isPublished = false;
         this.type = "Count";
         this.needALocation=geo_location;
     }
