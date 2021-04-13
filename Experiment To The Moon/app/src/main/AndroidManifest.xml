@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.Experiment_To_The_Moon">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ExperimentToTheMoon"
         tools:ignore="AllowBackup">
+        <activity android:name=".Map"></activity>
         <activity
             android:name=".SearchActivity"
             android:parentActivityName=".MainActivity" />
@@ -26,27 +27,31 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:configChanges="keyboardHidden|orientation|screenSize">
-
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ExperimentActivity"
-            android:parentActivityName=".MainActivity"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".Question"
-            android:parentActivityName=".ExperimentActivity"/>
+            android:parentActivityName=".ExperimentActivity" />
         <activity
             android:name=".Answer"
-            android:parentActivityName=".Question"/>
+            android:parentActivityName=".Question" />
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyC0XQoY2ZCFRIwwkAJlOQDXwG0n95TV0Ps" />
     </application>
 
 </manifest>

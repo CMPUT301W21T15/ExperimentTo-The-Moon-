@@ -32,6 +32,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -138,7 +143,8 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         Button end = findViewById(R.id.end_button);
         Button blacklist = findViewById(R.id.blacklist_button);
         Button viewAllTrials = findViewById(R.id.view_all_trials_button);
-
+        Button map = findViewById(R.id.Map);
+        if(!experiment.needALocation) map.setVisibility(View.INVISIBLE);
         if (!currentUser.getUid().equals(experiment.getOwner())) {
             // make description uneditable if the current user is not the owner of the experiment
             experimentDescription.setEnabled(false);
@@ -150,6 +156,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             end.setVisibility(View.INVISIBLE);
             blacklist.setVisibility(View.INVISIBLE);
             viewAllTrials.setVisibility(View.INVISIBLE);
+            map.setVisibility(View.INVISIBLE);
         }
 
         delete.setOnClickListener(view -> {
@@ -257,6 +264,14 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
                     Log.d(TAG, "get failed with ", task.getException());
                 }
             });
+        });
+
+        map.setOnClickListener(view -> {
+            Intent mapIntent=new Intent(this, com.example.Experiment_To_The_Moon.Map.class);
+            mapIntent.putExtra("UserId",currentUser.getUid());
+            mapIntent.putExtra("Name",experiment.getName());
+            mapIntent.putExtra("ExperimentName",experiment.getName());
+            startActivity(mapIntent);
         });
 
         blacklist.setOnClickListener(v -> new blacklistFragment().show(getSupportFragmentManager(),"Blacklist"));
@@ -418,5 +433,10 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    public void startMap(View view ){
+
+    }
+
 }
 
