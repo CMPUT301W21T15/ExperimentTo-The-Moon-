@@ -1,5 +1,8 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
+plugins {
+    id("com.android.application")
+    id("com.google.gms.google-services")
+    id("com.google.secrets_gradle_plugin") version "0.5"
+}
 
 android {
     compileSdkVersion 30
@@ -29,6 +32,7 @@ android {
 
 dependencies {
 
+
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
@@ -47,6 +51,7 @@ dependencies {
     implementation 'com.google.zxing:core:3.2.1'
     implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
     implementation 'com.jjoe64:graphview:4.2.2'
 }
