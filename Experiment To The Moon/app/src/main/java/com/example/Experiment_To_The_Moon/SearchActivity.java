@@ -65,6 +65,10 @@ public class SearchActivity extends AppCompatActivity {
                             boolean geo_location= Boolean.parseBoolean((String) doc.getData().get("geoLocation"));
                             String is_published = (String) doc.getData().get("isPublished");
                             // add the experiments from the db to experimentDataList as actual experiment objects.
+                            boolean i_own_this = false;
+                            try { i_own_this = owner.equals(currentUser.getUid());
+                            } catch (NullPointerException f) { Log.d(TAG, "Incompatible experiment in DB"); }
+                            if (is_published.equals("true") || i_own_this) {
                             try {
                                 switch (type) {
                                     case "Count":
