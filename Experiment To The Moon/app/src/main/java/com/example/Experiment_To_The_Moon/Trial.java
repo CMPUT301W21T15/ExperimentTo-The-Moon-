@@ -243,6 +243,8 @@ public class Trial implements Serializable {
         Map<String, Object> data = new HashMap<>();
         data.put("trialType", Type);
         data.put("createdBy",created_by);
+        data.put("latitude", getLocation().get(0));
+        data.put("longitude", getLocation().get(1));
         data.put("location", getLocation());
         data.put("date", getDate());
         if(Type.equals("Measurement")){
