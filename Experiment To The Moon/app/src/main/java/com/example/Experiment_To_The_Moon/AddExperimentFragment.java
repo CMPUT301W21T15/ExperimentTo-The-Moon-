@@ -92,15 +92,16 @@ public class AddExperimentFragment extends DialogFragment {
                     min_trials = experiment_min_trials.getText().toString();
                     trial_type = trialTypeSpinner.getSelectedItem().toString();
                     geo_location = geolocationSwitch.isChecked(); // returns True or False for now.
+                    String is_published = "false"; // start unpublished
 
                     if (trial_type.equals("Count")) {
-                        listener.onOkPressed(new Count(name, owner, description, end, region, min_trials, geo_location));
+                        listener.onOkPressed(new Count(name, owner, description, end, region, min_trials, geo_location, is_published));
                     } else if (trial_type.equals("Binomial")) {
-                        listener.onOkPressed(new Binomial(name, owner, description, end, region, min_trials, geo_location));
+                        listener.onOkPressed(new Binomial(name, owner, description, end, region, min_trials, geo_location, is_published));
                     } else if (trial_type.equals("Measurement")) {
-                        listener.onOkPressed(new Measurement(name, owner, description, end, region, min_trials, geo_location));
+                        listener.onOkPressed(new Measurement(name, owner, description, end, region, min_trials, geo_location, is_published));
                     } else if (trial_type.equals("Non-Neg Integer")) {
-                        listener.onOkPressed(new NonNegInt(name, owner, description, end, region, min_trials, geo_location));
+                        listener.onOkPressed(new NonNegInt(name, owner, description, end, region, min_trials, geo_location, is_published));
                     }
 
                 }).create();

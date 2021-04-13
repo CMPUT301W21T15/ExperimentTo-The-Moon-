@@ -135,7 +135,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="Generate QR/Bar Code"/>
+            android:text="@string/generate_qr_bar_code"/>
+
+        <Button
+            android:id="@+id/unpublish_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/publish"/>
 
     </LinearLayout>
 
@@ -160,25 +167,24 @@
             >
 
             <Button
-                android:id="@+id/unpublish_button"
-                android:layout_width="0dp"
+                android:id="@+id/end_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/unpublish" />
+                android:text="@string/end" />
 
             <Button
                 android:id="@+id/blacklist_button"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/blacklist" />
 
             <Button
                 android:id="@+id/view_all_trials_button"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textSize="12sp"
+                android:layout_weight="2"
                 android:text="@string/view_all_trials" />
         </LinearLayout>
 

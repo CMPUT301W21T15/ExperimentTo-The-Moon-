@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -69,6 +70,8 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         type = (String) intent.getSerializableExtra("type");  //  type of the experiment
         currentUser = (User) intent.getSerializableExtra("User"); // current user
+
+        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.meep_merp);
 
         // cast the experiment to its proper type.
         switch (type) {
@@ -130,8 +133,9 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         }
 
         Button delete = findViewById(R.id.delete_button);
-
         Button unpublish = findViewById(R.id.unpublish_button);
+
+        Button end = findViewById(R.id.end_button);
         Button blacklist = findViewById(R.id.blacklist_button);
         Button viewAllTrials = findViewById(R.id.view_all_trials_button);
 
@@ -140,8 +144,10 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
             experimentDescription.setEnabled(false);
             // make delete button invisible if the current user is not the owner of the experiment
             delete.setVisibility(View.INVISIBLE);
-            // make the top row of buttons invisible if the current user is not the owner of the experiment
+            // make unpublish button invisible if the current user is not the owner of the experiment
             unpublish.setVisibility(View.INVISIBLE);
+            // make the top row of buttons invisible if the current user is not the owner of the experiment
+            end.setVisibility(View.INVISIBLE);
             blacklist.setVisibility(View.INVISIBLE);
             viewAllTrials.setVisibility(View.INVISIBLE);
         }
@@ -157,21 +163,36 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
 
         Button participate= findViewById(R.id.participate_button);
         if (experiment.getIsEnd()) {
-            unpublish.setText("publish");
+            end.setVisibility(View.INVISIBLE);
             participate.setVisibility(View.INVISIBLE);
         } else {
-            unpublish.setText("unpublish");
+            end.setText("end");
             participate.setVisibility(View.VISIBLE);
         }
+        if (!experiment.getIsPublished()) participate.setVisibility(View.INVISIBLE);
 
         unpublish.setOnClickListener(view -> {
-            experiment.toggleEnd();
-            if (experiment.getIsEnd()) {
+            experiment.togglePublish();
+            if (!experiment.getIsPublished()) {
                 unpublish.setText("publish");
                 participate.setVisibility(View.INVISIBLE);
             } else {
                 unpublish.setText("unpublish");
-                participate.setVisibility(View.VISIBLE);
+                if (!experiment.isEnd) participate.setVisibility(View.VISIBLE);
+            }
+        });
+
+        end.setOnClickListener(view -> {
+            boolean can_end = false;
+            try { can_end = experiment.getTrials() >= Integer.parseInt(experiment.getMinTrials());
+            } catch (Exception e) {Log.d(TAG, "Min trials not an integer"); } // EXPERIMENT NEVER ENDS :O
+            if (can_end) {experiment.toggleEnd();
+            } else mp.start();  // meep merp
+            // Valve hereby grants, and you accept, a non-exclusive license and right, to use the Content and Services for your personal, non-commercial use (except where commercial use is expressly allowed herein or in the applicable Subscription Terms).
+            // @https://store.steampowered.com/subscriber_agreement/
+            if (experiment.getIsEnd()) {
+                end.setVisibility(View.INVISIBLE);
+                participate.setVisibility(View.INVISIBLE);
             }
         });
 
