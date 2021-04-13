@@ -123,7 +123,7 @@ public class ExperimentActivity extends AppCompatActivity implements StatisticsF
         totalTrials.setText("Total trials: " + experiment.getTrials());
 
         TextView mostUsefulStat = findViewById(R.id.experiment_activity_most_useful_stat);
-        mostUsefulStat.setText("PLACEHOLDER TEXT PUT MOST USEFUL STATISTIC");
+        mostUsefulStat.setText("");  // doesn't do anything
 
         CheckBox subscribed = findViewById(R.id.subscribe_box);
         // will be checked if user is subbed to experiment
