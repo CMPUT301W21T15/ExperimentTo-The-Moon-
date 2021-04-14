@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class StatisticsTest {
     private Experiment mockExperiment(){
         Experiment experiment = new Count("Exp01", "c56789", "Mock experiment",
-                "false", "Edmonton", "10", false);
+                "false", "Edmonton", "10", false, "true");
         return experiment;
     }
 
