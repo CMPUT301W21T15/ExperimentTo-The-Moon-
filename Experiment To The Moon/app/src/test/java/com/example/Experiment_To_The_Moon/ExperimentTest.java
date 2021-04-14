@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 public class ExperimentTest {
     private Experiment mockExperiment(){
         Experiment experiment = new Count("Exp01", "c56789", "Mock experiment",
-                "false", "Edmonton", "10", false);
+                "false", "Edmonton", "10", false, "false");
         return experiment;
     }
 

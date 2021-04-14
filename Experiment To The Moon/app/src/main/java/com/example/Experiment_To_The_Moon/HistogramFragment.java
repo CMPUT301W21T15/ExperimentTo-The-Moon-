@@ -39,6 +39,7 @@ public class HistogramFragment extends DialogFragment {
     private DocumentReference docRef;
     private String expType;
     private int num;
+    private GraphView histogram;
 
     /**
      *
@@ -61,6 +62,8 @@ public class HistogramFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.histogram_fragment_layout, null);
+        histogram = (GraphView) view.findViewById(R.id.histogram);
+        series = new BarGraphSeries<DataPoint>();
         drawHistogram(view);
 
         //return super.onCreateDialog(savedInstanceState);
@@ -70,6 +73,19 @@ public class HistogramFragment extends DialogFragment {
                 .setTitle("Histogram")
                 .setNegativeButton("Close", null)
                 .create();
+    }
+
+    /**
+     * Used in calculating bin sizes
+     * @param x
+     * @return
+     */
+    public int roundTo50(float x){
+        x = (float) Math.ceil(x);
+        if(x%50==0){
+            return (int) x;
+        }
+        return (int) (x + (50 - (x % 50)));
     }
 
     /**
@@ -86,11 +102,31 @@ public class HistogramFragment extends DialogFragment {
                     if (task.getResult().isEmpty()) {
                         return;
                     }
-                    GraphView histogram = (GraphView) view.findViewById(R.id.histogram);
-                    series = new BarGraphSeries<DataPoint>();
                     int n = 0;
                     int max_count = 0;
+                    int count_in_bin = 0;
+                    float max = stats.max;
+                    float min = stats.min;
+                    float bin_size;
+                    if(max <= 20){
+                        bin_size = 5;
+                    } else if(max <= 50){
+                        bin_size = 10;
+                    }else{
+                        bin_size = roundTo50(max);
+                        bin_size = bin_size/5;
+                    }
+                    float div = bin_size;
                     if(expType.equals("Count") || expType.equals("NonNegInt")) {
+                        series.setDataWidth(bin_size);
+                        histogram.getViewport().setYAxisBoundsManual(true);
+                        histogram.getViewport().setMinY(0);
+                        histogram.getViewport().setXAxisBoundsManual(true);
+                        histogram.getViewport().setMinX(min - (min % bin_size));
+                        histogram.getViewport().setMaxX(roundTo50(max));
+                        if(max <= 20){
+                            histogram.getViewport().setMaxX(25);
+                        }
                         ArrayList<Long> values = new ArrayList<Long>();
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             long val = (Long) doc.getData().get("data");
@@ -98,22 +134,43 @@ public class HistogramFragment extends DialogFragment {
                             n = n + 1;
                         }
                         Collections.sort(values);
-                        int count_in_bin = 0;
-                        int bin = 1;
-                        int div = (int) Math.ceil((double) num/5);
                         for(int i = 0; i < n; i++){
-                            if(values.get(i) >= div){
-                                series.appendData(new DataPoint(div, count_in_bin), true, 100);
+                            if(values.get(i) < div){
+                                count_in_bin += 1;
+                                if(i == n - 1){
+                                    if(count_in_bin > max_count){
+                                        max_count = count_in_bin;
+                                    }
+                                    series.appendData(new DataPoint(div - (bin_size/2), count_in_bin), true, 100);
+                                }
+                            }else{
                                 if(count_in_bin > max_count){
                                     max_count = count_in_bin;
                                 }
-                                bin += 1;
-                                div += div;
-                                count_in_bin = 0;
+                                if(count_in_bin == 0){
+                                    while(values.get(i) > div){
+                                        div += bin_size;
+                                    }
+                                    count_in_bin += 1;
+                                    if(i == n - 1){
+                                        series.appendData(new DataPoint(div - (bin_size/2), count_in_bin), true, 100);
+                                    }
+                                }else{
+                                    series.appendData(new DataPoint(div - (bin_size/2), count_in_bin), true, 100);
+                                    div += bin_size;
+                                    count_in_bin = 1;
+                                }
                             }
-                            count_in_bin += 1;
                         }
+                        histogram.getViewport().setMaxY(Math.ceil(max_count * 1.2));
+
                     } else if (expType.equals("Measurement")){
+                        series.setDataWidth(bin_size);
+                        histogram.getViewport().setYAxisBoundsManual(true);
+                        histogram.getViewport().setMinY(0);
+                        histogram.getViewport().setXAxisBoundsManual(true);
+                        histogram.getViewport().setMinX(min - (min % bin_size));
+                        histogram.getViewport().setMaxX(roundTo50(max));
                         ArrayList<Float> values = new ArrayList<Float>();
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             float val = (Float) doc.getData().get("data");
@@ -121,24 +178,39 @@ public class HistogramFragment extends DialogFragment {
                             n = n + 1;
                         }
                         Collections.sort(values);
-                        int count_in_bin = 0;
-                        int bin = 1;
-                        int div = (int) Math.ceil((double) num/5);
                         for(int i = 0; i < n; i++){
-                            if(values.get(i) >= div){
-                                series.appendData(new DataPoint(div, count_in_bin), true, 100);
+                            if(values.get(i) < div){
+                                count_in_bin += 1;
+                                if(i == n - 1){
+                                    if(count_in_bin > max_count){
+                                        max_count = count_in_bin;
+                                    }
+                                    series.appendData(new DataPoint(div - (bin_size/2), count_in_bin), true, 100);
+                                }
+                            }else{
                                 if(count_in_bin > max_count){
                                     max_count = count_in_bin;
                                 }
-                                bin += 1;
-                                div += div;
-                                count_in_bin = 0;
+                                if(count_in_bin == 0){
+                                    while(values.get(i) > div){
+                                        div += bin_size;
+                                    }
+                                    count_in_bin += 1;
+                                    if(i == n - 1){
+                                        series.appendData(new DataPoint(div - (bin_size/2), count_in_bin), true, 100);
+                                    }
+                                }else{
+                                    series.appendData(new DataPoint(div - (bin_size/2), count_in_bin), true, 100);
+                                    div += bin_size;
+                                    count_in_bin = 1;
+                                }
                             }
-                            count_in_bin += 1;
                         }
+                        histogram.getViewport().setMaxY(Math.ceil(max_count * 1.2));
                     } else if (expType.equals("Binomial")) {
                         int ones = 0;
                         int zeros = 0;
+                        int total = 0;
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             Boolean boolVal = (Boolean) doc.getData().get("data");
                             if (boolVal) {
@@ -146,25 +218,23 @@ public class HistogramFragment extends DialogFragment {
                             } else {
                                 zeros += 1;
                             }
+                            total += 1;
                         }
-                        series.appendData(new DataPoint(0, zeros), true, 100);
-                        series.appendData(new DataPoint(1, ones), true, 100);
+                        series.appendData(new DataPoint(0 + 0.5, zeros), true, 100);
+                        series.appendData(new DataPoint(1 + 0.5, ones), true, 100);
+                        series.setDataWidth(1);
+                        histogram.getViewport().setYAxisBoundsManual(true);
+                        histogram.getViewport().setMinY(0);
+                        histogram.getViewport().setMaxY(total + 1);
+                        histogram.getViewport().setXAxisBoundsManual(true);
+                        histogram.getViewport().setMaxX(2);
                     }
+                    series.setSpacing(0);
+                    series.setDrawValuesOnTop(true);
                     histogram.addSeries(series);
-                    histogram.getViewport().setYAxisBoundsManual(true);
-                    histogram.getViewport().setMinY(0);
-                    histogram.getViewport().setMaxY(max_count+1);
 
-                    // activate zooming and scrolling
-                    histogram.getViewport().setScalable(true);
 
-                    histogram.getViewport().setScrollable(true);
-
-                    histogram.getViewport().setScalableY(true);
-
-                    histogram.getViewport().setScrollableY(true);
-
-                    // styling
+                    // set the bars to different colors
                     series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
                         @Override
                         public int get(DataPoint data) {
